@@ -18,11 +18,13 @@ public:
   ~Order();
   Order(const Order &order);            // copy constructor
   Order &operator=(const Order &order); // assignment operator
-  int getId();
-  string getType();
+  int getId() const;
+  string getType() const;
+  int *setId();
+  string *setType(string type);
 
   // define virtual function of validate and execute,
-  // so subclasses of Order can overwrite this two functions
+  // allow calling this function of a subclass with a pointer to the base class
   virtual bool validate();
   virtual void execute();
 
@@ -30,7 +32,7 @@ private:
   // friend stream insertion operator to the class to access private member
   friend std::ostream &operator<<(std::ostream &, const Order &);
   static int order_id; // static variable use to automatic generate id for all objects
-  int *id;             // use to store id of the order
+  int *id;             // store the id of the order (Each order have one unique id)
   string *order_type;
 };
 
@@ -57,8 +59,92 @@ private:
 
 // The different kinds of orders are:
 // deploy, advance, bomb, blockade, airlift, and negotiate.
-// class Deploy
-// {
-// public:
-// private:
-// };
+class Deploy : public Order
+{
+public:
+  Deploy();
+  ~Deploy();
+  Deploy(const Deploy &deploy);
+  Deploy &operator=(const Deploy &deploy);
+
+  bool validate();
+  void execute();
+
+private:
+  friend std::ostream &operator<<(std::ostream &, const Deploy &);
+};
+
+class Advance : public Order
+{
+public:
+  Advance();
+  ~Advance();
+  Advance(const Advance &advance);
+  Advance &operator=(const Advance &advance);
+
+  bool validate();
+  void execute();
+
+private:
+  friend std::ostream &operator<<(std::ostream &, const Advance &);
+};
+
+class Bomb : public Order
+{
+public:
+  Bomb();
+  ~Bomb();
+  Bomb(const Bomb &bomb);
+  Bomb &operator=(const Bomb &bomb);
+
+  bool validate();
+  void execute();
+
+private:
+  friend std::ostream &operator<<(std::ostream &, const Bomb &);
+};
+
+class Blockade : public Order
+{
+public:
+  Blockade();
+  ~Blockade();
+  Blockade(const Blockade &blockade);
+  Blockade &operator=(const Blockade &blockade);
+
+  bool validate();
+  void execute();
+
+private:
+  friend std::ostream &operator<<(std::ostream &, const Blockade &);
+};
+
+class Airlift : public Order
+{
+public:
+  Airlift();
+  ~Airlift();
+  Airlift(const Airlift &airlift);
+  Airlift &operator=(const Airlift &airlift);
+
+  bool validate();
+  void execute();
+
+private:
+  friend std::ostream &operator<<(std::ostream &, const Airlift &);
+};
+
+class Negotiate : public Order
+{
+public:
+  Negotiate();
+  ~Negotiate();
+  Negotiate(const Negotiate &negotiate);
+  Negotiate &operator=(const Negotiate &negotiate);
+
+  bool validate();
+  void execute();
+
+private:
+  friend std::ostream &operator<<(std::ostream &, const Negotiate &);
+};
