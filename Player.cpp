@@ -1,32 +1,38 @@
 
 #include "Player.h"
-//using namespace std;
+using namespace std;
 #include <iostream>
 
-Player::Player() {
-    //this->totalPlayers = totalPlayers++;
+Player::Player()
+{
     this->name = nullptr;
 }
 
-
-Player::Player(std::string playerName): name(&playerName) {
-    //cout << "Hello world" << endl;
-    //this->totalPlayers = totalPlayers++;
-    //this->name = &playerName;
-} 
-
-string* Player::getName() {
-    return this->name;
+Player::Player(string *playerName)
+{
+    this->name = playerName;
 }
 
-/* ostream& operator<<(ostream &os, Player &player) {
-    os << player.getName() << "'s owned countries: " << endl;
-} */
+string Player::getName() const
+{
+    return *name;
+}
 
-Player::~Player() {
+void Player::setName(string *newName)
+{
+    this->name = newName;
+}
+
+Player::~Player()
+{
     delete this->name;
-    //delete this->totalPlayers;
-    //delete this->ownedTerritories;
-    //delete this->orders;
-    //delete this->hand;
+    // delete this->ownedTerritories;
+    // delete this->orders;
+    // delete this->hand;
+}
+
+ostream &operator<<(ostream &outs, Player &theObject)
+{
+    outs << theObject.getName() << "'s owned countries: " << endl;
+    return outs;
 }
