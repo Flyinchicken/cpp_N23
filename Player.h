@@ -1,18 +1,21 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "Orders.h"
 #include <string>
+#include <list>
 #include <vector>
 #include <ostream>
 using namespace std;
+
+class OrdersList;
 
 class Player
 {
 private:
   string *name;
   friend ostream &operator<<(ostream &outs, Player &theObject);
-  // list<Territory>* OwnedTerritories;
-  // list<Order>* orders;
+  OrdersList *orderslist;
   // Hand* hand;
 public:
   Player();
@@ -20,7 +23,7 @@ public:
   Player(string *name);
   // list<Territory>* toDefend();
   // list<Territory>* toAttack();
-  // void issueOrder();
+  void issueOrder(int orderNumber);
 
   string getName() const;
 
