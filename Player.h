@@ -18,7 +18,6 @@ public:
   Player();
   ~Player();
   Player(string *name);
-  static int *totalPlayers;
   // list<Territory>* toDefend();
   // list<Territory>* toAttack();
   // void issueOrder();

@@ -1,2 +1,11 @@
+.idea/
 .vscode
 *.exe
+CMakeLists.txt
+cmake-build-debug/
+Main
+Main.dSYM/Contents
+OrdersDriver
+Orders.dSYM
+OrdersDriver.dSYM
+Orders
