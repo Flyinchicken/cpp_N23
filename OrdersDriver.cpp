@@ -3,7 +3,7 @@
 
 using namespace std;
 
-int main()
+void testOrdersLists()
 {
   OrdersList ordersList1;
   cout << "*********" << endl;
@@ -42,4 +42,9 @@ int main()
   o7->execute();
   cout << ordersList1 << endl;
   ordersList1.print();
+}
+
+int main()
+{
+  testOrdersLists();
 }
