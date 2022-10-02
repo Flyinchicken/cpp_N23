@@ -10,6 +10,18 @@ Player::Player()
     this->orderslist = new OrdersList();
 }
 
+Player::Player(const Player& player)
+{
+    this->name = new string(*(player.name));
+    this->orderslist = new OrdersList(*(player.orderslist));
+}
+
+Player& Player::operator=(const Player& player)
+{
+    this->name = new string(*(player.name));
+    return *this;
+}
+
 Player::Player(string *playerName)
 {
     this->name = playerName;
@@ -29,8 +41,8 @@ void Player::setName(string *newName)
 Player::~Player()
 {
     delete this->name;
+    delete this->orderslist;
     // delete this->ownedTerritories;
-    // delete this->orders;
     // delete this->hand;
 }
 

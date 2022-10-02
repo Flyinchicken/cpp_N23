@@ -20,6 +20,8 @@ private:
 public:
   Player();
   ~Player();
+  Player(const Player& player);            
+  Player& operator=(const Player& player);
   Player(string *name);
   // list<Territory>* toDefend();
   // list<Territory>* toAttack();
