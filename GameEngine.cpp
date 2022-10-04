@@ -169,8 +169,23 @@ void GameEngine::processCommandString(string commandString) {
     }
     else {
         // Change state based on string
-    }
-    
+        if (commandString == "loadmap")
+            *currentGameState = 1;
+        else if (commandString == "validatemap")
+            *currentGameState = 2;
+        else if (commandString == "addplayer")
+            *currentGameState = 3;
+        else if (commandString == "assigncounties" || commandString == "endexecorders")
+            *currentGameState = 4;
+        else if (commandString == "issueorder")
+            *currentGameState = 5;
+        else if (commandString == "endissueorders" || commandString == "execorder")
+            *currentGameState = 6;
+        else if (commandString == "win")
+            *currentGameState = 7;
+        else if (commandString == "play")
+            *currentGameState = 0;
+    }    
 }
 
 // // enum GameEngine::validGameStates {
