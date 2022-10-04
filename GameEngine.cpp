@@ -7,6 +7,7 @@
  * */
 GameEngine::GameEngine() {
     this->currentGameState = new int(0);
+    this->isGameInProgress = new bool(true);
 }
 
 /**
@@ -14,6 +15,7 @@ GameEngine::GameEngine() {
  * */
 GameEngine::~GameEngine() {
     delete this->currentGameState;
+    delete this->isGameInProgress;
 }
 
 /**
@@ -106,17 +108,18 @@ bool GameEngine::isValidStateTransition(int newGameState) {
 bool GameEngine::isValidCommandString(string commandString) {
     // First, check that it is one of the acceptables
     if (commandString != "loadmap"
-        || commandString != "validatemap"
-        || commandString != "addplayer"
-        || commandString != "assigncounties"
-        || commandString != "issueorder"
-        || commandString != "endissueorder"
-        || commandString != "execorder"
-        || commandString != "endexecorder"
-        || commandString != "win"
-        || commandString != "playend"
-        || commandString != "validatemap"
+        && commandString != "validatemap"
+        && commandString != "addplayer"
+        && commandString != "assigncountries"
+        && commandString != "issueorder"
+        && commandString != "endissueorders"
+        && commandString != "execorder"
+        && commandString != "endexecorders"
+        && commandString != "win"
+        && commandString != "play"
+        && commandString != "end"
     ) {
+        cout << "HERE" << commandString << endl;
         return false;
     }
     
@@ -143,11 +146,11 @@ bool GameEngine::isValidCommandString(string commandString) {
                 return false;
             break;
         case 5:
-            if (commandString != "issueorder" && commandString != "endissurorders")
+            if (commandString != "issueorder" && commandString != "endissueorders")
                 return false;
             break;
         case 6:
-            if (commandString != "execorder" && commandString != "endexecorders")
+            if (commandString != "execorder" && commandString != "endexecorders" && commandString != "win")
                 return false;
             break;
         case 7:
@@ -175,7 +178,7 @@ void GameEngine::processCommandString(string commandString) {
             *currentGameState = 2;
         else if (commandString == "addplayer")
             *currentGameState = 3;
-        else if (commandString == "assigncounties" || commandString == "endexecorders")
+        else if (commandString == "assigncountries" || commandString == "endexecorders")
             *currentGameState = 4;
         else if (commandString == "issueorder")
             *currentGameState = 5;
@@ -185,6 +188,8 @@ void GameEngine::processCommandString(string commandString) {
             *currentGameState = 7;
         else if (commandString == "play")
             *currentGameState = 0;
+        else if (commandString == "end")
+            *isGameInProgress = false;
     }    
 }
 

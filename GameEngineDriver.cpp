@@ -11,12 +11,24 @@ int main() {
 
 void testGameStates() {
     cout << "Welcome to Warzone!" << endl;
+    cout << "To get started, input a valid command string to navigate through all possible states." << endl;
 
-    GameEngine *ge = new GameEngine("Start");
+    GameEngine *ge = new GameEngine();
+    cout << *ge << endl;
+    cout << *ge->isGameInProgress;
 
-    cout << *ge;
+    while (*ge->isGameInProgress) {
+        string inputCommand;
+        cin >> inputCommand;
 
-    GameEngine *ge2 = ge;
+        ge->processCommandString(inputCommand);
+        cout << *ge << endl;
+    }
 
-    cout << *ge2;
+    cout << "Conglatulation, you're win!" << endl;
+
+    // cout << inputCommand;
+    // Process the command string
+    // If -1, display error and restart
+    // If proper change, go to next
 }
