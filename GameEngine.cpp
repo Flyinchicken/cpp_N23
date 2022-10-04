@@ -101,26 +101,76 @@ bool GameEngine::isValidStateTransition(int newGameState) {
     }
 
     return true;
-    // // Places where loops are accepted:
-    // // mapLoaded, playersAdded, issueOrders, executeOrders
-    // if ((newGameState - *currentGameState == 0) 
-    //     && (*currentGameState == 1 || *currentGameState == 3 || *currentGameState == 5 || *currentGameState == 6)) {
-    //         // This should be ok
-    // }
+}
 
-    // // 2 Exceptions to this:
-    // // Go from win to start
-    // // Go from executeorders to assign
-    // if ((newGameState - *currentGameState != 1) 
-    //     || (newGameState - *currentGameState != -7)) {
-    //     return false;
-    // }
+bool GameEngine::isValidCommandString(string commandString) {
+    // First, check that it is one of the acceptables
+    if (commandString != "loadmap"
+        || commandString != "validatemap"
+        || commandString != "addplayer"
+        || commandString != "assigncounties"
+        || commandString != "issueorder"
+        || commandString != "endissueorder"
+        || commandString != "execorder"
+        || commandString != "endexecorder"
+        || commandString != "win"
+        || commandString != "playend"
+        || commandString != "validatemap"
+    ) {
+        return false;
+    }
     
-    // return true;
+    // Then, check if appropriate
+    switch (*currentGameState) {
+        case 0:
+            if (commandString != "loadmap")
+                return false;
+            break;
+        case 1:
+            if (commandString != "loadmap" && commandString != "validatemap")
+                return false;
+            break;
+        case 2:
+            if (commandString != "addplayer") 
+                return false;
+            break;
+        case 3:
+            if (commandString != "addplayer" && commandString != "assigncountries")
+                return false;
+            break;
+        case 4:
+            if (commandString != "issueorder")
+                return false;
+            break;
+        case 5:
+            if (commandString != "issueorder" && commandString != "endissurorders")
+                return false;
+            break;
+        case 6:
+            if (commandString != "execorder" && commandString != "endexecorders")
+                return false;
+            break;
+        case 7:
+            if (commandString != "play" && commandString != "end")
+                return false;
+            break;
+        default:
+            std::cout << "Not a valid state transition!" << endl;
+            break;
+    }
+
+    return true;
 }
 
 void GameEngine::processCommandString(string commandString) {
     // Check to make sure is a valid command string
+    if (!isValidCommandString(commandString)) {
+        std::cout << "Not a valid command string!" << endl;
+    }
+    else {
+        // Change state based on string
+    }
+    
 }
 
 // // enum GameEngine::validGameStates {
@@ -133,32 +183,3 @@ void GameEngine::processCommandString(string commandString) {
 // //     ExecuteOrders,            6
 // //     Win                       7
 // // };
-
-// /**
-//  * Default constructor
-//  * */
-// GameEngine::GameEngine() {
-//     this->currentGameState = nullptr;
-// }
-
-// /**
-//  * Destructor
-//  * */
-// GameEngine::~GameEngine() {
-//     delete this->currentGameState;
-// }
-
-// /**
-//  * Get current game state
-//  * */
-// int* GameEngine::getCurrentGameState() {
-//     return this->currentGameState;
-// }
-
-// /**
-//  * Copy constructor
-//  * */
-// GameEngine::GameEngine(const GameEngine &copy) {
-//     this->currentGameState = copy.currentGameState;
-// }
-
