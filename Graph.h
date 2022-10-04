@@ -15,7 +15,7 @@ private:
     int* size;
 
 public:
-    Graph() { size = new int(0); }
+    Graph();
     ~Graph() { delete size; }
 
     // Getters

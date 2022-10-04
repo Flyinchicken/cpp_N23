@@ -27,11 +27,11 @@ public:
     void setEdges(vector<string>* edges) { this->edges = edges; }
 
     // Methods
-    void addEdge(string* edge):
+    void addEdge(string* edge);
 
 };
 
-};
+
 
 
 #endif //CPP_N23_GRAPHNODE_H

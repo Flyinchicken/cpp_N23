@@ -6,9 +6,17 @@
 #define CPP_N23_MAPLOADER_H
 
 
-class MapLoader {
+#include "Graph.h"
 
+class MapLoader {
+public:
+    MapLoader() {};
+    ~MapLoader() = default;
+    //😄😄😄
+    //Methods
+    Graph LoadMap();
 };
+
 
 
 #endif //CPP_N23_MAPLOADER_H

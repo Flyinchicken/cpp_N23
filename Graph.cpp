@@ -4,6 +4,11 @@
 
 #include "Graph.h"
 
+Graph::Graph() {
+    *graphNodes = new vector<GraphNode>();
+    *size = 0;
+}
+
 void Graph::addGraphNode(GraphNode *graphNode) {
     graphNodes->push_back(*graphNode);
     *size = *size + 1;
