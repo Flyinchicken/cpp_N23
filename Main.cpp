@@ -7,5 +7,5 @@ int main()
     cout << "Welcome everyone!" << endl;
     MapLoader mapLoader;
 
-    Graph map = mapLoader.LoadMap();
+    mapLoader.LoadMap();
 }
