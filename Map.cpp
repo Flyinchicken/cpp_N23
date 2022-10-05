@@ -5,8 +5,8 @@
 #include <string>
 
 // Add a node to the graph
-void Graph::addNode(std::string name, Territory* territory){
-    this->nodes->insert_or_assign(name,territory);
+void Graph::addNode(std::string name){
+    this->nodes->insert_or_assign(name,(new Territory(name)));
 }
 
 // Add a neighbor to the existing node

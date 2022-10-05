@@ -26,7 +26,7 @@ class Graph
 
     public:
     // setters and getters:
-    void addNode(std::string, Territory*);
+    void addNode(std::string);
     void addNeighbor(std::string territory, std::string neighbor);
 
     Territory* getNode(std::string);
