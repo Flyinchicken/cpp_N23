@@ -23,13 +23,16 @@ GameEngine::~GameEngine() {
  * */
 GameEngine::GameEngine(const GameEngine &engine) {
     this->currentGameState = new int(*engine.currentGameState);
+    this->isGameInProgress = new bool(*engine.isGameInProgress);
 }
 
 /**
  * Assignment operator
  * */
 GameEngine &GameEngine::operator=(const GameEngine &engine) {
-    // Do something
+    this->currentGameState = new int(*engine.currentGameState);
+    this->isGameInProgress = new bool(*engine.isGameInProgress);
+    
     return *this;
 }
 

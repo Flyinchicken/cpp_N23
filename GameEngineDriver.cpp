@@ -15,7 +15,6 @@ void testGameStates() {
 
     GameEngine *ge = new GameEngine();
     cout << *ge << endl;
-    cout << *ge->isGameInProgress;
 
     while (*ge->isGameInProgress) {
         string inputCommand;
@@ -23,12 +22,9 @@ void testGameStates() {
 
         ge->processCommandString(inputCommand);
         cout << *ge << endl;
-    }
 
-    cout << "Conglatulation, you're win!" << endl;
-
-    // cout << inputCommand;
-    // Process the command string
-    // If -1, display error and restart
-    // If proper change, go to next
+        if (ge->getCurrentGameState() == 7) {
+            cout << "Conglaturation, you're win!" << endl;
+        }
+    }    
 }
