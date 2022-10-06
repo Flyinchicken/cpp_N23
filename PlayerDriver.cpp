@@ -11,15 +11,20 @@ int main()
 
 void testPlayers()
 {
-    string *name = new string("peppa");
-    Player player(name);
+    Player *player = new Player("peppa");
     cout << player << endl;
-    player.issueOrder(1);
-    player.issueOrder(2);
-    player.issueOrder(3);
-    player.issueOrder(4);
-    player.issueOrder(5);
-    player.issueOrder(6);
-    player.issueOrder(7);
+    (*player).issueOrder(1);
+    (*player).issueOrder(2);
+    (*player).issueOrder(3);
+    (*player).issueOrder(4);
+    (*player).issueOrder(5);
+    (*player).issueOrder(6);
+    (*player).issueOrder(7);
+
+    cout << (*player).getOrdersList() << endl;
+
+
+    cout << (*player).getHand() << endl;
+    
 
 }

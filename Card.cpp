@@ -101,7 +101,7 @@ Hand& Hand::operator =(const Hand& e) {
     return *this;
 };
 
-ostream& operator<<(std::ostream& stream, Hand& e) {
+ostream& operator<<(std::ostream& stream, const Hand& e) {
     stream << "This is the Hand and it has " << e._cardHand.size() << endl;
     return stream;
 };

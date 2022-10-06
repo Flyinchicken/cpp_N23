@@ -45,12 +45,12 @@ class Hand
 {
 private:
     vector<Card*> _cardHand;
+    friend ostream& operator<<(std::ostream& stream, const Hand& e);
 public:
     Hand();
     Hand(vector<Card*> e);
     Hand(const Hand& e);
     Hand& operator =(const Hand& e);
-    friend ostream& operator<<(std::ostream& stream, Hand& e);
     ~Hand();
 };
 

@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include "Orders.h"
+#include "Card.h"
 #include <string>
 #include <list>
 #include <vector>
@@ -9,27 +10,32 @@
 using namespace std;
 
 class OrdersList;
+class Hand;
 
 class Player
 {
 private:
-  string *name;
+  string name;
   friend ostream &operator<<(ostream &outs, Player &theObject);
   OrdersList *orderslist;
-  // Hand* hand;
+  Hand *hand;
+
 public:
   Player();
   ~Player();
-  Player(const Player& player);            
-  Player& operator=(const Player& player);
-  Player(string *name);
-  // list<Territory>* toDefend();
-  // list<Territory>* toAttack();
+  Player(const Player &player);
+  Player &operator=(const Player &player);
+  Player(string name);
+  // vector<Territory*> toDefend();
+  // vector<Territory*> toAttack();
   void issueOrder(int orderNumber);
 
   string getName() const;
+  OrdersList getOrdersList() const;
+  Hand getHand() const;
 
-  void setName(string *name);
+  void setName(string name);
+  void setOrdersList(OrdersList *list);
+  void setHand(Hand *hand);
 };
-
 #endif
