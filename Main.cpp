@@ -1,6 +1,6 @@
-// #include <iostream>
+#include <iostream>
 
-/* int main()
+int main()
 {
     std::cout << "Welcome everyone!" << std::endl;
-} */
+}
