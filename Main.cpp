@@ -1,6 +1,11 @@
-// #include <iostream>
+#include <iostream>
+#include "MapLoader.h"
 
-/* int main()
+using namespace std;
+int main()
 {
-    std::cout << "Welcome everyone!" << std::endl;
-} */
+    cout << "Welcome everyone!" << endl;
+    MapLoader mapLoader;
+
+    mapLoader.LoadMap();
+}
