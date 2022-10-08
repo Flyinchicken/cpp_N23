@@ -1,20 +1,32 @@
 #include "GameEngine.h"
 
 #include <iostream>
+#include <algorithm>
 
 /**
  * Default constructor
  * */
 GameEngine::GameEngine() {
-    this->currentGameState = 0;
-    setGameInProgress(true);
+    this->currentGameState = START;
+    validCommandStrings = { 
+        "loadmap",
+        "validatemap",
+        "addplayer",
+        "assigncountries",
+        "issueorder",
+        "endissueorders",
+        "execorder",
+        "endexecorders",
+        "win",
+        "play",
+        "end"
+    };
 }
 
 /**
  * Destructor
  * */
 GameEngine::~GameEngine() {
-    // Nothing to delete for now
 }
 
 /**
@@ -22,7 +34,6 @@ GameEngine::~GameEngine() {
  * */
 GameEngine::GameEngine(const GameEngine &engine) {
     this->currentGameState = engine.currentGameState;
-    this->gameInProgress = engine.gameInProgress;
 }
 
 /**
@@ -30,7 +41,6 @@ GameEngine::GameEngine(const GameEngine &engine) {
  * */
 GameEngine &GameEngine::operator = (const GameEngine &engine) {
     this->currentGameState = engine.currentGameState;
-    this->gameInProgress = engine.gameInProgress;
     
     return *this;
 }
@@ -50,28 +60,28 @@ ostream &operator << (ostream &out, const GameEngine &engine) {
  * */
 string GameEngine::getGameStateAsString() const {
     switch (currentGameState) {
-        case 0:
+        case START:
             return "Start";
             break;
-        case 1:
+        case MAPLOADED:
             return "Map Loaded";
             break;
-        case 2:
+        case MAPVALIDATED:
             return "Map Validated";
             break;
-        case 3:
+        case PLAYERSADDED:
             return "Players Added";
             break;
-        case 4:
+        case ASSIGNREINFORCEMENTS:
             return "Assign Reinforcements";
             break;
-        case 5:
+        case ISSUEORDERS:
             return "Issue Orders";
             break;
-        case 6:
+        case EXECUTEORDERS:
             return "Execute Orders";
             break;
-        case 7:
+        case WIN:
             return "Win";
             break;
         default:
@@ -81,148 +91,160 @@ string GameEngine::getGameStateAsString() const {
 }
 
 /**
- * Returns current game state.
- * */
-int GameEngine::getCurrentGameState() const {
-    return currentGameState;
+ * Displays a simpl welcome message to the user when a new game has commenced.
+*/
+void GameEngine::displayWelcomeMessage() {
+    cout << "Welcome to Warzone!" << endl;
+    cout << "Input a valid command string to start navigating through the various states of the game." << endl;
 }
 
-/**
- * Transistions the state of the game from one state to another. Will display an error message to console
- * and change nothing if the transition isn't valid acording to the rules of the game.
- * */
-void GameEngine::setCurrentGameState(int newGameState) {
-    if (isValidStateTransition(newGameState) || !newGameState) {
-        currentGameState = newGameState;
+void GameEngine::displayFarewellMessage() {
+    cout << "Farewell!" << endl;
+    cout << "We hope to see you attempt world domination again soon!" << endl;
+}
+
+void GameEngine::displayVictoryMessag() {
+    cout << "Congratulations, you've won!" << endl;
+    cout << "You can either play a new game or end your ruthless conquest now" << endl;
+}
+
+void GameEngine::displayCurrentGameState() {
+    cout << *this << endl;
+}
+
+string GameEngine::getUserInput() {
+    cout << "Input your next command: ";
+
+    string inputCommand;
+    cin >> inputCommand;
+
+    return inputCommand;
+}
+
+bool GameEngine::isValidCommandString(string commandString) {
+    return std::find(validCommandStrings.begin(), validCommandStrings.end(), commandString) != validCommandStrings.end();
+}
+
+bool GameEngine::hasGameBeenEnded(string commandString) {
+    return currentGameState == 7 && commandString == validCommandStrings.back();
+}
+
+bool GameEngine::changeStateFromCommand(string commandString) {
+    if (commandString == "end") {
+        return false;
     }
-    else {
-        std::cout << "Not a valid state transition!" << endl;
+
+    if (commandString == "loadmap") {
+        return setGameStateIfValid(MAPLOADED, commandString);
+    } else if (commandString == "validatemap") {
+        return setGameStateIfValid(MAPVALIDATED, commandString);
+    } else if (commandString == "addplayer") {
+        return setGameStateIfValid(PLAYERSADDED, commandString);
+    } else if (commandString == "assigncountries" || commandString == "endexecorders") {
+        return setGameStateIfValid(ASSIGNREINFORCEMENTS, commandString);
+    } else if (commandString == "issueorder") {
+        return setGameStateIfValid(ISSUEORDERS, commandString);
+    } else if (commandString == "endissueorders" || commandString == "execorder") {
+        return setGameStateIfValid(EXECUTEORDERS, commandString);
+    } else if (commandString == "win") {
+        return setGameStateIfValid(WIN, commandString);
+    } else if (commandString == "play") {
+        return setGameStateIfValid(START, commandString);
+    } else {
+        cout << "Command string is invalid after being checked for validity!" << endl;
+        return false;
     }
 }
 
-/**
- * Returns if a game is currently in progress or not
- * */
-bool GameEngine::isGameInProgress() const {
-    return gameInProgress;
-}
-
-/**
- * Either starts or ends a game in progress
- * */
-void GameEngine::setGameInProgress(bool gameInProgress) {
-    this->gameInProgress = gameInProgress;
-}
-
-/**
- * Compares a new game state with the current state and makes sure the state transittion is valid
- * according to the rules.
- * */
-bool GameEngine::isValidStateTransition(int newGameState) const {
+bool GameEngine::setGameStateIfValid(GameStates newState, string commandString) {
     switch (currentGameState) {
         case 0:
-            if (newGameState != 1)
-                return false;
+            if (newState == 1) {
+                currentGameState = newState;
+                return true;
+            }
             break;
         case 1:
-            if (newGameState != 1 && newGameState != 2)
-                return false;
+            if (newState == 1 || newState == 2) {
+                currentGameState = newState;
+                return true;
+            }
             break;
         case 2:
-            if (newGameState != 3) 
-                return false;
+            if (newState == 3) {
+                currentGameState = newState;
+                return true;
+            }
             break;
         case 3:
-            if (newGameState != 3 && newGameState != 4)
-                return false;
+            if (newState == 3 || (newState == 4 && commandString != "endexecorders")) {
+                currentGameState = newState;
+                return true;
+            }
             break;
         case 4:
-            if (newGameState != 5)
-                return false;
+            if (newState == 5) {
+                currentGameState = newState;
+                return true;
+            }
             break;
         case 5:
-            if (newGameState != 5 && newGameState != 6)
-                return false;
+            if (newState == 5 || (newState == 6 && commandString != "execorder")) {
+                currentGameState = newState;
+                return true;
+            }
             break;
         case 6:
-            if (newGameState != 6 && newGameState != 7 && newGameState != 4)     // Can input endissueorders w/o a complaint
-                return false;
+            if ((newState == 6 && commandString != "endissueorders") || newState == 4 || newState == 7) {
+                currentGameState = newState;
+                return true;
+            }
             break;
         case 7:
-            if (newGameState != 0)
-                return false;
+            if (newState == 0) {
+                currentGameState = newState;
+                cout << "Starting new game..." << endl;
+                return true;
+            }
             break;
         default:
-            std::cout << "Not a valid state transition!" << endl;
-            break;
+            cout << "Current state is not valid!" << endl;
     }
 
-    return true;
+    return false;
 }
 
-/**
- * Makes sure the command string acquired from the console is valid.
- * */
-bool GameEngine::isValidCommandString(string commandString) const {
-    if (commandString != "loadmap"
-        && commandString != "validatemap"
-        && commandString != "addplayer"
-        && commandString != "assigncountries"
-        && commandString != "issueorder"
-        && commandString != "endissueorders"
-        && commandString != "execorder"
-        && commandString != "endexecorders"
-        && commandString != "win"
-        && commandString != "play"
-        && commandString != "end"
-    ) {
-        return false;
-    }
-
-    if (commandString == "endissueorders" && currentGameState == 6) {
-        return false;
-    }
-
-    return true;
+bool GameEngine::hasPlayerWon() {
+    return currentGameState == 7;
 }
 
-/**
- * Processes a command string and can change the state of the game assuming it is valid.
- * */
-void GameEngine::processCommandString(string commandString) {
-    if (!isValidCommandString(commandString)) {
-        std::cout << "Not a valid command string!" << endl;
-    }
-    else {
-        // Change state based on string
-        if (commandString == "loadmap")
-            setCurrentGameState(1);
-        else if (commandString == "validatemap")
-            setCurrentGameState(2);
-        else if (commandString == "addplayer")
-            setCurrentGameState(3);
-        else if (commandString == "assigncountries" || commandString == "endexecorders")
-            setCurrentGameState(4);
-        else if (commandString == "issueorder")
-            setCurrentGameState(5);
-        else if (commandString == "endissueorders" || commandString == "execorder")
-            setCurrentGameState(6);
-        else if (commandString == "win")
-            setCurrentGameState(7);
-        else if (commandString == "play")
-            setCurrentGameState(0);
-        else if (commandString == "end")
-            setGameInProgress(false);
-    }    
-}
+void GameEngine::startNewGame() {
+    displayWelcomeMessage();
 
-// enum GameEngine::validGameStates {
-//     Start,                    0
-//     MapLoaded,                1
-//     MapValidated,             2
-//     PlayersAdded,             3
-//     AssignReinforcement,      4
-//     IssueOrders,              5
-//     ExecuteOrders,            6
-//     Win                       7
-// };
+    bool isGameInProgress = true;
+
+    while (isGameInProgress) {
+        string inputCommand = getUserInput();
+
+        if (!isValidCommandString(inputCommand)) {
+            cout << inputCommand << " is not a valid command string!" << endl;
+            continue;
+        }
+
+        if (hasGameBeenEnded(inputCommand)) {
+            isGameInProgress = false;
+            continue;
+        }
+
+        if (!changeStateFromCommand(inputCommand)) {
+            cout << "Invalid state transition!" << endl;
+        }
+        else if (hasPlayerWon()) {                          // In "else if" so displays only once if user decides to input jargin after claiming victory
+            displayVictoryMessag();
+        }
+
+        displayCurrentGameState();
+    }
+
+    displayFarewellMessage();
+}

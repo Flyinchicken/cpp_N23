@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <ostream>
 
 using namespace std;
@@ -9,6 +10,9 @@ using namespace std;
  * TODO: Figure out how make static/constant arrays for valid game states and command strings 
  * TODO: Where cin/main game loop go?
  * */
+
+
+
 
 /**
  * State = certain phase of game
@@ -22,13 +26,37 @@ using namespace std;
  * */
 class GameEngine {
     private:
-        int currentGameState;                                       // What state the game is in currently 
-        bool gameInProgress;                                        // If a game has been started and is in progress
+        enum GameStates {
+            START,
+            MAPLOADED,
+            MAPVALIDATED,
+            PLAYERSADDED,
+            ASSIGNREINFORCEMENTS,
+            ISSUEORDERS,
+            EXECUTEORDERS,
+            WIN
+        };
 
-        bool isValidStateTransition(int newGameState) const;              // Determines if can move from one to another
-        bool isValidCommandString(string commandString) const;            // Determines if a command string is a valid one
+        GameStates currentGameState;
+        vector<string> validCommandStrings;
 
         friend ostream& operator <<(ostream&, const GameEngine&);   // Assignment insertion operator
+
+        void displayWelcomeMessage();
+        void displayFarewellMessage();
+        void displayVictoryMessag();
+        void displayCurrentGameState();
+
+        string getUserInput();
+
+        bool isValidCommandString(string commandString);
+        bool hasGameBeenEnded(string commandString);
+        bool hasPlayerWon();
+
+        bool changeStateFromCommand(string commandString);
+        bool setGameStateIfValid(GameStates newState, string commandString);
+
+        string getGameStateAsString() const;                              // Returns the current game state as a string
 
     public:
         GameEngine();                                       // Default constructor
@@ -36,12 +64,5 @@ class GameEngine {
         GameEngine(const GameEngine&);                      // Copy constructor
         GameEngine &operator=(const GameEngine &engine);    // Assignment operator
 
-        int getCurrentGameState() const;
-        void setCurrentGameState(int newGameState);
-        string getGameStateAsString() const;                              // Returns the current game state as a string
-
-        void processCommandString(string commandString);
-
-        bool isGameInProgress() const;   
-        void setGameInProgress(bool gameInProgress);         
+        void startNewGame();
 };
