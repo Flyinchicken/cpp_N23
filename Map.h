@@ -15,27 +15,49 @@ using namespace std;
 class Territory
 {
 private:
-    std::string* countryName;
-    int* numberOfArmies;
-    // Player* owner;
-    bool* owned;
+    string name;
+    string continent;
+    int armies;
+    string owner;
+    bool occupied;
 
 public:
     // constructor and destructor
     Territory();
 
-    Territory(std::string);
+    Territory(string name, string continent, int armies, string owner);
 
-    //
-    bool isOwned();
+    // getter
+    string getName() const;
+
+    string getContinent() const;
+
+    int getArmy() const;
+
+    string getOwner() const;
+
+    bool isOccupied() const;
+
+    // setter
+
+    void setName(string name);
+
+    void setContinent(string continent);
+
+    void setArmy(int army);
+
+    void setOwner(string owner);
+
+    void setOccupied(bool occupied);
+
 
 };
 
 class Graph
 {
 private:
-    std::unordered_map<std::string,Territory*>* nodes;
-    std::unordered_map<std::string,std::vector<std::string>*>* edges;
+    unordered_map<string,Territory*> nodes;
+    unordered_map<string,vector<string>> edges;
 
 public:
     // setters and getters:
@@ -53,12 +75,24 @@ public:
 class Continent : public Graph
 {
 private:
-    std::string* continentName;
+    string continentName;
+    int bonusArmy;
 
 public:
     // contructors and destructor
     Continent();
+    Continent(string continentName, int bonusArmy);
     ~Continent();
+
+    // getter
+
+    string getContinentName() const;
+    int getBonusArmy() const;
+
+    // setter
+
+    void setContinentName(string continentName);
+    void setBonusArmy(int bonusArmy);
 
 };
 
@@ -67,7 +101,7 @@ public:
 class Map : public Graph
 {
 private:
-    std::unordered_map<std::string, Continent*>* continents;
+    unordered_map<string, Continent*> continents;
 
 public:
     // constructors and destructors

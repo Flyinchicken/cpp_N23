@@ -4,6 +4,7 @@
 
 #include "MapLoader.h"
 #include "Map.h"
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -11,6 +12,7 @@
 #include <vector>
 
 #include <filesystem>
+
 
 namespace fs = std::filesystem;
 
@@ -66,10 +68,17 @@ void MapLoader::LoadMap() {
         }
 
         if(readingContinent) {
-            Continent continent = Continent();
-            continent.name = line.substr(0, line.find('='));
-            continent.value = stoi(line.substr(line.find('=') + 1));
-            continents->push_back(continent);
+
+//            Continent continent = Continent(Continent(line.substr(0, line.find("=")), stoi(line.substr(line.find("=") + 1)));
+//            continents->push_back(continent);
+            Continent* continent;
+            if (line != "\r") {
+                continent = new Continent(line.substr(0, line.find("=")), stoi(line.substr(line.find("=") + 1)));
+                continents->push_back(*continent);
+                continent = nullptr;
+                delete continent;
+            }
+
         }
 
         if(readingTerritory) {
