@@ -20,36 +20,36 @@ Order::~Order()
 Order::Order(const Order &order)
 {
   order_id++;
-  this->id = new int(order_id);
-  this->order_type = new string(*(order.order_type));
+  this->id = order_id;
+  this->order_type = order.order_type;
   cout << "copy constructor called!!!" << endl;
 }
 
 Order &Order::operator=(const Order &order)
 {
-  this->order_type = new string(*(order.order_type));
+  this->order_type = order.order_type;
   return *this;
 }
 
 int Order::getId() const
 {
-  return *this->id;
+  return this->id;
 }
 
 string Order::getType() const
 {
-  return *this->order_type;
+  return this->order_type;
 }
 
-int *Order::setId()
+int Order::setId()
 {
   order_id++;
-  return this->id = new int(order_id);
+  return this->id = order_id;
 }
 
-string *Order::setType(string type)
+string Order::setType(string type)
 {
-  return this->order_type = new string(type);
+  return this->order_type = type;
 }
 
 bool Order::validate()
@@ -72,8 +72,8 @@ void Order::execute()
 
 std::ostream &operator<<(std::ostream &strm, const Order &order)
 {
-  return strm << "Order ID: " << *order.id << " --- "
-              << "Order Type: " << *order.order_type << endl;
+  return strm << "Order ID: " << order.id << " --- "
+              << "Order Type: " << order.order_type << endl;
 }
 
 // implement of OrdersList class
@@ -169,7 +169,7 @@ std::ostream &operator<<(std::ostream &strm, const OrdersList &order_List)
 // implement of Deploy class
 Deploy::Deploy()
 {
-  setId();
+  // setId();
   setType("Deploy");
 }
 
@@ -180,7 +180,7 @@ Deploy::~Deploy()
 Deploy::Deploy(const Deploy &deploy)
 {
 
-  setId();
+  // setId();
   setType("Deploy");
   // TODO: need to figure out other data member of deploy
 }
@@ -218,7 +218,7 @@ std::ostream &operator<<(std::ostream &strm, const Deploy &deploy)
 // implement of Advance class
 Advance::Advance()
 {
-  setId();
+  // setId();
   setType("Advance");
 }
 
@@ -229,7 +229,7 @@ Advance::~Advance()
 Advance::Advance(const Advance &advance)
 {
 
-  setId();
+  // setId();
   setType("Advance");
   // TODO: need to figure out other data member of Advance
 }
@@ -267,7 +267,7 @@ std::ostream &operator<<(std::ostream &strm, const Advance &advance)
 // implement of Bomb class
 Bomb::Bomb()
 {
-  setId();
+  // setId();
   setType("Bomb");
 }
 
@@ -278,7 +278,7 @@ Bomb::~Bomb()
 Bomb::Bomb(const Bomb &bomb)
 {
 
-  setId();
+  // setId();
   setType("Bomb");
   // TODO: need to figure out other data member of bomb
 }
@@ -316,7 +316,7 @@ std::ostream &operator<<(std::ostream &strm, const Bomb &bomb)
 // implement of Blockade class
 Blockade::Blockade()
 {
-  setId();
+  // setId();
   setType("Blockade");
 }
 
@@ -327,7 +327,7 @@ Blockade::~Blockade()
 Blockade::Blockade(const Blockade &blockade)
 {
 
-  setId();
+  // setId();
   setType("Blockade");
   // TODO: need to figure out other data member of Blockade
 }
@@ -365,7 +365,7 @@ std::ostream &operator<<(std::ostream &strm, const Blockade &blockade)
 // implement of Airlift class
 Airlift::Airlift()
 {
-  setId();
+  // setId();
   setType("Airlift");
 }
 
@@ -376,7 +376,7 @@ Airlift::~Airlift()
 Airlift::Airlift(const Airlift &airlift)
 {
 
-  setId();
+  // setId();
   setType("Airlift");
   // TODO: need to figure out other data member of Airlift
 }
@@ -414,7 +414,7 @@ std::ostream &operator<<(std::ostream &strm, const Airlift &airlift)
 // implement of Negotiate class
 Negotiate::Negotiate()
 {
-  setId();
+  // setId();
   setType("Negotiate");
 }
 
@@ -425,7 +425,7 @@ Negotiate::~Negotiate()
 Negotiate::Negotiate(const Negotiate &negotiate)
 {
 
-  setId();
+  // setId();
   setType("Negotiate");
   // TODO: need to figure out other data member of Negotiate
 }
