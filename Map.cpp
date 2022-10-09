@@ -242,6 +242,7 @@ bool Map::continentsAllSubgraphs() {
     return true;
 }
 
+
 bool Map::validate(){
     if(this->isConnected() && this->continentsAllSubgraphs() && this->territoryInUniqueContinent()){
         return true;
@@ -249,3 +250,4 @@ bool Map::validate(){
     return false;
 }
 // End of the Map Class ******************************************************************************************
+
