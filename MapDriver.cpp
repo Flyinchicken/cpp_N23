@@ -9,7 +9,7 @@
 
 using namespace std;
 namespace fs = std::filesystem;
-
+/*
 void MapDriver::run() {
     cout << "Welcome to the RISK Game" << endl;
     cout << "Please choose your option to load the map: " << endl;
@@ -52,3 +52,4 @@ void MapDriver::run() {
         }
     }
 }
+*/

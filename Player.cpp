@@ -70,38 +70,21 @@ void Player::setHand(Hand *newHand)
     this->hand = newHand;
 }
 
-void Player::issueOrder(int orderNumber)
+void Player::issueOrder()
 {
-    Order *newOrder{};
-    switch (orderNumber)
-    {
-    case 1:
-        newOrder = new Deploy();
-        break;
-    case 2:
-        newOrder = new Advance();
-        break;
-    case 3:
-        newOrder = new Bomb();
-        break;
-    case 4:
-        newOrder = new Blockade();
-        break;
-    case 5:
-        newOrder = new Airlift();
-        break;
-    case 6:
-        newOrder = new Negotiate();
-        break;
-    default:
-        cout << "Invalid number: " << orderNumber << ". Please choose an order from 1 - 6." << endl;
-        break;
-    }
-    if (newOrder != nullptr)
-    {
-        cout << (*newOrder) << endl;
-        this->orderslist->push_back(newOrder);
-    }
+    Deploy *deploy = new Deploy();
+    Advance* advance = new Advance();
+    Bomb* bomb = new Bomb();
+    Blockade* blockade = new Blockade();
+    Airlift* airlift = new Airlift();
+    Negotiate* negotiate = new Negotiate();
+
+    this->orderslist->push_back(deploy);
+    this->orderslist->push_back(advance);
+    this->orderslist->push_back(bomb);
+    this->orderslist->push_back(blockade);
+    this->orderslist->push_back(airlift);
+    this->orderslist->push_back(negotiate);
 }
 ostream &operator<<(ostream &outs, Player &theObject)
 {

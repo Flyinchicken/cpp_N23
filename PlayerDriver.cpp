@@ -4,17 +4,12 @@ using namespace std;
 
 void testPlayers();
 
-void testPlayers()
+int main()
 {
     Player *player = new Player("peppa");
-    cout << player << endl;
-    (*player).issueOrder(1);
-    (*player).issueOrder(2);
-    (*player).issueOrder(3);
-    (*player).issueOrder(4);
-    (*player).issueOrder(5);
-    (*player).issueOrder(6);
-    (*player).issueOrder(7);
+    cout << *player << endl;
+    (*player).issueOrder();
+
 
     cout << (*player).getOrdersList() << endl;
 

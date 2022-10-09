@@ -2,7 +2,7 @@
 #include "Card.h"
 #include<string>
 using namespace std;
-
+/*
 int main()
 {
     std::cout << "Welcome everyone!" << std::endl;
@@ -25,4 +25,4 @@ int main()
 
 void testCards() {
     cout << "test" << endl;
-}
+}*/

@@ -28,7 +28,7 @@ public:
   Player(string name);
   // vector<Territory*> toDefend();
   // vector<Territory*> toAttack();
-  void issueOrder(int orderNumber);
+  void issueOrder();
 
   string getName() const;
   OrdersList getOrdersList() const;
