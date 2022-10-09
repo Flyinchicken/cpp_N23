@@ -1,6 +1,5 @@
 //
 // Created by xu zhang on 2022-09-24.
-// Added Map, Continent, Graph methods for validation by Weijie Tan on 2022-10-08
 //
 
 #ifndef CPP_N23_MAP_H
@@ -12,56 +11,65 @@
 #include <unordered_map>
 #include <set>
 #include <stack>
+#include "Player.h"
 
 using namespace std;
 
 class Territory
 {
 private:
-    string name;
-    string continent;
-    int armies;
-    string owner;
-    bool occupied;
+    string* territoryName;
+    string* continentName;
+    int armyNumber;
+    bool isOccupied;
+    Player* owner;
 
 public:
     // constructor and destructor
     Territory();
 
-    Territory(string name, string continent, int armies, string owner);
+    Territory(string* territoryName, string* continentName, int armyNumber, bool isOccupied, Player* owner);
 
-    // copy constructor?
+    ~Territory();
 
-    // getter
-    string getName() const;
+    // Deep copy constructor
+    Territory(const Territory& territory);
 
-    string getContinent() const;
+    // Deep copy assignment operator
+    Territory& operator=(const Territory& territory);
 
-    int getArmy() const;
+    // iostream operator
+    friend ostream& operator<<(ostream& outs, Territory& theObject);
 
-    string getOwner() const;
+    // getter and setter
+    string* getTerritoryName() const;
 
-    bool isOccupied() const;
+    void setTerritoryName(string* territoryName);
 
-    // setter
+    string* getContinentName() const;
 
-    void setName(string name);
+    void setContinentName(string* continentName);
 
-    void setContinent(string continent);
+    int getArmyNumber() const;
 
-    void setArmy(int army);
+    void setArmyNumber(int armyNumber);
 
-    void setOwner(string owner);
+    bool getOccupied() const;
 
-    void setOccupied(bool occupied);
+    void setOccupied(bool isOccupied);
 
-    // operator overload
-    // +, <<, =
-    void operator+();
+    Player* getOwner() const;
 
-    string operator<<(Territory*);
+    void setOwner(Player* owner);
 
-    void operator=(Territory*);
+    // other methods
+
+    // add army to the territory
+    void addArmy(int armyNumber);
+
+    // remove army from the territory
+    void removeArmy(int armyNumber);
+
 };
 
 class Graph
@@ -77,8 +85,9 @@ public:
     Territory* getNode(std::string);
     std::vector<std::string>* getNeighbours(std::string);
 
+    virtual
     // map methods:
-    bool validate();
+//    bool validate();
     bool isConnected();
 
 };
@@ -86,63 +95,62 @@ public:
 class Continent : public Graph
 {
 private:
-    string continentName;
+    string* continentName;
     int bonusArmy;
-    // Player* owner;
+    //Player* owner;
 
 public:
     // contructors and destructor
     Continent();
-    Continent(string continentName, int bonusArmy);
+    Continent(string* continentName, int bonusArmy);
     ~Continent();
+
+    // Deep copy constructor
+    Continent(const Continent& continent);
+
+    // Deep copy assignment operator
+    Continent& operator=(const Continent& continent);
+
+    // iostream operator
+    friend ostream& operator<<(ostream& outs, Continent& theObject);
 
     // getter
 
-    string getContinentName() const;
+    string* getContinentName() const;
     int getBonusArmy() const;
-    string getOwner();
 
     // setter
 
-    void setContinentName(string continentName);
+    void setContinentName(string* continentName);
     void setBonusArmy(int bonusArmy);
 
-    // operator overload
-    // +, <<, =
-    void operator+();
-
-    string operator<<(Continent*);
-
-    void operator=(Continent*);
 };
-
 
 
 class Map : public Graph
 {
+
 private:
     unordered_map<string, Continent*> continents;
 
 public:
-    // constructors and destructors
-    Map();
-    ~Map();
+// constructors and destructors
+Map();
+~Map();
 
-    // Map methods:
-    void addContinent(string Continent_Name, int bonus);
+// Map methods:
+void addContinent(string Continent_Name, int bonus);
+bool continentsAllSubgraphs();
+bool validate();
+bool territoryInUniqueContinent();
 
+// operator overload
+// +, <<, =
+void operator+();
 
-    bool continentsAllSubgraphs();
-    bool validate();
-    bool territoryInUniqueContinent();
+string operator<<(Map*);
 
-    // operator overload
-    // +, <<, =
-    void operator+();
-
-    string operator<<(Map*);
-
-    void operator=(Map*);
+void operator=(Map*);
 
 };
 #endif //CPP_N23_MAP_H
