@@ -24,20 +24,20 @@ GameEngine::GameEngine() {
 }
 
 /**
- * Destructor
+ * Destructor. No pointer to destroy...for now.
  * */
 GameEngine::~GameEngine() {
 }
 
 /**
- * Copy constructor
+ * Copy constructor. Copies over the current game state.
  * */
 GameEngine::GameEngine(const GameEngine &engine) {
     this->currentGameState = engine.currentGameState;
 }
 
 /**
- * Assignment operator
+ * Assignment operator. Copies over the current game state.
  * */
 GameEngine &GameEngine::operator = (const GameEngine &engine) {
     this->currentGameState = engine.currentGameState;
@@ -46,7 +46,7 @@ GameEngine &GameEngine::operator = (const GameEngine &engine) {
 }
 
 /*
- * Stream insertion operator
+ * Stream insertion operator. Displays the current state of the game.
  * */
 ostream &operator << (ostream &out, const GameEngine &engine) {
     out << "Current Game State: " << engine.getGameStateAsString() << endl;
@@ -91,27 +91,42 @@ string GameEngine::getGameStateAsString() const {
 }
 
 /**
- * Displays a simpl welcome message to the user when a new game has commenced.
+ * Displays a simple welcome message to the user. Used when a new game has commenced.
 */
 void GameEngine::displayWelcomeMessage() {
     cout << "Welcome to Warzone!" << endl;
     cout << "Input a valid command string to start navigating through the various states of the game." << endl;
 }
 
+/**
+ * Displays a farewell message. Used when the user has exited the game via the "end" command.
+*/
 void GameEngine::displayFarewellMessage() {
     cout << "Farewell!" << endl;
     cout << "We hope to see you attempt world domination again soon!" << endl;
 }
 
-void GameEngine::displayVictoryMessag() {
+/**
+ * Displays a victory message. Used when a player has reached the "Win" state.
+*/
+void GameEngine::displayVictoryMessage() {
     cout << "Congratulations, you've won!" << endl;
     cout << "You can either play a new game or end your ruthless conquest now" << endl;
 }
 
+/**
+ * Displays the current game state to console. Calls the stream insertion operator since it currently
+ * outputs only this.
+*/
 void GameEngine::displayCurrentGameState() {
     cout << *this << endl;
 }
 
+/**
+ * Prompts the user for input from the console and returns it.
+ * 
+ * @returns The user's console input command.
+*/
 string GameEngine::getUserInput() {
     cout << "Input your next command: ";
 
@@ -121,14 +136,33 @@ string GameEngine::getUserInput() {
     return inputCommand;
 }
 
+/**
+ * Checks if the input command string is one of the valid command strings.
+ * 
+ * @param commandString The command string taken from console input
+ * @returns If the command string is one of the valid command strings
+*/
 bool GameEngine::isValidCommandString(string commandString) {
     return std::find(validCommandStrings.begin(), validCommandStrings.end(), commandString) != validCommandStrings.end();
 }
 
+/**
+ * Checks if the user has input the "end" command while the game is in the "win" state.
+ * 
+ * @returns If the user has attempted to end the game after winning.
+*/
 bool GameEngine::hasGameBeenEnded(string commandString) {
     return currentGameState == 7 && commandString == validCommandStrings.back();
 }
 
+/**
+ * Parses a command string to its numeric/enum representation and changes the game state based both the numeric and string
+ * value of the user input.
+ * 
+ * @param commandString The user input command string from the console
+ * @returns Whether or not a state change has taken place. If a change has not occured, it is because the state change
+ * was not a valid one.
+*/
 bool GameEngine::changeStateFromCommand(string commandString) {
     if (commandString == "end") {
         return false;
@@ -156,52 +190,67 @@ bool GameEngine::changeStateFromCommand(string commandString) {
     }
 }
 
+/**
+ * Changes the current state of the game based on what the user would like to change the state to. Will
+ * only change the state if it is a valid state transition.
+ * For example: 
+ *      If user has input the command "validatemap" but the current state is "Start", it will reject this change.
+ *      If user has input the command "addplayer" when the current state is "playersadded", it will accept this change
+ *      (not however in this instance that the current state will simply be set to the same value it previously had).
+ * 
+ * @param newState The numeric/enum representation of what the new state of the game should be. This is based off what
+ *                 command string the user input to the console.
+ * @param commandString The command string the user input to console.
+*/
 bool GameEngine::setGameStateIfValid(GameStates newState, string commandString) {
     switch (currentGameState) {
-        case 0:
-            if (newState == 1) {
+        case START:
+            if (newState == MAPLOADED) {
                 currentGameState = newState;
                 return true;
             }
             break;
-        case 1:
-            if (newState == 1 || newState == 2) {
+        case MAPLOADED:
+            if (newState == MAPLOADED || newState == MAPVALIDATED) {
                 currentGameState = newState;
                 return true;
             }
             break;
-        case 2:
-            if (newState == 3) {
+        case MAPVALIDATED:
+            if (newState == PLAYERSADDED) {
                 currentGameState = newState;
                 return true;
             }
             break;
-        case 3:
-            if (newState == 3 || (newState == 4 && commandString != "endexecorders")) {
+        case PLAYERSADDED:
+            if (newState == PLAYERSADDED || (newState == ASSIGNREINFORCEMENTS && commandString != "endexecorders")) {
                 currentGameState = newState;
                 return true;
             }
             break;
-        case 4:
-            if (newState == 5) {
+        case ASSIGNREINFORCEMENTS:
+            if (newState == ISSUEORDERS) {
                 currentGameState = newState;
                 return true;
             }
             break;
-        case 5:
-            if (newState == 5 || (newState == 6 && commandString != "execorder")) {
+        case ISSUEORDERS:
+            if (newState == ISSUEORDERS || (newState == EXECUTEORDERS && commandString != "execorder")) {
                 currentGameState = newState;
                 return true;
             }
             break;
-        case 6:
-            if ((newState == 6 && commandString != "endissueorders") || newState == 4 || newState == 7) {
+        case EXECUTEORDERS:
+            if ((newState == EXECUTEORDERS && commandString != "endissueorders") 
+                || (newState == ASSIGNREINFORCEMENTS && commandString != "assigncountries") 
+                || newState == WIN
+            ) {
                 currentGameState = newState;
                 return true;
             }
             break;
-        case 7:
-            if (newState == 0) {
+        case WIN:
+            if (newState == START) {
                 currentGameState = newState;
                 cout << "Starting new game..." << endl;
                 return true;
@@ -214,10 +263,19 @@ bool GameEngine::setGameStateIfValid(GameStates newState, string commandString) 
     return false;
 }
 
+/**
+ * Checks if the current game state is "Win".
+ * 
+ * @returns Whether or not a player has won
+*/
 bool GameEngine::hasPlayerWon() {
-    return currentGameState == 7;
+    return currentGameState == WIN;
 }
 
+/**
+ * Starts a new game loop that accepts user input from the console and allows them to navigate through the various
+ * states of the game.
+*/
 void GameEngine::startNewGame() {
     displayWelcomeMessage();
 
@@ -240,7 +298,7 @@ void GameEngine::startNewGame() {
             cout << "Invalid state transition!" << endl;
         }
         else if (hasPlayerWon()) {                          // In "else if" so displays only once if user decides to input jargin after claiming victory
-            displayVictoryMessag();
+            displayVictoryMessage();
         }
 
         displayCurrentGameState();

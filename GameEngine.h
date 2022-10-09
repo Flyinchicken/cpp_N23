@@ -7,25 +7,16 @@
 using namespace std;
 
 /**
- * TODO: Figure out how make static/constant arrays for valid game states and command strings 
- * TODO: Where cin/main game loop go?
- * */
-
-
-
-
-/**
- * State = certain phase of game
- *          What are valid actions and user commands take place
- *          Some action may trigger transition to another state
+ * Represents the principle game engine of Warzone that allows a user to start a new game with a console-driven
+ * inteface.
  * 
- * States = 
- *      Start, Map loaded, Map validated, Players added, Assign reinforcement, issue orders, execute orders, win
- * Command strings =
- *      loadmap, validatemap, addplayer, assigncounties, issueorder, endissueorders, execorder, endexecorders, win, play, end
- * */
+ * Controls the state of the game along with what commands and actions are allowed at each phase.
+*/
 class GameEngine {
     private:
+        /**
+         * Represents the possible states of a Warzone game.
+        */
         enum GameStates {
             START,
             MAPLOADED,
@@ -40,11 +31,11 @@ class GameEngine {
         GameStates currentGameState;
         vector<string> validCommandStrings;
 
-        friend ostream& operator <<(ostream&, const GameEngine&);   // Assignment insertion operator
+        friend ostream& operator <<(ostream&, const GameEngine&);
 
         void displayWelcomeMessage();
         void displayFarewellMessage();
-        void displayVictoryMessag();
+        void displayVictoryMessage();
         void displayCurrentGameState();
 
         string getUserInput();
@@ -56,13 +47,13 @@ class GameEngine {
         bool changeStateFromCommand(string commandString);
         bool setGameStateIfValid(GameStates newState, string commandString);
 
-        string getGameStateAsString() const;                              // Returns the current game state as a string
+        string getGameStateAsString() const;
 
     public:
-        GameEngine();                                       // Default constructor
-        ~GameEngine();                                      // Destructor
-        GameEngine(const GameEngine&);                      // Copy constructor
-        GameEngine &operator=(const GameEngine &engine);    // Assignment operator
+        GameEngine();
+        ~GameEngine();
+        GameEngine(const GameEngine&);
+        GameEngine &operator=(const GameEngine &engine);
 
         void startNewGame();
 };
