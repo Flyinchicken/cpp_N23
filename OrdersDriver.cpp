@@ -43,8 +43,3 @@ void testOrdersLists()
   cout << ordersList1 << endl;
   ordersList1.print();
 }
-
-int main()
-{
-  testOrdersLists();
-}

@@ -4,11 +4,6 @@ using namespace std;
 
 void testPlayers();
 
-int main()
-{
-    testPlayers();
-}
-
 void testPlayers()
 {
     string *name = new string("peppa");

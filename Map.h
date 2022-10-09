@@ -10,46 +10,64 @@
 #include <iostream>
 #include <unordered_map>
 
+#include "Player.h"
+
 using namespace std;
 
 class Territory
 {
 private:
-    string name;
-    string continent;
-    int armies;
-    string owner;
-    bool occupied;
+    string* territoryName;
+    string* continentName;
+    int armyNumber;
+    bool isOccupied;
+    Player* owner;
 
 public:
     // constructor and destructor
     Territory();
 
-    Territory(string name, string continent, int armies, string owner);
+    Territory(string* territoryName, string* continentName, int armyNumber, bool isOccupied, Player* owner);
 
-    // getter
-    string getName() const;
+    ~Territory();
 
-    string getContinent() const;
+    // Deep copy constructor
+    Territory(const Territory& territory);
 
-    int getArmy() const;
+    // Deep copy assignment operator
+    Territory& operator=(const Territory& territory);
 
-    string getOwner() const;
+    // iostream operator
+    friend ostream& operator<<(ostream& outs, Territory& theObject);
 
-    bool isOccupied() const;
+    // getter and setter
+    string* getTerritoryName() const;
 
-    // setter
+    void setTerritoryName(string* territoryName);
 
-    void setName(string name);
+    string* getContinentName() const;
 
-    void setContinent(string continent);
+    void setContinentName(string* continentName);
 
-    void setArmy(int army);
+    int getArmyNumber() const;
 
-    void setOwner(string owner);
+    void setArmyNumber(int armyNumber);
 
-    void setOccupied(bool occupied);
+    bool getOccupied() const;
 
+    void setOccupied(bool isOccupied);
+
+    Player* getOwner() const;
+
+    void setOwner(Player* owner);
+
+    // other methods
+
+    // add army to the territory
+    void addArmy(int armyNumber);
+
+    // remove army from the territory
+    void removeArmy(int armyNumber);
 
 };
 
@@ -75,23 +93,23 @@ public:
 class Continent : public Graph
 {
 private:
-    string continentName;
+    string* continentName;
     int bonusArmy;
 
 public:
     // contructors and destructor
     Continent();
-    Continent(string continentName, int bonusArmy);
+    Continent(string* continentName, int bonusArmy);
     ~Continent();
 
     // getter
 
-    string getContinentName() const;
+    string* getContinentName() const;
     int getBonusArmy() const;
 
     // setter
 
-    void setContinentName(string continentName);
+    void setContinentName(string* continentName);
     void setBonusArmy(int bonusArmy);
 
 };

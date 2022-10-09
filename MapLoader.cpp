@@ -66,17 +66,15 @@ void MapLoader::LoadMap() {
             readingTerritory = true;
             continue;
         }
+        Continent* continent;
+        Territory* territory;
 
         if(readingContinent) {
 
-//            Continent continent = Continent(Continent(line.substr(0, line.find("=")), stoi(line.substr(line.find("=") + 1)));
-//            continents->push_back(continent);
-            Continent* continent;
             if (line != "\r") {
-                continent = new Continent(line.substr(0, line.find("=")), stoi(line.substr(line.find("=") + 1)));
+                string* continentName = new string(line.substr(0, line.find("=")));
+                continent = new Continent(continentName, stoi(line.substr(line.find("=") + 1)));
                 continents->push_back(*continent);
-                continent = nullptr;
-                delete continent;
             }
 
         }
@@ -91,7 +89,24 @@ void MapLoader::LoadMap() {
                 getline(ss, substr, ',');
                 territoryInfo.push_back(substr);
             }
+
+            if (territoryInfo.size() > 1) {
+                string* territoryName = new string(territoryInfo[0]);
+                string* continentName = new string(territoryInfo[3]);
+                territory = new Territory(territoryName, continentName, 0, false, nullptr);
+                territories->push_back(*territory);
+            }
+
+            for (int i = 4; i < territoryInfo.size(); i++) {
+                cout << territoryInfo[i] << endl;
+            }
+
         }
+
+        continent = nullptr;
+        delete continent;
+        territory = nullptr;
+        delete territory;
     }
 
 //    ifstream input("001_I72_Ghtroc720.map");

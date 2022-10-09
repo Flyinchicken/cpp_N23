@@ -5,77 +5,126 @@
 #include "Map.h"
 
 Territory::Territory() {
-    this->name = "";
-    this->continent = "";
-    this->armies = 0;
-    this->owner = "";
-    this->occupied = false;
+    territoryName = nullptr;
+    continentName = nullptr;
+    armyNumber = 0;
+    isOccupied = false;
+    owner = nullptr;
 }
 
-Territory::Territory(string name, string continent, int armies, string owner) {
-    this->name = name;
-    this->continent = continent;
-    this->armies = armies;
-    this->owner = owner;
-    this->occupied = false;
-}
-
-string Territory::getName() const {
-    return this->name;
-}
-
-string Territory::getContinent() const {
-    return this->continent;
-}
-
-int Territory::getArmy() const {
-    return this->armies;
-}
-
-string Territory::getOwner() const {
-    return this->owner;
-}
-
-bool Territory::isOccupied() const {
-    return this->occupied;
-}
-
-void Territory::setName(string name) {
-    this->name = name;
-}
-
-void Territory::setContinent(string continent) {
-    this->continent = continent;
-}
-
-void Territory::setArmy(int army) {
-    this->armies = army;
-}
-
-void Territory::setOwner(string owner) {
+Territory::Territory(string* territoryName, string* continentName, int armyNumber, bool isOccupied, Player* owner) {
+    this->territoryName = territoryName;
+    this->continentName = continentName;
+    this->armyNumber = armyNumber;
+    this->isOccupied = isOccupied;
     this->owner = owner;
 }
 
-void Territory::setOccupied(bool occupied) {
-    this->occupied = occupied;
+Territory::~Territory() {
+    delete territoryName;
+    delete continentName;
+    delete owner;
 }
+
+Territory::Territory(const Territory& territory) {
+    territoryName = new string(*territory.territoryName);
+    continentName = new string(*territory.continentName);
+    armyNumber = territory.armyNumber;
+    isOccupied = territory.isOccupied;
+}
+
+Territory& Territory::operator=(const Territory& territory) {
+    if (this != &territory) {
+        delete territoryName;
+        delete continentName;
+        delete owner;
+        territoryName = new string(*territory.territoryName);
+        continentName = new string(*territory.continentName);
+        armyNumber = territory.armyNumber;
+        isOccupied = territory.isOccupied;
+        owner = new Player(*territory.owner);
+    }
+    return *this;
+}
+
+ostream& operator<<(ostream& outs, Territory& o) {
+    outs << "Territory Name: " << *o.territoryName << endl;
+    outs << "Continent Name: " << *o.continentName << endl;
+    outs << "Army Number: " << o.armyNumber << endl;
+    outs << "Is Occupied: " << o.isOccupied << endl;
+    outs << "Owner: " << *o.owner << endl;
+    return outs;
+}
+
+string* Territory::getTerritoryName() const {
+    return territoryName;
+}
+
+void Territory::setTerritoryName(string* territoryName) {
+    this->territoryName = territoryName;
+}
+
+string* Territory::getContinentName() const {
+    return continentName;
+}
+
+void Territory::setContinentName(string* continentName) {
+    this->continentName = continentName;
+}
+
+int Territory::getArmyNumber() const {
+    return armyNumber;
+}
+
+void Territory::setArmyNumber(int armyNumber) {
+    this->armyNumber = armyNumber;
+}
+
+bool Territory::getOccupied() const {
+    return isOccupied;
+}
+
+void Territory::setOccupied(bool isOccupied) {
+    this->isOccupied = isOccupied;
+}
+
+Player* Territory::getOwner() const {
+    return owner;
+}
+
+void Territory::setOwner(Player* owner) {
+    this->owner = owner;
+}
+
+void Territory::addArmy(int armyNumber) {
+    this->armyNumber += armyNumber;
+}
+
+void Territory::removeArmy(int armyNumber) {
+    if (this->armyNumber - armyNumber < 0) {
+        this->armyNumber = 0;
+    } else {
+        this->armyNumber -= armyNumber;
+    }
+}
+
 
 
 Continent::Continent() {
-    this->continentName = "";
+    this->continentName = nullptr;
     this->bonusArmy = 0;
 }
 
-Continent::Continent(string name, int bonus) {
+Continent::Continent(string* name, int bonus) {
     this->continentName = name;
     this->bonusArmy = bonus;
 }
 
-Continent::~Continent(){
-    delete this;
+Continent::~Continent() {
+    delete continentName;
 }
 
-string Continent::getContinentName() const {
+string* Continent::getContinentName() const {
     return this->continentName;
 }
 
@@ -83,7 +132,7 @@ int Continent::getBonusArmy() const {
     return this->bonusArmy;
 }
 
-void Continent::setContinentName(string name) {
+void Continent::setContinentName(string* name) {
     this->continentName = name;
 }
 
