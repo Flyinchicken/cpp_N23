@@ -1,7 +1,4 @@
 #include "GameEngine.h"
-using namespace std;
-#include <iostream>
-#include <string>
 
 void testGameStates();
 

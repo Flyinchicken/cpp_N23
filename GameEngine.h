@@ -29,7 +29,6 @@ class GameEngine {
         };
 
         GameStates currentGameState;
-        vector<string> validCommandStrings;
 
         friend ostream& operator <<(ostream&, const GameEngine&);
 
@@ -40,7 +39,6 @@ class GameEngine {
 
         string getUserInput();
 
-        bool isValidCommandString(string commandString);
         bool hasGameBeenEnded(string commandString);
         bool hasPlayerWon();
 
@@ -56,4 +54,23 @@ class GameEngine {
         GameEngine &operator=(const GameEngine &engine);
 
         void startNewGame();
+};
+
+/**
+ * Struct that contains all definitions for command strings a user may input in a game of Warzone.
+*/
+struct CommandStrings {
+    static const string loadMap;
+    static const string validateMap;
+    static const string addPlayer;
+    static const string assignCountries;
+    static const string issueOrder;
+    static const string endIssueOrders;
+    static const string execOrder;
+    static const string endExecOrders;
+    static const string win;
+    static const string play;
+    static const string end;
+
+    static bool isStringCommandString(string input);
 };

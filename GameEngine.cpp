@@ -1,26 +1,45 @@
 #include "GameEngine.h"
 
 #include <iostream>
-#include <algorithm>
+
+// Define command string constants
+const string CommandStrings::loadMap = "loadmap";
+const string CommandStrings::validateMap = "validatemap";
+const string CommandStrings::addPlayer = "addplayer";
+const string CommandStrings::assignCountries = "assigncountries";
+const string CommandStrings::issueOrder = "issueorder";
+const string CommandStrings::endIssueOrders = "endissueorders";
+const string CommandStrings::execOrder = "execorder";
+const string CommandStrings::endExecOrders = "endexecorders";
+const string CommandStrings::win = "win";
+const string CommandStrings::play = "play";
+const string CommandStrings::end = "end";
+
+/**
+ * Checks if input string matches any of the valid command strings.
+ * 
+ * @param input The string to check
+ * @returns Boolean indicating if input string is a valid command string or not
+*/
+bool CommandStrings::isStringCommandString(string input) {
+    return input == loadMap
+        || input == validateMap
+        || input == addPlayer
+        || input == assignCountries
+        || input == issueOrder
+        || input == endIssueOrders
+        || input == execOrder
+        || input == endExecOrders
+        || input == win
+        || input == play
+        || input == end;
+}
 
 /**
  * Default constructor
  * */
 GameEngine::GameEngine() {
     this->currentGameState = START;
-    validCommandStrings = { 
-        "loadmap",
-        "validatemap",
-        "addplayer",
-        "assigncountries",
-        "issueorder",
-        "endissueorders",
-        "execorder",
-        "endexecorders",
-        "win",
-        "play",
-        "end"
-    };
 }
 
 /**
@@ -50,6 +69,7 @@ GameEngine &GameEngine::operator = (const GameEngine &engine) {
  * */
 ostream &operator << (ostream &out, const GameEngine &engine) {
     out << "Current Game State: " << engine.getGameStateAsString() << endl;
+
     return out;
 }
 
@@ -137,22 +157,12 @@ string GameEngine::getUserInput() {
 }
 
 /**
- * Checks if the input command string is one of the valid command strings.
- * 
- * @param commandString The command string taken from console input
- * @returns If the command string is one of the valid command strings
-*/
-bool GameEngine::isValidCommandString(string commandString) {
-    return std::find(validCommandStrings.begin(), validCommandStrings.end(), commandString) != validCommandStrings.end();
-}
-
-/**
  * Checks if the user has input the "end" command while the game is in the "win" state.
  * 
  * @returns If the user has attempted to end the game after winning.
 */
 bool GameEngine::hasGameBeenEnded(string commandString) {
-    return currentGameState == 7 && commandString == validCommandStrings.back();
+    return currentGameState == 7 && commandString == CommandStrings::end;
 }
 
 /**
@@ -164,25 +174,25 @@ bool GameEngine::hasGameBeenEnded(string commandString) {
  * was not a valid one.
 */
 bool GameEngine::changeStateFromCommand(string commandString) {
-    if (commandString == "end") {
+    if (commandString == CommandStrings::end) {
         return false;
     }
 
-    if (commandString == "loadmap") {
+    if (commandString == CommandStrings::loadMap) {
         return setGameStateIfValid(MAPLOADED, commandString);
-    } else if (commandString == "validatemap") {
+    } else if (commandString == CommandStrings::validateMap) {
         return setGameStateIfValid(MAPVALIDATED, commandString);
-    } else if (commandString == "addplayer") {
+    } else if (commandString == CommandStrings::addPlayer) {
         return setGameStateIfValid(PLAYERSADDED, commandString);
-    } else if (commandString == "assigncountries" || commandString == "endexecorders") {
+    } else if (commandString == CommandStrings::assignCountries || commandString == CommandStrings::endExecOrders) {
         return setGameStateIfValid(ASSIGNREINFORCEMENTS, commandString);
-    } else if (commandString == "issueorder") {
+    } else if (commandString == CommandStrings::issueOrder) {
         return setGameStateIfValid(ISSUEORDERS, commandString);
-    } else if (commandString == "endissueorders" || commandString == "execorder") {
+    } else if (commandString == CommandStrings::endIssueOrders || commandString == CommandStrings::execOrder) {
         return setGameStateIfValid(EXECUTEORDERS, commandString);
-    } else if (commandString == "win") {
+    } else if (commandString == CommandStrings::win) {
         return setGameStateIfValid(WIN, commandString);
-    } else if (commandString == "play") {
+    } else if (commandString == CommandStrings::play) {
         return setGameStateIfValid(START, commandString);
     } else {
         cout << "Command string is invalid after being checked for validity!" << endl;
@@ -223,7 +233,7 @@ bool GameEngine::setGameStateIfValid(GameStates newState, string commandString) 
             }
             break;
         case PLAYERSADDED:
-            if (newState == PLAYERSADDED || (newState == ASSIGNREINFORCEMENTS && commandString != "endexecorders")) {
+            if (newState == PLAYERSADDED || (newState == ASSIGNREINFORCEMENTS && commandString != CommandStrings::endExecOrders)) {
                 currentGameState = newState;
                 return true;
             }
@@ -235,14 +245,14 @@ bool GameEngine::setGameStateIfValid(GameStates newState, string commandString) 
             }
             break;
         case ISSUEORDERS:
-            if (newState == ISSUEORDERS || (newState == EXECUTEORDERS && commandString != "execorder")) {
+            if (newState == ISSUEORDERS || (newState == EXECUTEORDERS && commandString != CommandStrings::execOrder)) {
                 currentGameState = newState;
                 return true;
             }
             break;
         case EXECUTEORDERS:
-            if ((newState == EXECUTEORDERS && commandString != "endissueorders") 
-                || (newState == ASSIGNREINFORCEMENTS && commandString != "assigncountries") 
+            if ((newState == EXECUTEORDERS && commandString != CommandStrings::endIssueOrders) 
+                || (newState == ASSIGNREINFORCEMENTS && commandString != CommandStrings::assignCountries) 
                 || newState == WIN
             ) {
                 currentGameState = newState;
@@ -284,7 +294,7 @@ void GameEngine::startNewGame() {
     while (isGameInProgress) {
         string inputCommand = getUserInput();
 
-        if (!isValidCommandString(inputCommand)) {
+        if (!CommandStrings::isStringCommandString(inputCommand)) {
             cout << inputCommand << " is not a valid command string!" << endl;
             continue;
         }
