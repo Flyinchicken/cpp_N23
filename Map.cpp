@@ -31,6 +31,10 @@ Territory::Territory(const Territory& territory) {
     continentName = new string(*territory.continentName);
     armyNumber = territory.armyNumber;
     isOccupied = territory.isOccupied;
+    // Here we need to deep copy the owner @Xin Jia
+    //owner = new Player(*territory.owner);
+    owner = new Player();
+
 }
 
 Territory& Territory::operator=(const Territory& territory) {
