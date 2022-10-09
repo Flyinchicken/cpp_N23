@@ -2,9 +2,6 @@
 .vs
 *.exe
 CMakeLists.txt
-<<<<<<< HEAD
-cmake-build-debug/
-=======
 cmake-build-debug/
 Main
 Main.dSYM/Contents
@@ -12,4 +9,3 @@ OrdersDriver
 Orders.dSYM
 OrdersDriver.dSYM
 Orders
->>>>>>> b8f71b775d09981f6aec131ead6b43d5ff53d181
