@@ -57,6 +57,9 @@ class GameEngine {
 
 /**
  * Struct that contains all definitions for command strings a user may input in a game of Warzone.
+ * 
+ * As per go-ahead from prof, does not contain a definition for a copy constrctor or assignment operator since
+ * strings are static and are always going to be the same.
 */
 struct CommandStrings {
     static const string loadMap;
@@ -72,4 +75,6 @@ struct CommandStrings {
     static const string end;
 
     static bool isStringCommandString(string input);
+
+    friend ostream& operator << (ostream&, const CommandStrings&);
 };

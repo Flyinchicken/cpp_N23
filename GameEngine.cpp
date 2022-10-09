@@ -36,6 +36,28 @@ bool CommandStrings::isStringCommandString(string input) {
 }
 
 /**
+ * Stream insertion operator for CommandStrings. Will display current dictionary of command strings.
+*/
+ostream &operator << (ostream &out, const CommandStrings &strings) {
+    out << "Current list of command strings: " << endl;
+
+    // Done manually since could not find way to programmatically do it within C++ without the aid
+    // of external libraries
+    out << "1: " << strings.loadMap << endl;
+    out << "2: " << strings.validateMap << endl;
+    out << "3: " << strings.addPlayer << endl;
+    out << "4: " << strings.assignCountries << endl;
+    out << "5: " << strings.issueOrder << endl;
+    out << "6: " << strings.endIssueOrders << endl;
+    out << "7: " << strings.execOrder << endl;
+    out << "8: " << strings.win << endl;
+    out << "9: " << strings.play << endl;
+    out << "10: " << strings.end << endl;
+
+    return out;
+}
+
+/**
  * Default constructor
  * */
 GameEngine::GameEngine() {
@@ -65,7 +87,7 @@ GameEngine &GameEngine::operator = (const GameEngine &engine) {
 }
 
 /*
- * Stream insertion operator. Displays the current state of the game.
+ * Stream insertion operator for GameEngine. Displays the current state of the game.
  * */
 ostream &operator << (ostream &out, const GameEngine &engine) {
     out << "Current Game State: " << engine.getGameStateAsString() << endl;
@@ -289,6 +311,8 @@ bool GameEngine::hasPlayerWon() {
 void GameEngine::startNewGame() {
     displayWelcomeMessage();
 
+    displayCurrentGameState();
+
     bool isGameInProgress = true;
 
     while (isGameInProgress) {
@@ -296,6 +320,7 @@ void GameEngine::startNewGame() {
 
         if (!CommandStrings::isStringCommandString(inputCommand)) {
             cout << inputCommand << " is not a valid command string!" << endl;
+            displayCurrentGameState();
             continue;
         }
 
