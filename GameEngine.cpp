@@ -43,7 +43,7 @@ GameEngine::GameEngine() {
 }
 
 /**
- * Destructor. No pointer to destroy...for now.
+ * Destructor. No pointers to destroy...for now.
  * */
 GameEngine::~GameEngine() {
 }

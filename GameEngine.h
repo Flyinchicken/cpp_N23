@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <vector>
 #include <ostream>
 
 using namespace std;
@@ -28,9 +27,7 @@ class GameEngine {
             WIN
         };
 
-        GameStates currentGameState;
-
-        friend ostream& operator <<(ostream&, const GameEngine&);
+        GameStates currentGameState;                // Not a pointer type as per prof. Paquet
 
         void displayWelcomeMessage();
         void displayFarewellMessage();
@@ -51,7 +48,9 @@ class GameEngine {
         GameEngine();
         ~GameEngine();
         GameEngine(const GameEngine&);
-        GameEngine &operator=(const GameEngine &engine);
+
+        GameEngine &operator = (const GameEngine &engine);
+        friend ostream& operator << (ostream&, const GameEngine&);
 
         void startNewGame();
 };
