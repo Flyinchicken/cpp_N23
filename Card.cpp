@@ -3,6 +3,7 @@
 #include "Card.h"
 #include<string>
 #include<vector>
+#include "Player.h"
 
 //Card definitions
 int Card::numCards = 0;
@@ -11,13 +12,12 @@ Card::Card(){
     numCards++;
     _description = "default";
     _name = "Card " + to_string(numCards);
-    _type = "default";
-    cout << "card Created" <<endl;
+    _type = generateType((rand() % 5) + 1);
 };
 
-Card::Card(string description, string type, string name): _name(name), _description(description), _type(type){
+Card::Card(string description, int type, string name): _name(name), _description(description){
+    _type = generateType(type);
     numCards++;
-    cout <<"card created" <<endl;
 };
 
 Card::Card(const Card& e){
@@ -44,9 +44,15 @@ Card::~Card(){
 
 void Card::play(Hand* hand) {
     cout << "Playing card " << _name << " from hand " << hand->getName() << endl;
-    //Create order
-    hand->removeCardFromHand(this);
-    x->addCardToDeck(this);
+    bool isRemoved;
+    isRemoved = hand->removeCardFromHand(this);
+    if (isRemoved) {
+        x->addCardToDeck(this);
+        hand->getPlayer()->issueOrder(generateOrderNumber(_type));
+    }
+    else {
+        cout << "Card could not be played" << endl;
+    }
 };
 
 string Card::getName() {
@@ -63,11 +69,11 @@ string Card::getType(){
 
 //Deck Definitions
 Deck::Deck() {
-    cout << "Deck Created" << endl;
+
 };
 
 Deck::Deck(vector<Card*> input) : _cardDeck(input){
-    cout << "Deck created" << endl;
+
 };
 
 Deck::Deck(const Deck& e) {
@@ -113,13 +119,25 @@ int Hand::numHands = 0;
 Hand::Hand() {
     numHands++;
     _name = to_string(numHands);
-    cout << "Hand Created" << endl;
+    _player = new Player(new string("Default"));
 };
 
 Hand::Hand(vector<Card*> input) : _cardHand(input) {
+    _player = new Player(new string("Default"));
     numHands++;
     _name = to_string(numHands);
-    cout << "Hand created" << endl;
+};
+
+Hand::Hand(Player* e) {
+    numHands++;
+    _name = to_string(numHands);
+    _player = e;
+};
+
+Hand::Hand(Player* e, vector<Card*> input) : _cardHand(input) {
+    _player = e;
+    numHands++;
+    _name = to_string(numHands);
 };
 
 vector<Card*> Hand::getHand() {
@@ -128,6 +146,10 @@ vector<Card*> Hand::getHand() {
 
 string Hand::getName() {
     return _name;
+}
+
+Player* Hand::getPlayer() {
+    return _player;
 }
 
 Hand::Hand(const Hand& e) {
@@ -140,20 +162,27 @@ Hand& Hand::operator =(const Hand& e) {
 };
 
 ostream& operator<<(std::ostream& stream, Hand& e) {
-    stream << "This is the Hand " << e._name << " and it has " << e._cardHand.size() << endl;
+    stream << "This is the Hand " << e._name << " and it has " << e._cardHand.size() << " and belongs to " << e._player->getName() <<endl;
     return stream;
+};
+
+void Hand::setPlayer(Player* e) {
+    delete _player;
+    _player = e;
 };
 
 void Hand::addCardToHand(Card* e) {
     _cardHand.push_back(e);
 };
 
-void Hand::removeCardFromHand(Card* e){
+bool Hand::removeCardFromHand(Card* e){
     vector<Card*>::iterator it = find(_cardHand.begin(), _cardHand.end(), e);
     if(it != _cardHand.end()){
         _cardHand.erase(it);
+        return true;
     } else{
         cout << "Incorrect instruction, this Card is not in this Hand";
+        return false;
     }
 }
 
@@ -162,3 +191,49 @@ Hand::~Hand() {
         x->addCardToDeck(_cardHand.at(i));
     }
 };
+
+string generateType(int type) {
+    string cardType = "";
+    switch (type) {
+    case 1:
+        cardType = "bomb";
+        break;
+    case 2:
+        cardType = "reinforcement";
+        break;
+    case 3:
+        cardType = "blockade";
+        break;
+    case 4:
+        cardType = "airlift";
+        break;
+    case 5:
+        cardType = "diplomacy";
+        break;
+    default:
+        cardType = "default";
+    }
+
+    return cardType;
+}
+
+int generateOrderNumber(string type) {
+    if (type == "bomb") {
+        return 3;
+    }
+    else if (type == "reinforcement") {
+        return 1;
+    }
+    else if (type == "blockade") {
+        return 4;
+    }
+    else if (type == "airlift") {
+        return 5;
+    }
+    else if (type == "diplomacy") {
+        return 6;
+    }
+    else {
+        return 7;
+    }
+}

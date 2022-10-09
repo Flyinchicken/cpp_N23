@@ -1,12 +1,12 @@
 #include <iostream>
 #include "Card.h"
 #include<string>
+#include "Player.h"
+#include "CardDriver.h"
 using namespace std;
 
 Deck* x = new Deck();
-
-int main()
-{
+void testCards() {
     std::cout << "Welcome everyone!" << std::endl;
     for (int i = 0; i < 50; i++) {
         x->addCardToDeck(new Card());
@@ -14,6 +14,7 @@ int main()
         cout << *v.at(i) <<endl;
     }
 
+    Player* jeff = new Player(new string("jeff"));
     Hand* myHand = new Hand();
 
     for (int i = 0; i < 50; i++) {
@@ -29,6 +30,9 @@ int main()
     }
 
     cout << *x << endl;
+    cout << *myHand << endl;
+
+    myHand->setPlayer(jeff);
     cout << *myHand << endl;
 
     /* vector<Card*> v;
@@ -53,8 +57,4 @@ int main()
     myHand = NULL;
     cout << *x;
     x->draw(myHand); */
-}
-
-void testCards() {
-    cout << "test" << endl;
 }

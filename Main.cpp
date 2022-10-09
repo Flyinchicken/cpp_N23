@@ -1,5 +1,6 @@
 #include <iostream>
 #include "MapDriver.h"
+#include "CardDriver.h"
 
 using namespace std;
 int main()
@@ -7,4 +8,5 @@ int main()
     cout << "Welcome everyone!" << endl;
     MapDriver mapDriver;
     mapDriver.run();
+    testCards();
 }
