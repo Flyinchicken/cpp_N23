@@ -42,9 +42,5 @@ void testOrdersLists()
   o7->execute();
   cout << ordersList1 << endl;
   ordersList1.print();
-}
-
-int main()
-{
-  testOrdersLists();
+  o8->validate();
 }
