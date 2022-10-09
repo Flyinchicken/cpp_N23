@@ -4,11 +4,6 @@ using namespace std;
 
 void testPlayers();
 
-int main()
-{
-    testPlayers();
-}
-
 void testPlayers()
 {
     Player *player = new Player("peppa");

@@ -2,8 +2,8 @@
 #include "Card.h"
 #include<string>
 using namespace std;
-/*
- int main()
+
+int main()
 {
     std::cout << "Welcome everyone!" << std::endl;
     Card* mycard = new Card();
@@ -25,4 +25,4 @@ using namespace std;
 
 void testCards() {
     cout << "test" << endl;
-} */
+}
