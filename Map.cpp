@@ -78,6 +78,14 @@ void Territory::operator=(Territory*) {
 
 
 // Methods implementation of the Graph Class ******************************************************************************************
+void Graph::addNode(string territory_name){
+    this->nodes[territory_name] = new Territory();
+}
+
+void Graph::addNeighbor(string territory, string neighbor){
+    this->edges[territory].push_back(neighbor);
+}
+
 bool Graph::isConnected() {
     // Check if the graph is strongly connected
     // Definition used here: every node can reach all the rest of the nodes in the map
