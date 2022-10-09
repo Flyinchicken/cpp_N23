@@ -27,7 +27,7 @@ class GameEngine {
             WIN
         };
 
-        GameStates currentGameState;                // Not a pointer type as per prof. Paquet
+        GameStates currentGameState;                // Not a pointer type as per prof. Paquet's permission
 
         void displayWelcomeMessage();
         void displayFarewellMessage();
@@ -58,7 +58,7 @@ class GameEngine {
 /**
  * Struct that contains all definitions for command strings a user may input in a game of Warzone.
  * 
- * As per go-ahead from prof, does not contain a definition for a copy constrctor or assignment operator since
+ * As per go-ahead from prof, does not contain a definition for a copy constrctor or assignment operator since the
  * strings are static and are always going to be the same.
 */
 struct CommandStrings {

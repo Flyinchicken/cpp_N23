@@ -58,7 +58,7 @@ ostream &operator << (ostream &out, const CommandStrings &strings) {
 }
 
 /**
- * Default constructor
+ * Default constructor sets current game state to Start
  * */
 GameEngine::GameEngine() {
     this->currentGameState = START;
@@ -127,8 +127,7 @@ string GameEngine::getGameStateAsString() const {
             return "Win";
             break;
         default:
-            return "Current Game state is not valid!";
-            break;
+            return "Error: current Game state is not valid!";
     }
 }
 
@@ -141,7 +140,7 @@ void GameEngine::displayWelcomeMessage() {
 }
 
 /**
- * Displays a farewell message. Used when the user has exited the game via the "end" command.
+ * Displays a farewell message. Used when the user has exited the game via the "end" command after winning.
 */
 void GameEngine::displayFarewellMessage() {
     cout << "Farewell!" << endl;
@@ -217,7 +216,7 @@ bool GameEngine::changeStateFromCommand(string commandString) {
     } else if (commandString == CommandStrings::play) {
         return setGameStateIfValid(START, commandString);
     } else {
-        cout << "Command string is invalid after being checked for validity!" << endl;
+        cout << "Error: command string is invalid after being checked for validity!" << endl;
         return false;
     }
 }
@@ -228,11 +227,12 @@ bool GameEngine::changeStateFromCommand(string commandString) {
  * For example: 
  *      If user has input the command "validatemap" but the current state is "Start", it will reject this change.
  *      If user has input the command "addplayer" when the current state is "playersadded", it will accept this change
- *      (not however in this instance that the current state will simply be set to the same value it previously had).
+ *      (note however in this instance that the current state will simply be set to the same value it previously had).
  * 
  * @param newState The numeric/enum representation of what the new state of the game should be. This is based off what
  *                 command string the user input to the console.
  * @param commandString The command string the user input to console.
+ * @returns Whether or not a state transition has occured
 */
 bool GameEngine::setGameStateIfValid(GameStates newState, string commandString) {
     switch (currentGameState) {
@@ -289,7 +289,7 @@ bool GameEngine::setGameStateIfValid(GameStates newState, string commandString) 
             }
             break;
         default:
-            cout << "Current state is not valid!" << endl;
+            cout << "Error: current state is not valid!" << endl;
     }
 
     return false;
