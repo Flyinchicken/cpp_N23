@@ -1,30 +1,75 @@
-#ifndef MAP_H
-#define MAP_H
+//
+// Created by xu zhang on 2022-09-24.
+// Added Map, Continent, Graph methods for validation by Weijie Tan on 2022-10-08
+//
 
-#include <iostream>
-#include <vector>
-#include <unordered_map>
+#ifndef CPP_N23_MAP_H
+#define CPP_N23_MAP_H
+
 #include <string>
+#include <vector>
+#include <iostream>
+#include <unordered_map>
+#include <set>
+#include <stack>
 
+using namespace std;
 
-class Map : public Graph
+class Territory
 {
-    private:
-    std::unordered_map<std::string, Continent*>* continents;
+private:
+    string name;
+    string continent;
+    int armies;
+    string owner;
+    bool occupied;
 
-    public:
-    // constructors and destructors
-    Map();
+public:
+    // constructor and destructor
+    Territory();
 
+    Territory(string name, string continent, int armies, string owner);
+
+    // copy constructor?
+
+    // getter
+    string getName() const;
+
+    string getContinent() const;
+
+    int getArmy() const;
+
+    string getOwner() const;
+
+    bool isOccupied() const;
+
+    // setter
+
+    void setName(string name);
+
+    void setContinent(string continent);
+
+    void setArmy(int army);
+
+    void setOwner(string owner);
+
+    void setOccupied(bool occupied);
+
+    // operator overload
+    // +, <<, =
+    void operator+();
+
+    string operator<<(Territory*);
+
+    void operator=(Territory*);
 };
 
 class Graph
 {
-    private:
-    std::unordered_map<std::string,Territory*>* nodes;
-    std::unordered_map<std::string,std::vector<std::string>*>* edges;
+public:
+    unordered_map<string, Territory*> nodes;
+    unordered_map<string, vector<string>> edges;
 
-    public:
     // setters and getters:
     void addNode(std::string);
     void addNeighbor(std::string territory, std::string neighbor);
@@ -34,46 +79,70 @@ class Graph
 
     // map methods:
     bool validate();
+    bool isConnected();
 
 };
 
 class Continent : public Graph
 {
-    private:
-    std::string* continentName;
+private:
+    string continentName;
+    int bonusArmy;
+    // Player* owner;
 
-    public:
+public:
     // contructors and destructor
     Continent();
+    Continent(string continentName, int bonusArmy);
     ~Continent();
 
+    // getter
+
+    string getContinentName() const;
+    int getBonusArmy() const;
+    string getOwner();
+
+    // setter
+
+    void setContinentName(string continentName);
+    void setBonusArmy(int bonusArmy);
+
+    // operator overload
+    // +, <<, =
+    void operator+();
+
+    string operator<<(Continent*);
+
+    void operator=(Continent*);
 };
 
-class Territory 
+
+
+class Map : public Graph
 {
-    private:
-    std::string* countryName;
-    int* numberOfArmies;
-    // Player* owner;
-    bool* owned;
+private:
+    unordered_map<string, Continent*> continents;
 
-    public:
-    // constructor and destructor
-    Territory();
+public:
+    // constructors and destructors
+    Map();
+    ~Map();
 
-    Territory(std::string);
-    
-    // 
-    bool isOwned();
+    // Map methods:
+    void addContinent(string Continent_Name, int bonus);
 
+
+    bool continentsAllSubgraphs();
+    bool validate();
+    bool territoryInUniqueContinent();
+
+    // operator overload
+    // +, <<, =
+    void operator+();
+
+    string operator<<(Map*);
+
+    void operator=(Map*);
 
 };
-
-class MapLoader
-{
-    public:
-    Map* loadMap();
-
-};
-
-#endif 
+#endif //CPP_N23_MAP_H
