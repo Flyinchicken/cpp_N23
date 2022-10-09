@@ -20,8 +20,8 @@ public:
   Order &operator=(const Order &order); // assignment operator
   int getId() const;
   string getType() const;
-  int *setId();
-  string *setType(string type);
+  int setId();
+  string setType(string type);
 
   // define virtual function of validate and execute,
   // allow calling this function of a subclass with a pointer to the base class
@@ -32,8 +32,8 @@ private:
   // friend stream insertion operator to the class to access private member
   friend std::ostream &operator<<(std::ostream &, const Order &);
   static int order_id; // static variable use to automatic generate id for all objects
-  int *id;             // store the id of the order (Each order have one unique id)
-  string *order_type;
+  int id;              // store the id of the order (Each order have one unique id)
+  string order_type;
 };
 
 // The OrdersList class contains a list of Order objects.

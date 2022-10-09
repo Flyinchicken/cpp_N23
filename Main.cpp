@@ -1,6 +1,10 @@
-// #include <iostream>
+#include <iostream>
+#include "MapDriver.h"
 
-/* int main()
+using namespace std;
+int main()
 {
-    std::cout << "Welcome everyone!" << std::endl;
-} */
+    cout << "Welcome everyone!" << endl;
+    MapDriver mapDriver;
+    mapDriver.run();
+}

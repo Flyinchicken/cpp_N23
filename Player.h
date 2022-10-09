@@ -28,6 +28,8 @@ public:
   string getName() const;
 
   void setName(string *name);
+
+
 };
 
 #endif

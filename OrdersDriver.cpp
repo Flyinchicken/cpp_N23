@@ -25,10 +25,10 @@ void testOrdersLists()
   cout << *o1 << *o2 << *o3 << *o4 << endl;
   cout << "++++++++" << endl;
   cout << ordersList1 << endl;
-  cout << "--------" << endl;
+  cout << "*********" << endl;
   ordersList1.move(2, 1);
   cout << ordersList1 << endl;
-  cout << "========" << endl;
+  cout << "*********" << endl;
   o1->execute();
   ordersList1.remove(2);
   Bomb *o5 = new Bomb();
@@ -42,9 +42,5 @@ void testOrdersLists()
   o7->execute();
   cout << ordersList1 << endl;
   ordersList1.print();
-}
-
-int main()
-{
-  testOrdersLists();
+  o8->validate();
 }
