@@ -86,6 +86,41 @@ void Player::issueOrder()
     this->orderslist->push_back(airlift);
     this->orderslist->push_back(negotiate);
 }
+
+void Player::cardOrder(int orderNumber)
+{
+    Order* newOrder{};
+    switch (orderNumber)
+    {
+    case 1:
+        newOrder = new Deploy();
+        break;
+    case 2:
+        newOrder = new Advance();
+        break;
+    case 3:
+        newOrder = new Bomb();
+        break;
+    case 4:
+        newOrder = new Blockade();
+        break;
+    case 5:
+        newOrder = new Airlift();
+        break;
+    case 6:
+        newOrder = new Negotiate();
+        break;
+    default:
+        cout << "Invalid card type" << endl;
+        break;
+    }
+    if (newOrder != nullptr)
+    {
+        cout << (*newOrder) << endl;
+        this->orderslist->push_back(newOrder);
+    }
+}
+
 ostream &operator<<(ostream &outs, Player &theObject)
 {
     outs << theObject.getName() << "'s owned countries: " << endl;

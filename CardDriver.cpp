@@ -1,28 +1,61 @@
 #include <iostream>
 #include "Card.h"
 #include<string>
+#include "Player.h"
+#include "CardDriver.h"
 using namespace std;
-/*
-int main()
-{
-    std::cout << "Welcome everyone!" << std::endl;
-    Card* mycard = new Card();
-    Card* secondCard = new Card(new string("This is a card"), new string("Bombing"), new string("Dark magician"));
-    Card thirdCard(new string("This is a card"), new string("Bombing"), new string("POOP"));
-    cout << *secondCard << endl;
-    cout << "my name" << thirdCard.getName() << endl;
 
-
-    vector<Card*> vec;
-    vec.push_back(mycard);
-    vec.push_back(secondCard);
-    Deck* mydeck = new Deck(vec);
-    cout << *mydeck << endl;
-
-    Hand* myHand = new Hand(vec);
-    cout << *myHand << endl;
-}
-
+Deck* x = new Deck();
 void testCards() {
-    cout << "test" << endl;
-}*/
+
+    for (int i = 0; i < 50; i++) {
+        x->addCardToDeck(new Card());
+        vector<Card*> v = x->getDeck();
+        cout << *v.at(i) << endl;
+    }
+
+    Hand* myHand = new Hand();
+
+    for (int i = 0; i < 50; i++) {
+        x->draw(myHand);
+    }
+
+    cout << *x << endl;
+    cout << *myHand << endl;
+
+    for (int i = 0; i < 50; i++) {
+        vector<Card*> t = myHand->getHand();
+        if (t.size() == 0) {
+            break;
+        }
+        t.at(0)->play(myHand);
+    }
+
+    cout << *x << endl;
+    cout << *myHand << endl;
+
+    /* vector<Card*> v;
+    for (int i = 0; i < 50; i++) {
+        v.push_back(new Card());
+        cout << *v.at(i);
+    }
+    Hand* myHand = new Hand(v);
+    cout << *myHand;
+
+    Card* testCard = new Card();
+    cout << *testCard;
+    myHand->addCardToHand(testCard);
+    cout << *myHand;
+
+    cout << *x;
+    testCard->play(myHand);
+    cout << *myHand;
+
+    cout << *x;
+    delete myHand;
+    myHand = NULL;
+    cout << *x;
+    x->draw(myHand);
+    Player* jeff = new Player(new string("jeff"));
+    myHand->setPlayer(jeff);*/
+}

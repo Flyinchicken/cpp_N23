@@ -14,7 +14,7 @@ int main()
     cout << (*player).getOrdersList() << endl;
 
 
-    cout << (*player).getHand() << endl;
+    //cout << (*player).hand << endl;
     
 
 }

@@ -11,6 +11,7 @@ using namespace std;
 
 class OrdersList;
 class Hand;
+class Territory;
 
 class Player
 {
@@ -26,9 +27,10 @@ public:
   Player(const Player &player);
   Player &operator=(const Player &player);
   Player(string name);
-  // vector<Territory*> toDefend();
-  // vector<Territory*> toAttack();
+  vector<Territory*> toDefend();
+  vector<Territory*> toAttack();
   void issueOrder();
+  void cardOrder(int);
 
   string getName() const;
   OrdersList getOrdersList() const;
