@@ -1,11 +1,10 @@
 #include <iostream>
-#include "MapLoader.h"
+#include "MapDriver.h"
 
 using namespace std;
 int main()
 {
     cout << "Welcome everyone!" << endl;
-    MapLoader mapLoader;
-
-    mapLoader.LoadMap();
+    MapDriver mapDriver;
+    mapDriver.run();
 }

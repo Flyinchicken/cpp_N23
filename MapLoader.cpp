@@ -3,7 +3,6 @@
 //
 
 #include "MapLoader.h"
-#include "Map.h"
 #include <algorithm>
 #include <iostream>
 #include <fstream>
@@ -18,38 +17,16 @@ namespace fs = std::filesystem;
 
 using namespace std;
 
-void MapLoader::LoadMap() {
-
-//    cout << "Welcome to RISK game!" << endl;
-//    cout << "Please enter the map file name: " << endl;
-//    string fileName;
-//    cin >> fileName;
+Map* MapLoader::LoadMap(string fileName) {
 
     cout << "Loading map..." << endl;
 
-    vector<string> mapFiles;
-
-    string path = "../MapFiles";
-    for (const auto & entry : fs::directory_iterator(path)){
-        mapFiles.push_back(entry.path());
-    }
-//        cout << entry.path() << endl;
-
-    for (int i = 0; i < mapFiles.size(); i++) {
-        cout << mapFiles[i].replace(0,12, "") << endl;
-    }
-
-//    cout << "Please enter the map file name: " << endl;
-
-    ifstream input("../MapFiles/3D.map");
+    ifstream input(fileName);
 
     if(!input.is_open()) {
         cout << "File not found!" << endl;
-        return;
+        return nullptr;
     }
-
-    vector<Continent>* continents = new vector<Continent>();
-    vector<Territory>* territories = new vector<Territory>();
 
     Map* map = new Map();
 
@@ -100,5 +77,7 @@ void MapLoader::LoadMap() {
     }
 
     input.close();
+
+    return map;
 
 }

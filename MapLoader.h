@@ -5,13 +5,14 @@
 #ifndef CPP_N23_MAPLOADER_H
 #define CPP_N23_MAPLOADER_H
 
+#include "Map.h"
+
 class MapLoader {
 public:
     MapLoader() {};
     ~MapLoader() = default;
-    //😄😄😄
-    //Methods
-    void LoadMap();
+
+    Map* LoadMap(string filename);
 };
 
 

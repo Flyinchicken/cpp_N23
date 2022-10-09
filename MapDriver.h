@@ -1,6 +1,13 @@
 #ifndef MAP_DRIVER_H
 #define MAP_DRIVER_H
 
-void testLoadMaps(void);
+class MapDriver {
+
+public:
+    MapDriver() {};
+    ~MapDriver() = default;
+    void run();
+
+};
 
 #endif 
