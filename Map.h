@@ -75,7 +75,7 @@ public:
     void addNeighbor(std::string territory, std::string neighbor);
 
     Territory* getNode(std::string);
-    std::vector<std::string>* getNeighbours(std::string);
+    vector<std::string> getNeighbours(std::string);
 
     // map methods:
     bool validate();

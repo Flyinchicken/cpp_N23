@@ -86,6 +86,14 @@ void Graph::addNeighbor(string territory, string neighbor){
     this->edges[territory].push_back(neighbor);
 }
 
+Territory* Graph::getNode(string territory_name){
+    return this->nodes.at(territory_name);
+}
+
+vector<std::string> Graph::getNeighbours(string territory_name){
+     return this->edges.at(territory_name);
+}
+
 bool Graph::isConnected() {
     // Check if the graph is strongly connected
     // Definition used here: every node can reach all the rest of the nodes in the map
