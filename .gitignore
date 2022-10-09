@@ -1,5 +1,5 @@
-.idea/
 .vscode
+.vs
 *.exe
 CMakeLists.txt
 <<<<<<< HEAD
