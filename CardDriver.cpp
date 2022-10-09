@@ -7,14 +7,13 @@ using namespace std;
 
 Deck* x = new Deck();
 void testCards() {
-    std::cout << "Welcome everyone!" << std::endl;
+    
     for (int i = 0; i < 50; i++) {
         x->addCardToDeck(new Card());
         vector<Card*> v= x->getDeck();
         cout << *v.at(i) <<endl;
     }
 
-    Player* jeff = new Player(new string("jeff"));
     Hand* myHand = new Hand();
 
     for (int i = 0; i < 50; i++) {
@@ -26,13 +25,13 @@ void testCards() {
 
     for (int i = 0; i < 50; i++) {
         vector<Card*> t = myHand->getHand();
+        if (t.size() == 0) {
+            break;
+        }
         t.at(0)->play(myHand);
     }
 
     cout << *x << endl;
-    cout << *myHand << endl;
-
-    myHand->setPlayer(jeff);
     cout << *myHand << endl;
 
     /* vector<Card*> v;
@@ -56,5 +55,7 @@ void testCards() {
     delete myHand;
     myHand = NULL;
     cout << *x;
-    x->draw(myHand); */
+    x->draw(myHand);
+    Player* jeff = new Player(new string("jeff"));
+    myHand->setPlayer(jeff);*/
 }

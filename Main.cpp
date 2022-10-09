@@ -22,5 +22,8 @@ int main()
 
     cout << "*** Order list test ***" << endl;
     testOrdersLists();
+
+    //Card Test
+    cout << "*** Starting the Card test ***" << endl;
     testCards();
 }
