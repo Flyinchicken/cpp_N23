@@ -10,7 +10,7 @@
 using namespace std;
 namespace fs = std::filesystem;
 
-/*void testLoadMaps()
+void testLoadMaps()
 {
     cout << "Welcome to the RISK Game" << endl;
     cout << "Please choose your option to load the map: " << endl;
@@ -58,4 +58,4 @@ namespace fs = std::filesystem;
             }
         }
     }
-}*/
+}

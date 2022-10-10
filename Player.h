@@ -3,41 +3,58 @@
 
 #include "Orders.h"
 #include "Card.h"
+#include "Map.h"
 #include <string>
 #include <list>
 #include <vector>
 #include <ostream>
 using namespace std;
 
+class Territory;
 class OrdersList;
 class Hand;
-class Territory;
 
 class Player
 {
 private:
-  string name;
-  friend ostream &operator<<(ostream &outs, Player &theObject);
-  OrdersList *orderslist;
-  Hand *hand;
+	//stream operator to access private members
+	friend ostream& operator<<(ostream& outs, Player& theObject);
+
+	//Player object members
+	string name;
+	OrdersList* orderslist;
+	vector<Territory*> territories;
+	Hand* hand;
 
 public:
-  Player();
-  ~Player();
-  Player(const Player &player);
-  Player &operator=(const Player &player);
-  Player(string name);
-  vector<Territory*> toDefend();
-  vector<Territory*> toAttack();
-  void issueOrder();
-  void cardOrder(int);
 
-  string getName() const;
-  OrdersList getOrdersList() const;
-  Hand getHand() const;
+	Player();
+	~Player();
+	//copy constructor
+	Player(const Player& player);
+	//assignment operator
+	Player& operator=(const Player& player);
+	Player(string name);
+	Player(string playerName, Hand* newHand, OrdersList* newOrdersList, vector<Territory*> newTerritories);
 
-  void setName(string name);
-  void setOrdersList(OrdersList *list);
-  void setHand(Hand *hand);
+	//Player's actions
+	vector<Territory*> toDefend();
+	vector<Territory*> toAttack();
+	void issueOrder();
+
+	//helper method
+	void cardOrder(int);
+
+	//getters
+	string getName() const;
+	OrdersList getOrdersList() const;
+	Hand getHand() const;
+	vector<Territory*> getTerritories() const;
+
+	//setters
+	void setName(string name);
+	void setOrdersList(OrdersList* list);
+	void setHand(Hand* hand);
+	void setTerritories(vector<Territory*> territories);
 };
 #endif
