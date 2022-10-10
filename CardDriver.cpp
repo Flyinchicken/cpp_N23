@@ -7,11 +7,11 @@ using namespace std;
 
 Deck* x = new Deck();
 void testCards() {
-    
+
     for (int i = 0; i < 50; i++) {
         x->addCardToDeck(new Card());
-        vector<Card*> v= x->getDeck();
-        cout << *v.at(i) <<endl;
+        vector<Card*> v = x->getDeck();
+        cout << *v.at(i) << endl;
     }
 
     Hand* myHand = new Hand();
@@ -41,7 +41,7 @@ void testCards() {
     }
     Hand* myHand = new Hand(v);
     cout << *myHand;
-    
+
     Card* testCard = new Card();
     cout << *testCard;
     myHand->addCardToHand(testCard);

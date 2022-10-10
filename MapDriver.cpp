@@ -33,14 +33,14 @@ void testLoadMaps()
     if (option == 1)
     {
         MapLoader mapLoader;
-        Map *map = mapLoader.LoadMap("3D.map");
+        Map* map = mapLoader.LoadMap("3D.map");
         cout << "Map loaded successfully!" << endl;
     }
     else
     {
-        vector<Map *> maps;
+        vector<Map*> maps;
         vector<string> mapFiles;
-        for (const auto &entry : fs::directory_iterator(filePrefix))
+        for (const auto& entry : fs::directory_iterator(filePrefix))
         {
             mapFiles.push_back(entry.path());
         }
@@ -48,7 +48,7 @@ void testLoadMaps()
         for (int i = 0; i < mapFiles.size(); i++)
         {
             MapLoader mapLoader;
-            Map *map = mapLoader.LoadMap(mapFiles[i]);
+            Map* map = mapLoader.LoadMap(mapFiles[i]);
 
             if (map->validate())
             {

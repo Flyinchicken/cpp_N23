@@ -2,19 +2,29 @@
 using namespace std;
 #include <iostream>
 
-void testPlayers();
-
+//Test Player object 
 void testPlayers()
 {
-    string *name = new string("peppa");
-    Player player(name);
-    cout << player << endl;
-    player.issueOrder(1);
-    player.issueOrder(2);
-    player.issueOrder(3);
-    player.issueOrder(4);
-    player.issueOrder(5);
-    player.issueOrder(6);
-    player.issueOrder(7);
+    Player *player = new Player("Peppa");
 
+    player->setHand(new Hand(player));
+
+    cout << "Orders created: " << endl;
+    player->issueOrder();
+    player->getOrdersList().print();
+
+    cout << "Territories created: " << endl;
+    Territory* territory1 = new Territory(new string("territory 1"), new string("continent 1"), 3, false, player);
+    Territory* territory2 = new Territory(new string("territory 2"), new string("continent 2"), 2, false, player);
+    vector<Territory*> territories;
+    territories.push_back(territory1);
+    territories.push_back(territory2);
+    player->setTerritories(territories);
+
+    cout << *player << endl;
+
+    cout << "Territories to Defend: " << endl;
+    player->toDefend();
+    cout << "Territories to Attack: " << endl;
+    player->toAttack();
 }

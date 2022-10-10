@@ -62,7 +62,7 @@ public:
     vector<Card*> getDeck(); //Returns the Card collection
     void addCardToDeck(Card* e); //Adds a card to the Deck collection of Cards
     void draw(Hand* hand); //Draws a card from the Deck, removes it and places it on the given Hand
-    
+
 };
 
 //Stream insertion operator for Deck
@@ -107,7 +107,6 @@ ostream& operator<<(std::ostream& stream, Hand& e);
 //Free Functions
 int generateOrderNumber(string type); //Transform string type into a number from 1-6
 string generateType(int type); //Transform number type into a string
-
 
 
 
