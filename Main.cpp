@@ -4,6 +4,7 @@
 #include "MapDriver.h"
 #include "OrdersDriver.h"
 #include "CardDriver.h"
+#include "PlayerDriver.h"
 
 using namespace std;
 int main()
@@ -28,4 +29,8 @@ int main()
     // Card Test
     cout << "*** Starting the Card test ***" << endl;
     testCards();
+
+    // Player Test
+    cout << "*** Starting the Player test ***" << endl;
+    testPlayers();
 }
