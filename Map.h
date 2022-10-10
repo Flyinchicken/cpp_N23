@@ -80,7 +80,9 @@ public:
 
     // setters and getters:
     void addNode(std::string);
+    void addNode(string,Territory*);
     void addNeighbor(std::string territory, std::string neighbor);
+    void addNeighbor(string territory, vector<string> neighbor);
 
     Territory* getNode(std::string);
     std::vector<std::string>* getNeighbours(std::string);
@@ -130,13 +132,15 @@ public:
 class Map : public Graph
 {
 
-private:
+public:
     unordered_map<string, Continent*> continents;
 
 public:
 // constructors and destructors
 Map();
 ~Map();
+Map(const Map& map);
+
 
 // Map methods:
 void addContinent(string Continent_Name, int bonus);
@@ -147,9 +151,7 @@ bool territoryInUniqueContinent();
 // operator overload
 // +, <<, =
 void operator+();
-
-string operator<<(Map*);
-
+friend ostream& operator<<(ostream& os, Map& map);
 void operator=(Map*);
 
 };

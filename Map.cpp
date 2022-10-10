@@ -116,13 +116,26 @@ void Territory::removeArmy(int armyNumber) {
 
 // Methods implementation of the Graph Class ******************************************************************************************
 void Graph::addNode(string territory_name){
-    this->nodes[territory_name] = new Territory();
+    if(this->nodes.count(territory_name) == 0){
+        this->nodes.insert_or_assign(territory_name, new Territory());
+    }
+
 }
+
 
 void Graph::addNeighbor(string territory, string neighbor){
     this->edges[territory].push_back(neighbor);
 }
 
+void Graph::addNeighbor(string territory, vector<string> neighbor){
+    this->edges[territory] = neighbor;
+}
+
+void Graph::addNode(string territory_name, Territory* Territory){
+    if(this->nodes.count(territory_name) == 0){
+        this->nodes.insert_or_assign(territory_name, Territory);
+    }
+}
 
 bool Graph::isConnected() {
     // Check if the graph is strongly connected
@@ -141,7 +154,9 @@ bool Graph::isConnected() {
             neighborStack.pop();
             reached.insert(current);
             for (auto& neighbor : this->edges.at(current)) {
-                neighborStack.push(neighbor);
+                if (reached.count(neighbor) != 1) {
+                    neighborStack.push(neighbor);
+                }
             }
         }
 
@@ -223,8 +238,15 @@ void Map::operator+() {
     cout << "Maps cannot be added!" << endl;
 }
 
-string Map::operator<<(Map*) {
-    return "This is a game map for RISK";
+ostream& operator<<(ostream& os, Map& map) {
+    for(auto& kv : map.nodes){
+        os << kv.first << " : ";
+        for(auto& neighbor : map.edges.at(kv.first)){
+            os << neighbor << ",";
+        }
+        os << endl;
+    }
+    return os;
 }
 
 void Map::operator=(Map*) {
@@ -232,7 +254,7 @@ void Map::operator=(Map*) {
 }
 
 void Map::addContinent(string Continent_Name, int bonus) {
-    this->continents.at(Continent_Name) = new Continent(&Continent_Name, bonus);
+    this->continents.insert_or_assign(Continent_Name,Continent(&Continent_Name, bonus));
 }
 
 bool Map::territoryInUniqueContinent() {

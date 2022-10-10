@@ -1,7 +1,7 @@
 //
 // Created by xu zhang on 2022-09-24.
 //
-
+#include "Map.h"
 #include "MapLoader.h"
 #include <algorithm>
 #include <iostream>
@@ -67,10 +67,12 @@ Map* MapLoader::LoadMap(string fileName) {
 
             if (territoryInfo.size() > 1) {
                 map->addNode(territoryInfo[0]);
+                map->continents.at(territoryInfo[3])->addNode(territoryInfo[0],map->nodes.at(territoryInfo[0]));
             }
 
             for (int i = 4; i < territoryInfo.size(); i++) {
                 map->addNeighbor(territoryInfo[0], territoryInfo[i]);
+                map->continents.at(territoryInfo[3])->addNeighbor(territoryInfo[0],map->edges.at(territoryInfo[0]));
             }
 
         }
