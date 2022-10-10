@@ -201,5 +201,6 @@ ostream &operator<<(ostream &outs, Player &player)
     for (int i = 0; i < player.territories.size(); i++) {
         outs << (*player.territories.at(i)->getTerritoryName()) << endl;
     }
+
     return outs;
 }
