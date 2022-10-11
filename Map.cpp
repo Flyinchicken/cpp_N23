@@ -254,7 +254,7 @@ void Map::operator=(Map*) {
 }
 
 void Map::addContinent(string Continent_Name, int bonus) {
-    this->continents.insert_or_assign(Continent_Name,Continent(&Continent_Name, bonus));
+    this->continents.insert_or_assign(Continent_Name, new Continent(&Continent_Name, bonus));
 }
 
 bool Map::territoryInUniqueContinent() {

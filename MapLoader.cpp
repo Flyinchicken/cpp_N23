@@ -20,7 +20,7 @@ using namespace std;
 Map* MapLoader::LoadMap(string fileName) {
 
     cout << "Loading map..." << endl;
-
+    
     ifstream input(fileName);
 
     if(!input.is_open()) {
@@ -28,8 +28,10 @@ Map* MapLoader::LoadMap(string fileName) {
         return nullptr;
     }
 
-    Map* map = new Map();
+    
 
+    Map* map = new Map();
+    
     bool readingContinent = false;
     bool readingTerritory = false;
 
@@ -79,7 +81,7 @@ Map* MapLoader::LoadMap(string fileName) {
     }
 
     input.close();
-
+    
     return map;
 
 }
