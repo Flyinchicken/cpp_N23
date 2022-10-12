@@ -20,7 +20,7 @@ using namespace std;
 Map* MapLoader::LoadMap(string fileName) {
 
     cout << "Loading map..." << endl;
-
+    
     ifstream input(fileName);
 
     if (!input.is_open()) {
@@ -28,19 +28,21 @@ Map* MapLoader::LoadMap(string fileName) {
         return nullptr;
     }
 
-    Map* map = new Map();
+    
 
+    Map* map = new Map();
+    
     bool readingContinent = false;
     bool readingTerritory = false;
 
     while (!input.eof()) {
         string line;
         getline(input, line);
-        if (line == "[Continents]\r") {
+        if (line == "[Continents]") {
             readingContinent = true;
             continue;
         }
-        if (line == "[Territories]\r") {
+        if (line == "[Territories]") {
             readingContinent = false;
             readingTerritory = true;
             continue;
@@ -48,7 +50,7 @@ Map* MapLoader::LoadMap(string fileName) {
 
         if (readingContinent) {
 
-            if (line != "\r") {
+            if (line != "") {
                 map->addContinent(line.substr(0, line.find("=")), stoi(line.substr(line.find("=") + 1)));
             }
 
@@ -79,7 +81,7 @@ Map* MapLoader::LoadMap(string fileName) {
     }
 
     input.close();
-
+    
     return map;
 
 }

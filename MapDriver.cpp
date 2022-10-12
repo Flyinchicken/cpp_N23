@@ -33,7 +33,7 @@ void testLoadMaps()
     if (option == 1)
     {
         MapLoader mapLoader;
-        Map* map = mapLoader.LoadMap("3D.map");
+        Map* map = mapLoader.LoadMap("C:/cpp/cpp_N23/MapFiles/3D.map");
         if (map->validate())
         {
             cout << "Map is valid" << endl;
@@ -44,7 +44,7 @@ void testLoadMaps()
             cout << "Map is invalid" << endl;
             cout << "Map loaded failed!" << endl;
         }
-    }
+    }/*
     else
     {
         // load all maps
@@ -70,5 +70,5 @@ void testLoadMaps()
                 maps.push_back(map);
             }
         }
-    }
+    }*/
 }

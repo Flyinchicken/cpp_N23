@@ -234,6 +234,10 @@ Map::~Map() {
 
 }
 
+void Map::operator=(Map*) {
+    cout << "Maps have no assignment operator!" << endl;
+}
+
 void Map::operator+() {
     cout << "Maps cannot be added!" << endl;
 }
@@ -249,12 +253,10 @@ ostream& operator<<(ostream& os, Map& map) {
     return os;
 }
 
-void Map::operator=(Map*) {
-    cout << "Maps have no assignment operator!" << endl;
-}
+
 
 void Map::addContinent(string Continent_Name, int bonus) {
-    this->continents.insert_or_assign(Continent_Name,Continent(&Continent_Name, bonus));
+    this->continents.insert_or_assign(Continent_Name, new Continent(&Continent_Name, bonus));
 }
 
 bool Map::territoryInUniqueContinent() {
@@ -262,22 +264,17 @@ bool Map::territoryInUniqueContinent() {
     int count = 0;
 
     // for each territory_name and Territory* key-value pair
-    for (auto& kv : this->nodes) {
-        for (auto& c_kv : this->continents) {
+ 
+        for (auto& kv : this->nodes) {
+            for (auto& c_kv : this->continents) {
             //check if territory_name can be found in exactly one continent
-            if (c_kv.first == kv.first) {
-                count++;
+                count += c_kv.second->nodes.count(kv.first);
             }
-
-            // a territory belongs to more than 1 continent
-            if (count > 1) {
-                return false;
-            }
-        }
-        // territory name cannot be found
-        if (count != 1) {
+            // territory name cannot be found or found more than once
+            if (count != 1) {
             return false;
-        }
+            }
+            count = 0;
     }
     return true;
 }
