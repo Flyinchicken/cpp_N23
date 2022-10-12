@@ -7,7 +7,7 @@ using namespace std;
 //Test Player object 
 void testPlayers()
 {
-    Player *player = new Player("Peppa");
+    Player* player = new Player("Peppa");
 
     player->setHand(new Hand(player));
 
