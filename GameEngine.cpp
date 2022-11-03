@@ -2,6 +2,10 @@
 
 #include <iostream>
 
+using std::cout;
+using std::cin;
+using std::endl;
+
 // Define command string constants
 const string CommandStrings::loadMap = "loadmap";
 const string CommandStrings::validateMap = "validatemap";
@@ -316,8 +320,10 @@ void GameEngine::startNewGame() {
     bool isGameInProgress = true;
 
     while (isGameInProgress) {
+        // TODO: Move to command processor
         string inputCommand = getUserInput();
 
+        // TODO: Move to command processor
         if (!CommandStrings::isStringCommandString(inputCommand)) {
             cout << inputCommand << " is not a valid command string!" << endl;
             displayCurrentGameState();
@@ -329,6 +335,7 @@ void GameEngine::startNewGame() {
             continue;
         }
 
+        // TODO: Move to command processor
         if (!changeStateFromCommand(inputCommand)) {
             cout << "Invalid state transition!" << endl;
         }

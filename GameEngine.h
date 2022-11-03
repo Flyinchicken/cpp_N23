@@ -3,7 +3,22 @@
 #include <string>
 #include <ostream>
 
-using namespace std;
+using std::string;
+using std::ostream;
+
+/**
+ * Represents the possible states of a Warzone game.
+*/
+enum GameStates {
+    START,
+    MAPLOADED,
+    MAPVALIDATED,
+    PLAYERSADDED,
+    ASSIGNREINFORCEMENTS,
+    ISSUEORDERS,
+    EXECUTEORDERS,
+    WIN
+};
 
 /**
  * Represents the principle game engine of Warzone that allows a user to start a new game with a console-driven
@@ -13,22 +28,8 @@ using namespace std;
 */
 class GameEngine {
     private:
-        /**
-         * Represents the possible states of a Warzone game.
-        */
-        enum GameStates {
-            START,
-            MAPLOADED,
-            MAPVALIDATED,
-            PLAYERSADDED,
-            ASSIGNREINFORCEMENTS,
-            ISSUEORDERS,
-            EXECUTEORDERS,
-            WIN
-        };
-
         GameStates currentGameState;                // Not a pointer type as per prof. Paquet's permission
-
+        
         void displayWelcomeMessage();
         void displayFarewellMessage();
         void displayVictoryMessage();
