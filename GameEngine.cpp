@@ -181,7 +181,7 @@ bool GameEngine::changeStateFromCommand(string commandString) {
  * @param commandString The command string the user input to console.
  * @returns Whether or not a state transition has occured
 */
-bool GameEngine::setGameStateIfValid(GameStates newState, string commandString) {
+/*bool GameEngine::setGameStateIfValid(GameStates newState, string commandString) {
     // switch (currentGameState) {
     //     case START:
     //         if (newState == MAPLOADED) {
@@ -240,7 +240,7 @@ bool GameEngine::setGameStateIfValid(GameStates newState, string commandString) 
     // }
 
     // return false;
-}
+}*/
 
 /**
  * Checks if the current game state is "Win".

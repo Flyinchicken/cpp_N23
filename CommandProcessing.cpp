@@ -4,6 +4,7 @@
 
 using std::cin;
 using std::endl;
+using std::cout;
 
 //
 //  COMMAND STRINGS
@@ -85,6 +86,10 @@ string Command::getEffect() {
 //  COMMAND PROCESSOR
 //
 
+CommandProcessor::CommandProcessor() {
+    this->commandsList = vector<Command*>();
+}
+
 bool CommandProcessor::validate(Command *command, GameStates currentGameState) {
     if (!CommandStrings::isStringCommandString(command->getCommand())) {
         command->saveEffect(command->getCommand() + " is not a valid command string!");
@@ -123,4 +128,23 @@ bool CommandProcessor::validate(Command *command, GameStates currentGameState) {
     command->saveEffect(command->getCommand() + " is not valid in the current game state");
 
     return false;
+}
+
+string CommandProcessor::readCommand() {
+    cout << "Give a command:" << endl;
+    string commandStr;
+    cin >> commandStr;
+    return commandStr;
+}
+
+void CommandProcessor::saveCommand(string command) {
+    this->commandsList.push_back(new Command(command));
+}
+
+void CommandProcessor::getCommand() {
+    this->saveCommand(this->readCommand());
+}
+
+vector<Command*> CommandProcessor::getCommandsList() {
+    return this->commandsList;
 }

@@ -23,7 +23,7 @@ Map* MapLoader::LoadMap(string fileName) {
     
     ifstream input(fileName);
 
-    if(!input.is_open()) {
+    if (!input.is_open()) {
         cout << "File not found!" << endl;
         return nullptr;
     }
@@ -35,7 +35,7 @@ Map* MapLoader::LoadMap(string fileName) {
     bool readingContinent = false;
     bool readingTerritory = false;
 
-    while( !input.eof() ) {
+    while (!input.eof()) {
         string line;
         getline(input, line);
         if (line == "[Continents]") {
@@ -48,7 +48,7 @@ Map* MapLoader::LoadMap(string fileName) {
             continue;
         }
 
-        if(readingContinent) {
+        if (readingContinent) {
 
             if (line != "") {
                 map->addContinent(line.substr(0, line.find("=")), stoi(line.substr(line.find("=") + 1)));
@@ -56,7 +56,7 @@ Map* MapLoader::LoadMap(string fileName) {
 
         }
 
-        if(readingTerritory) {
+        if (readingTerritory) {
             vector<string> territoryInfo;
 
             stringstream ss(line);
@@ -69,12 +69,12 @@ Map* MapLoader::LoadMap(string fileName) {
 
             if (territoryInfo.size() > 1) {
                 map->addNode(territoryInfo[0]);
-                map->continents.at(territoryInfo[3])->addNode(territoryInfo[0],map->nodes.at(territoryInfo[0]));
+                map->continents.at(territoryInfo[3])->addNode(territoryInfo[0], map->nodes.at(territoryInfo[0]));
             }
 
             for (int i = 4; i < territoryInfo.size(); i++) {
                 map->addNeighbor(territoryInfo[0], territoryInfo[i]);
-                map->continents.at(territoryInfo[3])->addNeighbor(territoryInfo[0],map->edges.at(territoryInfo[0]));
+                map->continents.at(territoryInfo[3])->addNeighbor(territoryInfo[0], map->edges.at(territoryInfo[0]));
             }
 
         }
