@@ -1,24 +1,12 @@
 #pragma once
 
+#include "CommandProcessing.h"
+
 #include <string>
 #include <ostream>
 
 using std::string;
 using std::ostream;
-
-/**
- * Represents the possible states of a Warzone game.
-*/
-enum GameStates {
-    START,
-    MAPLOADED,
-    MAPVALIDATED,
-    PLAYERSADDED,
-    ASSIGNREINFORCEMENTS,
-    ISSUEORDERS,
-    EXECUTEORDERS,
-    WIN
-};
 
 /**
  * Represents the principle game engine of Warzone that allows a user to start a new game with a console-driven
@@ -29,6 +17,8 @@ enum GameStates {
 class GameEngine {
     private:
         GameStates currentGameState;                // Not a pointer type as per prof. Paquet's permission
+
+        CommandProcessor *commandProcessor;
         
         void displayWelcomeMessage();
         void displayFarewellMessage();
@@ -41,6 +31,7 @@ class GameEngine {
         bool hasPlayerWon();
 
         bool changeStateFromCommand(string commandString);
+        // this one can be removed
         bool setGameStateIfValid(GameStates newState, string commandString);
 
         string getGameStateAsString() const;
@@ -54,28 +45,4 @@ class GameEngine {
         friend ostream& operator << (ostream&, const GameEngine&);
 
         void startNewGame();
-};
-
-/**
- * Struct that contains all definitions for command strings a user may input in a game of Warzone.
- * 
- * As per go-ahead from prof, does not contain a definition for a copy constrctor or assignment operator since the
- * strings are static and are always going to be the same.
-*/
-struct CommandStrings {
-    static const string loadMap;
-    static const string validateMap;
-    static const string addPlayer;
-    static const string assignCountries;
-    static const string issueOrder;
-    static const string endIssueOrders;
-    static const string execOrder;
-    static const string endExecOrders;
-    static const string win;
-    static const string play;
-    static const string end;
-
-    static bool isStringCommandString(string input);
-
-    friend ostream& operator << (ostream&, const CommandStrings&);
 };

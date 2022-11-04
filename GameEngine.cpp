@@ -6,72 +6,19 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-// Define command string constants
-const string CommandStrings::loadMap = "loadmap";
-const string CommandStrings::validateMap = "validatemap";
-const string CommandStrings::addPlayer = "addplayer";
-const string CommandStrings::assignCountries = "assigncountries";
-const string CommandStrings::issueOrder = "issueorder";
-const string CommandStrings::endIssueOrders = "endissueorders";
-const string CommandStrings::execOrder = "execorder";
-const string CommandStrings::endExecOrders = "endexecorders";
-const string CommandStrings::win = "win";
-const string CommandStrings::play = "play";
-const string CommandStrings::end = "end";
-
-/**
- * Checks if input string matches any of the valid command strings.
- * 
- * @param input The string to check
- * @returns Boolean indicating if input string is a valid command string or not
-*/
-bool CommandStrings::isStringCommandString(string input) {
-    return input == loadMap
-        || input == validateMap
-        || input == addPlayer
-        || input == assignCountries
-        || input == issueOrder
-        || input == endIssueOrders
-        || input == execOrder
-        || input == endExecOrders
-        || input == win
-        || input == play
-        || input == end;
-}
-
-/**
- * Stream insertion operator for CommandStrings. Will display current dictionary of command strings.
-*/
-ostream &operator << (ostream &out, const CommandStrings &strings) {
-    out << "Current list of command strings: " << endl;
-
-    // Done manually since could not find way to programmatically do it within C++ without the aid
-    // of external libraries
-    out << "1: " << strings.loadMap << endl;
-    out << "2: " << strings.validateMap << endl;
-    out << "3: " << strings.addPlayer << endl;
-    out << "4: " << strings.assignCountries << endl;
-    out << "5: " << strings.issueOrder << endl;
-    out << "6: " << strings.endIssueOrders << endl;
-    out << "7: " << strings.execOrder << endl;
-    out << "8: " << strings.win << endl;
-    out << "9: " << strings.play << endl;
-    out << "10: " << strings.end << endl;
-
-    return out;
-}
-
 /**
  * Default constructor sets current game state to Start
  * */
 GameEngine::GameEngine() {
     this->currentGameState = START;
+    this->commandProcessor = new CommandProcessor();
 }
 
 /**
  * Destructor. No pointers to destroy...for now.
  * */
 GameEngine::~GameEngine() {
+    delete this->commandProcessor;
 }
 
 /**
@@ -199,6 +146,8 @@ bool GameEngine::hasGameBeenEnded(string commandString) {
  * was not a valid one.
 */
 bool GameEngine::changeStateFromCommand(string commandString) {
+    // TODO: Change so that it instead calls CommandProcessor::validate(), and if that returns okay then change
+    // state based on command string
     if (commandString == CommandStrings::end) {
         return false;
     }
@@ -322,13 +271,20 @@ void GameEngine::startNewGame() {
     while (isGameInProgress) {
         // TODO: Move to command processor
         string inputCommand = getUserInput();
+        Command *command = new Command(inputCommand);
 
-        // TODO: Move to command processor
-        if (!CommandStrings::isStringCommandString(inputCommand)) {
-            cout << inputCommand << " is not a valid command string!" << endl;
+        if (!this->commandProcessor->validate(command, this->currentGameState)) {
+            cout << command->getEffect() << endl;
             displayCurrentGameState();
             continue;
         }
+
+        // TODO: Move to command processor
+        // if (!CommandStrings::isStringCommandString(inputCommand)) {
+        //     cout << inputCommand << " is not a valid command string!" << endl;
+        //     displayCurrentGameState();
+        //     continue;
+        // }
 
         if (hasGameBeenEnded(inputCommand)) {
             isGameInProgress = false;
