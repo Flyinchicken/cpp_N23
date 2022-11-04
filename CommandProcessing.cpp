@@ -68,10 +68,6 @@ Command::~Command() {
     // Nothing to delete...for now
 }
 
-void Command::saveCommand(string commandString) {
-    this->command = commandString;
-}
-
 string Command::getCommand() {
     return this->command;
 }

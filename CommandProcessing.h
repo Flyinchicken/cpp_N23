@@ -29,7 +29,6 @@ class Command {
         void saveEffect(string effectString);
         string getEffect();
 
-        void saveCommand(string commandString);
         string getCommand();
     private:
         string command;
@@ -38,7 +37,6 @@ class Command {
 
 class CommandProcessor {
     public:
-        string readCommand();
         bool validate(Command *command, GameStates currentGameState);
 };
 
