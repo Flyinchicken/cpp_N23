@@ -27,7 +27,7 @@ class GameEngine {
 
         string getUserInput();
 
-        bool hasGameBeenEnded(string commandString);
+        bool hasGameBeenEnded(string command);
         bool hasPlayerWon();
 
         bool changeStateFromCommand(string commandString);

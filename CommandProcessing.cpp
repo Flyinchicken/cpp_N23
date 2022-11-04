@@ -17,15 +17,6 @@ const string CommandStrings::gameStart = "gamestart";
 const string CommandStrings::replay = "replay";
 const string CommandStrings::quit = "quit";
 
-const string CommandStrings::assignCountries = "assigncountries";
-const string CommandStrings::issueOrder = "issueorder";
-const string CommandStrings::endIssueOrders = "endissueorders";
-const string CommandStrings::execOrder = "execorder";
-const string CommandStrings::endExecOrders = "endexecorders";
-const string CommandStrings::win = "win";
-const string CommandStrings::play = "play";
-const string CommandStrings::end = "end";
-
 /**
  * Checks if input string matches any of the valid command strings.
  * 
@@ -38,16 +29,7 @@ bool CommandStrings::isStringCommandString(string input) {
         || input == addPlayer
         || input == gameStart
         || input == replay
-        || input == quit
-        
-        || input == assignCountries
-        || input == issueOrder
-        || input == endIssueOrders
-        || input == execOrder
-        || input == endExecOrders
-        || input == win
-        || input == play
-        || input == end;
+        || input == quit;
 }
 
 /**
@@ -143,6 +125,6 @@ bool CommandProcessor::validate(Command *command, GameStates currentGameState) {
     }
 
     command->saveEffect(command->getCommand() + " is not valid in the current game state");
-    
+
     return false;
 }

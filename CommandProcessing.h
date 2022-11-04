@@ -1,7 +1,5 @@
 #pragma once
 
-// TODO: Is this the right thing? Put GameStates in a namespace instead??
-
 #include <string>
 #include <iostream>
 
@@ -54,16 +52,6 @@ struct CommandStrings {
     static const string loadMap;
     static const string validateMap;
     static const string addPlayer;
-    static const string assignCountries;
-    static const string issueOrder;
-    static const string endIssueOrders;
-    static const string execOrder;
-    static const string endExecOrders;
-    static const string win;
-    static const string play;
-    static const string end;
-
-    // NEW
     static const string gameStart;
     static const string replay;
     static const string quit;

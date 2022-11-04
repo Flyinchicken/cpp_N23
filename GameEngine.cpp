@@ -133,8 +133,8 @@ string GameEngine::getUserInput() {
  * 
  * @returns If the user has attempted to end the game after winning.
 */
-bool GameEngine::hasGameBeenEnded(string commandString) {
-    return currentGameState == 7 && commandString == CommandStrings::end;
+bool GameEngine::hasGameBeenEnded(string command) {
+    return currentGameState == WIN && command == CommandStrings::quit;
 }
 
 /**
@@ -146,32 +146,26 @@ bool GameEngine::hasGameBeenEnded(string commandString) {
  * was not a valid one.
 */
 bool GameEngine::changeStateFromCommand(string commandString) {
-    // TODO: Change so that it instead calls CommandProcessor::validate(), and if that returns okay then change
-    // state based on command string
-    if (commandString == CommandStrings::end) {
+    if (commandString == CommandStrings::quit) {
         return false;
     }
 
     if (commandString == CommandStrings::loadMap) {
-        return setGameStateIfValid(MAPLOADED, commandString);
+        this->currentGameState = MAPLOADED;
     } else if (commandString == CommandStrings::validateMap) {
-        return setGameStateIfValid(MAPVALIDATED, commandString);
+        this->currentGameState = MAPVALIDATED;
     } else if (commandString == CommandStrings::addPlayer) {
-        return setGameStateIfValid(PLAYERSADDED, commandString);
-    } else if (commandString == CommandStrings::assignCountries || commandString == CommandStrings::endExecOrders) {
-        return setGameStateIfValid(ASSIGNREINFORCEMENTS, commandString);
-    } else if (commandString == CommandStrings::issueOrder) {
-        return setGameStateIfValid(ISSUEORDERS, commandString);
-    } else if (commandString == CommandStrings::endIssueOrders || commandString == CommandStrings::execOrder) {
-        return setGameStateIfValid(EXECUTEORDERS, commandString);
-    } else if (commandString == CommandStrings::win) {
-        return setGameStateIfValid(WIN, commandString);
-    } else if (commandString == CommandStrings::play) {
-        return setGameStateIfValid(START, commandString);
+        this->currentGameState = PLAYERSADDED;
+    } else if (commandString == CommandStrings::gameStart) {
+        this->currentGameState = ASSIGNREINFORCEMENTS;
+    } else if (commandString == CommandStrings::replay) {
+        this->currentGameState = START;
     } else {
         cout << "Error: command string is invalid after being checked for validity!" << endl;
         return false;
     }
+
+    return true;
 }
 
 /**
@@ -188,64 +182,64 @@ bool GameEngine::changeStateFromCommand(string commandString) {
  * @returns Whether or not a state transition has occured
 */
 bool GameEngine::setGameStateIfValid(GameStates newState, string commandString) {
-    switch (currentGameState) {
-        case START:
-            if (newState == MAPLOADED) {
-                currentGameState = newState;
-                return true;
-            }
-            break;
-        case MAPLOADED:
-            if (newState == MAPLOADED || newState == MAPVALIDATED) {
-                currentGameState = newState;
-                return true;
-            }
-            break;
-        case MAPVALIDATED:
-            if (newState == PLAYERSADDED) {
-                currentGameState = newState;
-                return true;
-            }
-            break;
-        case PLAYERSADDED:
-            if (newState == PLAYERSADDED || (newState == ASSIGNREINFORCEMENTS && commandString != CommandStrings::endExecOrders)) {
-                currentGameState = newState;
-                return true;
-            }
-            break;
-        case ASSIGNREINFORCEMENTS:
-            if (newState == ISSUEORDERS) {
-                currentGameState = newState;
-                return true;
-            }
-            break;
-        case ISSUEORDERS:
-            if (newState == ISSUEORDERS || (newState == EXECUTEORDERS && commandString != CommandStrings::execOrder)) {
-                currentGameState = newState;
-                return true;
-            }
-            break;
-        case EXECUTEORDERS:
-            if ((newState == EXECUTEORDERS && commandString != CommandStrings::endIssueOrders) 
-                || (newState == ASSIGNREINFORCEMENTS && commandString != CommandStrings::assignCountries) 
-                || newState == WIN
-            ) {
-                currentGameState = newState;
-                return true;
-            }
-            break;
-        case WIN:
-            if (newState == START) {
-                currentGameState = newState;
-                cout << "Starting new game..." << endl;
-                return true;
-            }
-            break;
-        default:
-            cout << "Error: current state is not valid!" << endl;
-    }
+    // switch (currentGameState) {
+    //     case START:
+    //         if (newState == MAPLOADED) {
+    //             currentGameState = newState;
+    //             return true;
+    //         }
+    //         break;
+    //     case MAPLOADED:
+    //         if (newState == MAPLOADED || newState == MAPVALIDATED) {
+    //             currentGameState = newState;
+    //             return true;
+    //         }
+    //         break;
+    //     case MAPVALIDATED:
+    //         if (newState == PLAYERSADDED) {
+    //             currentGameState = newState;
+    //             return true;
+    //         }
+    //         break;
+    //     case PLAYERSADDED:
+    //         if (newState == PLAYERSADDED || (newState == ASSIGNREINFORCEMENTS && commandString != CommandStrings::endExecOrders)) {
+    //             currentGameState = newState;
+    //             return true;
+    //         }
+    //         break;
+    //     case ASSIGNREINFORCEMENTS:
+    //         if (newState == ISSUEORDERS) {
+    //             currentGameState = newState;
+    //             return true;
+    //         }
+    //         break;
+    //     case ISSUEORDERS:
+    //         if (newState == ISSUEORDERS || (newState == EXECUTEORDERS && commandString != CommandStrings::execOrder)) {
+    //             currentGameState = newState;
+    //             return true;
+    //         }
+    //         break;
+    //     case EXECUTEORDERS:
+    //         if ((newState == EXECUTEORDERS && commandString != CommandStrings::endIssueOrders) 
+    //             || (newState == ASSIGNREINFORCEMENTS && commandString != CommandStrings::assignCountries) 
+    //             || newState == WIN
+    //         ) {
+    //             currentGameState = newState;
+    //             return true;
+    //         }
+    //         break;
+    //     case WIN:
+    //         if (newState == START) {
+    //             currentGameState = newState;
+    //             cout << "Starting new game..." << endl;
+    //             return true;
+    //         }
+    //         break;
+    //     default:
+    //         cout << "Error: current state is not valid!" << endl;
+    // }
 
-    return false;
+    // return false;
 }
 
 /**
@@ -268,7 +262,7 @@ void GameEngine::startNewGame() {
 
     bool isGameInProgress = true;
 
-    while (isGameInProgress) {
+    while (isGameInProgress) {   
         // TODO: Move to command processor
         string inputCommand = getUserInput();
         Command *command = new Command(inputCommand);
@@ -279,19 +273,11 @@ void GameEngine::startNewGame() {
             continue;
         }
 
-        // TODO: Move to command processor
-        // if (!CommandStrings::isStringCommandString(inputCommand)) {
-        //     cout << inputCommand << " is not a valid command string!" << endl;
-        //     displayCurrentGameState();
-        //     continue;
-        // }
-
-        if (hasGameBeenEnded(inputCommand)) {
+        if (hasGameBeenEnded(command->getCommand())) {
             isGameInProgress = false;
             continue;
         }
 
-        // TODO: Move to command processor
         if (!changeStateFromCommand(inputCommand)) {
             cout << "Invalid state transition!" << endl;
         }
