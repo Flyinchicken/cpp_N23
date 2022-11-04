@@ -17,8 +17,8 @@ int main()
 
     // Game Engine Tests
     std::cout << std::endl
-        << "Game Engine Tests Commencing" << std::endl
-        << std::endl;
+              << "Game Engine Tests Commencing" << std::endl
+              << std::endl;
 
     testGameStates();
 

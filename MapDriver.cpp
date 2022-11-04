@@ -22,11 +22,19 @@ void testLoadMaps()
 
     cin >> option;
 
-    while (option != 1 && option != 2)
-    {
-        cout << "Please enter a valid option: " << endl;
+    while (!cin) {
+        cout << "Please enter a number 1 or 2" << endl;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         cin >> option;
+        while (option != 1 && option != 2)
+        {
+            cout << "Please enter a valid option: " << endl;
+            cin >> option;
+        }
     }
+
+
 
     string filePrefix = "../MapFiles/";
 
