@@ -1,10 +1,12 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <iostream>
 
 using std::string;
 using std::ostream;
+using std::vector;
 
 /**
  * Represents the possible states of a Warzone game.
@@ -37,7 +39,14 @@ class Command {
 
 class CommandProcessor {
     public:
+        CommandProcessor();
         bool validate(Command *command, GameStates currentGameState);
+        void getCommand();
+        vector<Command*> getCommandsList();
+    private:
+        vector<Command*> commandsList;
+        string readCommand();
+        void saveCommand(string command);
 };
 
 /**
