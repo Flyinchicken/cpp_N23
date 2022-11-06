@@ -41,7 +41,7 @@ class CommandProcessor {
     public:
         CommandProcessor();
         bool validate(Command *command, GameStates currentGameState);
-        void getCommand();
+        vector<string> getCommand();
         vector<Command*> getCommandsList();
     private:
         vector<Command*> commandsList;

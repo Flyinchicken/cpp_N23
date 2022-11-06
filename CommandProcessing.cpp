@@ -141,8 +141,12 @@ void CommandProcessor::saveCommand(string command) {
     this->commandsList.push_back(new Command(command));
 }
 
-void CommandProcessor::getCommand() {
-    this->saveCommand(this->readCommand());
+vector<string> CommandProcessor::getCommand() {
+    string inputCommand = this->readCommand();
+    this->saveCommand(inputCommand);
+    vector<string> commands;
+    commands.push_back(inputCommand);
+    return commands;
 }
 
 vector<Command*> CommandProcessor::getCommandsList() {
