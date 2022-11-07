@@ -146,9 +146,9 @@ void CommandProcessor::getCommand() {
     while (true) {
         string inputCommand = this->readCommand();
         
-        cout << inputCommand;
+        cout << inputCommand << endl;
 
-        if (inputCommand == "end") {
+        if (inputCommand == "end" || inputCommand == "nd") {
             return;
         }
 
@@ -186,10 +186,26 @@ FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
 string FileCommandProcessorAdapter::readCommand() {
     cout << "Type the path of the file where your commands are: (Type 'end' to stop)" << endl;
     string path;
-    cin >> path;
-    if (path == "end") {
+    cin.ignore();
+    getline(cin, path);
+
+    if (path == "end" || path ==  "nd") {
         return path;
     }
+
+    ifstream input(path.c_str());
+
+    while (input.fail())
+    {
+        if (path == "end") {
+            return path;
+        }
+        input.clear();
+        cout << "Incorrect file path. Please provide a valid file." << endl;
+        getline(cin, path);
+        input.open(path.c_str());
+    }
+    input.clear();
 
     vector<string> commands;
     commands = this->fileReader->processCommands(path);
@@ -199,6 +215,7 @@ string FileCommandProcessorAdapter::readCommand() {
 
     return "Opening " + path;
 }
+
 
 /*
 File Processor
@@ -214,6 +231,7 @@ FileProcessor::~FileProcessor() {
 }
 
 vector<string> FileProcessor::processCommands(string filePath) {
+
     vector<string> commands;
     string tempCommand;
 
