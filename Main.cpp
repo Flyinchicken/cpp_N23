@@ -5,19 +5,13 @@
 #include "OrdersDriver.h"
 #include "CardDriver.h"
 #include "PlayerDriver.h"
-#include "CommandProcessing.h"
-#include "GameEngine.h"
+#include "CommandProcessingDriver.h"
 
 using namespace std;
 int main()
 {
-    //Test CommandProcessor 
-    CommandProcessor *cp = new CommandProcessor();
-    cp->getCommand();
-    //Print the list of commands in the CommandProcessor object 
-    for (int i = 0; i < cp->getCommandsList().size(); i++) {
-        cout << (cp->getCommandsList().at(i)->getCommand()) << endl;
-    }
+    testCommandProcessor();
+    
 
     /*std::cout << "Welcome everyone!" << std::endl;
 
