@@ -144,7 +144,6 @@ void CommandProcessor::saveCommand(string command) {
 
 void CommandProcessor::getCommand() {
     while (true) {
-
         string inputCommand = this->readCommand();
         
         cout << inputCommand << endl;
@@ -216,6 +215,7 @@ string FileCommandProcessorAdapter::readCommand() {
 
     return "Opening " + path;
 }
+
 
 /*
 File Processor
