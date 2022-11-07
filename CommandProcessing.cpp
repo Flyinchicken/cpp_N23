@@ -5,6 +5,7 @@
 using std::cin;
 using std::endl;
 using std::cout;
+using std::ifstream;
 
 //
 //  COMMAND STRINGS
@@ -131,7 +132,7 @@ bool CommandProcessor::validate(Command *command, GameStates currentGameState) {
 }
 
 string CommandProcessor::readCommand() {
-    cout << "Give a command:" << endl;
+    cout << "Give a command: (Type 'end' when you wish to stop) " << endl;
     string commandStr;
     cin >> commandStr;
     return commandStr;
@@ -141,14 +142,88 @@ void CommandProcessor::saveCommand(string command) {
     this->commandsList.push_back(new Command(command));
 }
 
-vector<string> CommandProcessor::getCommand() {
-    string inputCommand = this->readCommand();
-    this->saveCommand(inputCommand);
-    vector<string> commands;
-    commands.push_back(inputCommand);
-    return commands;
+void CommandProcessor::getCommand() {
+    while (true) {
+        string inputCommand = this->readCommand();
+        
+        cout << inputCommand;
+
+        if (inputCommand == "end") {
+            return;
+        }
+
+        this->saveCommand(inputCommand);
+    }
 }
 
 vector<Command*> CommandProcessor::getCommandsList() {
     return this->commandsList;
 }
+
+CommandProcessor::~CommandProcessor() {
+
+}
+
+/*
+File Processor Adapter
+
+*/
+
+FileCommandProcessorAdapter::FileCommandProcessorAdapter() {
+    CommandProcessor();
+    this->fileReader = new FileProcessor();
+}
+
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileProcessor* file) {
+    CommandProcessor();
+    this->fileReader = file;
+}
+
+FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
+
+}
+
+string FileCommandProcessorAdapter::readCommand() {
+    cout << "Type the path of the file where your commands are: (Type 'end' to stop)" << endl;
+    string path;
+    cin >> path;
+    if (path == "end") {
+        return path;
+    }
+
+    vector<string> commands;
+    commands = this->fileReader->processCommands(path);
+
+    for (string i : commands)
+        this->saveCommand(i);
+
+    return "Opening " + path;
+}
+
+/*
+File Processor
+
+*/
+
+FileProcessor::FileProcessor() {
+
+}
+
+FileProcessor::~FileProcessor() {
+   
+}
+
+vector<string> FileProcessor::processCommands(string filePath) {
+    vector<string> commands;
+    string tempCommand;
+
+    ifstream commandFile(filePath);
+
+    while (getline(commandFile, tempCommand)) {
+        commands.push_back(tempCommand);
+    }
+
+    commandFile.close();
+    return commands;
+}
+

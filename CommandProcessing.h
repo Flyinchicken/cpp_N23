@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <fstream>
 
 using std::string;
 using std::ostream;
@@ -37,16 +38,35 @@ class Command {
         string effect;
 };
 
+class FileProcessor {
+    public:
+        FileProcessor();
+        vector<string> processCommands(string filePath);
+        ~FileProcessor();
+};
+
 class CommandProcessor {
     public:
         CommandProcessor();
-        bool validate(Command *command, GameStates currentGameState);
-        vector<string> getCommand();
+        static bool validate(Command *command, GameStates currentGameState);
+        void getCommand();
         vector<Command*> getCommandsList();
-    private:
+        virtual ~CommandProcessor();
+    protected:
         vector<Command*> commandsList;
-        string readCommand();
+        virtual string readCommand();
         void saveCommand(string command);
+};
+
+
+class FileCommandProcessorAdapter : public CommandProcessor {
+public:
+    FileCommandProcessorAdapter();
+    FileCommandProcessorAdapter(FileProcessor *file);
+    ~FileCommandProcessorAdapter();
+private:
+    FileProcessor* fileReader;
+    string readCommand();
 };
 
 /**

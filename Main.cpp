@@ -11,6 +11,7 @@
 using namespace std;
 int main()
 {
+    /*
     //Test CommandProcessor 
     CommandProcessor *cp = new CommandProcessor();
     cp->getCommand();
@@ -18,6 +19,16 @@ int main()
     for (int i = 0; i < cp->getCommandsList().size(); i++) {
         cout << (cp->getCommandsList().at(i)->getCommand()) << endl;
     }
+    */
+
+    FileCommandProcessorAdapter* file = new FileCommandProcessorAdapter();
+    file->getCommand();
+    vector<Command*> commands = file->getCommandsList();
+
+    for (Command* i: commands)
+        cout <<i->getCommand()<<endl;
+    
+    //CommandProcessor::validate(cp->getCommandsList().at(0), GameStates::START);
 
     /*std::cout << "Welcome everyone!" << std::endl;
 
