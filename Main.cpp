@@ -12,6 +12,8 @@ int main()
 {
     testCommandProcessor();
 
+    testStartupPhase();
+
     /*std::cout << "Welcome everyone!" << std::endl;
 
     // Map Test

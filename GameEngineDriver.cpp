@@ -11,3 +11,14 @@ void testGameStates() {
     
     delete ge;  
 }
+
+/**
+ * Demonstrates that within the startupPhase a map is loaded, validated, players are added, and the game is started
+*/
+void testStartupPhase() {
+    GameEngine *ge = new GameEngine();
+
+    ge->startupPhase();
+    
+    delete ge;
+}
