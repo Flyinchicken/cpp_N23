@@ -94,7 +94,7 @@ CommandProcessor::CommandProcessor() {
 bool CommandProcessor::validate(Command *command, GameStates currentGameState) {
     if (!CommandStrings::isStringCommandString(command->getCommand())) {
         command->saveEffect(command->getCommand() + " is not a valid command string!");
-
+        cout << command->getCommand() + " is not a valid command string!"  << endl;
         return false;
     }
     
@@ -148,7 +148,7 @@ void CommandProcessor::getCommand() {
         
         cout << inputCommand << endl;
 
-        if (inputCommand == "end" || inputCommand == "nd") {
+        if (inputCommand == "end") {
             return;
         }
 
@@ -186,16 +186,18 @@ FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
 string FileCommandProcessorAdapter::readCommand() {
     cout << "Type the path of the file where your commands are: (Type 'end' to stop)" << endl;
     string path;
-    cin.ignore();
     getline(cin, path);
+    if (path == "") {
+        getline(cin, path);
+    }
 
-    if (path == "end" || path ==  "nd") {
+    if (path == "end") {
         return path;
     }
 
-    ifstream input(path.c_str());
+    ifstream input(path);
 
-    while (input.fail())
+    while (input.fail() && path != "")
     {
         if (path == "end") {
             return path;
@@ -203,7 +205,7 @@ string FileCommandProcessorAdapter::readCommand() {
         input.clear();
         cout << "Incorrect file path. Please provide a valid file." << endl;
         getline(cin, path);
-        input.open(path.c_str());
+        input.open(path);
     }
     input.clear();
 
