@@ -58,6 +58,7 @@ class CommandProcessor {
         void saveCommand(string command);
 };
 
+bool validateLoadmapAndAddplayer(Command* command);
 
 class FileCommandProcessorAdapter : public CommandProcessor {
 public:

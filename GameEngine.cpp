@@ -150,11 +150,11 @@ bool GameEngine::changeStateFromCommand(string commandString) {
         return false;
     }
 
-    if (commandString == CommandStrings::loadMap) {
+    if (commandString.find("loadmap")) {
         this->currentGameState = MAPLOADED;
     } else if (commandString == CommandStrings::validateMap) {
         this->currentGameState = MAPVALIDATED;
-    } else if (commandString == CommandStrings::addPlayer) {
+    } else if (commandString.find("addplayer")) {
         this->currentGameState = PLAYERSADDED;
     } else if (commandString == CommandStrings::gameStart) {
         this->currentGameState = ASSIGNREINFORCEMENTS;
