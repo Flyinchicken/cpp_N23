@@ -11,7 +11,6 @@ using namespace std;
 int main()
 {
     testCommandProcessor();
-    
 
     /*std::cout << "Welcome everyone!" << std::endl;
 
