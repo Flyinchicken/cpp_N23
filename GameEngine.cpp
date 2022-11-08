@@ -252,6 +252,13 @@ bool GameEngine::hasPlayerWon() {
 }
 
 /**
+ * Command-based user interaction mechanism to start the game
+*/
+void GameEngine::startupPhase() {
+
+}
+
+/**
  * Starts a new game loop that accepts user input from the console and allows them to navigate through the various
  * states of the game.
 */
