@@ -47,4 +47,14 @@ class GameEngine {
         void startNewGame();
 
         void startupPhase();
+
+        void mainGameLoop();
+
+        void reinforcementPhase();
+
+        void issueOrdersPhase();
+
+        void executeOrdersPhase();
+
+
 };

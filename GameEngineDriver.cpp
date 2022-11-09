@@ -11,3 +11,11 @@ void testGameStates() {
     
     delete ge;  
 }
+
+void testMainGameLoop(){
+    GameEngine *ge = new GameEngine();
+
+    ge->mainGameLoop();
+    
+    delete ge; 
+}

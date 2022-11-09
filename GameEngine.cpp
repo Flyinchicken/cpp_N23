@@ -259,6 +259,47 @@ void GameEngine::startupPhase() {
 }
 
 /**
+ * gamestart command triggers state change to ASSIGNREINFORCEMENT and call mainGameLoop
+ * Loop between reinforcement, issuing orders, and execute orders.
+*/
+void GameEngine::mainGameLoop(){
+    //********For Assignement 2 only**********
+    currentGameState = ASSIGNREINFORCEMENTS;
+    //****************************************
+    while(currentGameState == ASSIGNREINFORCEMENTS || currentGameState == ISSUEORDERS || currentGameState == EXECUTEORDERS){
+        if(currentGameState == ASSIGNREINFORCEMENTS){
+            reinforcementPhase();
+        } else if (currentGameState == ISSUEORDERS){
+            issueOrdersPhase();
+        } else {
+            executeOrdersPhase();
+        }
+
+    }
+}
+
+/**
+ * calculate and assign armies to each player
+*/
+void reinforcementPhase(){
+    // need a list of players, each player's territory count
+    // for(auto& i : players){
+    //     i.getTerritoryCount() / 3
+
+    // }
+
+}
+
+void issueOrdersPhase(){
+
+}
+
+void executeOrdersPhase(){
+
+}
+
+
+/**
  * Starts a new game loop that accepts user input from the console and allows them to navigate through the various
  * states of the game.
 */
