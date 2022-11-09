@@ -45,4 +45,6 @@ class GameEngine {
         friend ostream& operator << (ostream&, const GameEngine&);
 
         void startNewGame();
+
+        void startupPhase();
 };
