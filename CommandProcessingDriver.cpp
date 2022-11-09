@@ -28,12 +28,12 @@ void testCommandProcessor() {
             for (Command* i : consoleCommands) {    // 0 = false, 1 = true
                 cout << "========================================" << endl;
                 cout << "Command from console: " << i->getCommand() << endl;
-                if (validateLoadmapAndAddplayer(i)) {
-                        cout << "START: " << console->validate(i, START) << endl;
-                        cout << "MAPLOADED: " << console->validate(i, MAPLOADED) << endl;
-                        cout << "MAPVALIDATED: " << console->validate(i, MAPVALIDATED) << endl;
-                        cout << "PLAYERSADDED: " << console->validate(i, PLAYERSADDED) << endl;
-                        cout << "WIN: " << console->validate(i, WIN) << endl; 
+                if (validateCommandString(i)) {
+                    cout << "START: " << console->validate(i, START) << endl;
+                    cout << "MAPLOADED: " << console->validate(i, MAPLOADED) << endl;
+                    cout << "MAPVALIDATED: " << console->validate(i, MAPVALIDATED) << endl;
+                    cout << "PLAYERSADDED: " << console->validate(i, PLAYERSADDED) << endl;
+                    cout << "WIN: " << console->validate(i, WIN) << endl;
                 }
 
             }
@@ -49,7 +49,7 @@ void testCommandProcessor() {
                 if (i->getCommand().find("Opening") == std::string::npos) {
                     cout << "========================================" << endl;
                     cout << "Command from file: " << i->getCommand() << endl;
-                    if (validateLoadmapAndAddplayer(i)) {
+                    if (validateCommandString(i)) {
                         cout << "START: " << file->validate(i, START) << endl;
                         cout << "MAPLOADED: " << file->validate(i, MAPLOADED) << endl;
                         cout << "MAPVALIDATED: " << file->validate(i, MAPVALIDATED) << endl;
