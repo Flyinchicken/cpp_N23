@@ -58,8 +58,6 @@ protected:
     void saveCommand(string command);
 };
 
-bool validateCommandString(Command* command);
-
 class FileCommandProcessorAdapter : public CommandProcessor {
 public:
     FileCommandProcessorAdapter();
