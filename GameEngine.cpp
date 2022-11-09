@@ -255,7 +255,19 @@ bool GameEngine::hasPlayerWon() {
  * Command-based user interaction mechanism to start the game
 */
 void GameEngine::startupPhase() {
+    bool inStartup = true;
 
+    while (inStartup) {
+        Command* command = commandProcessor->getCommand();
+        
+        if (commandProcessor->validate(command, currentGameState)) {
+            cout << "this has been validated" << endl;
+            changeStateFromCommand(command->getCommand());
+        }
+        else {
+            cout << command->getEffect() << endl;
+        }
+    }    
 }
 
 /**

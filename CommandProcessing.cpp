@@ -320,11 +320,11 @@ bool CommandProcessor::validate(Command *command, GameStates currentGameState) {
             if (commandString == CommandStrings::replay || commandString == CommandStrings::quit) {
                 return true;
             }
-            break;
-        default:
-            command->saveEffect(command->getCommand() + " is not valid in the current game state");
+            break;            
     }    
 
+    command->saveEffect(command->getCommand() + " is not valid in the current game state");
+    
     return false;
 }
 
