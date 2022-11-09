@@ -38,27 +38,39 @@ class Command {
         string effect;
 };
 
+class CommandProcessor {
+    public:
+        CommandProcessor();
+        CommandProcessor(const CommandProcessor&);
+        virtual ~CommandProcessor();
+
+        CommandProcessor &operator = (const CommandProcessor&);
+        friend ostream &operator << (ostream&, const CommandProcessor&);
+
+        Command* getCommand();
+        bool validate(Command *command, GameStates currentGameState);
+
+        void getInputFormat();
+        bool isConsoleInput();
+        
+        vector<Command*> getCommandsList();        
+    protected:
+        vector<Command*> commandsList;
+        bool consoleInput;
+
+        virtual string readCommand();
+        void saveCommand(string command);
+        vector<string> splitStringByDelim(string toSplit, char delim);
+};
+
+bool validateLoadmapAndAddplayer(Command* command);
+
 class FileProcessor {
     public:
         FileProcessor();
         vector<string> processCommands(string filePath);
         ~FileProcessor();
 };
-
-class CommandProcessor {
-    public:
-        CommandProcessor();
-        static bool validate(Command *command, GameStates currentGameState);
-        void getCommand();
-        vector<Command*> getCommandsList();
-        virtual ~CommandProcessor();
-    protected:
-        vector<Command*> commandsList;
-        virtual string readCommand();
-        void saveCommand(string command);
-};
-
-bool validateLoadmapAndAddplayer(Command* command);
 
 class FileCommandProcessorAdapter : public CommandProcessor {
 public:
@@ -69,6 +81,8 @@ private:
     FileProcessor* fileReader;
     string readCommand();
 };
+
+
 
 /**
  * Struct that contains all definitions for command strings a user may input in a game of Warzone.
