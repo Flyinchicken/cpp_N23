@@ -95,61 +95,8 @@ bool has_suffix(const std::string& str, const std::string& suffix)
         str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
 }
 
-//Validate the command string given to check if the command is valid
-bool validateCommandString(Command* command) {
-
-    string commandString = command->getCommand();
-    const int loadmapStringSize = 7;
-    const int addplayerStringSize = 9;
-
-    bool isLoadmapCommand = commandString.find("loadmap") == 0 && (commandString.size() > loadmapStringSize) ? isspace(commandString.at(loadmapStringSize)) : false;
-    bool isAddplayerCommand = commandString.find("addplayer") == 0 && (commandString.size() > addplayerStringSize) ? isspace(commandString.at(addplayerStringSize)) : false;
-
-
-    //return true if the command given is in the list of valid commands
-    if (CommandStrings::isStringCommandString(commandString)) return true;
-
-    bool isLoadmapOrAddplayer = isLoadmapCommand || isAddplayerCommand;
-
-    //return false if the command given is neither in the list of valid commands or a command to add a
-    //player (addplayer) or load a map (loadmap)
-    if (!isLoadmapOrAddplayer && !CommandStrings::isStringCommandString(commandString)) {
-        command->saveEffect(commandString + " is not a valid command string!");
-        cout << commandString + " is not a valid command string!" << endl;
-        return false;
-    }
-
-    //Check if the loadmap <filename> command has a valid filename
-    if (isLoadmapCommand) {
-        string mapFile = commandString.substr(loadmapStringSize + 1, commandString.size() - loadmapStringSize);
-        ifstream infile(mapFile.c_str());
-        if (mapFile != "" && infile.good() && has_suffix(mapFile, ".map")) {
-            cout << "Loading map: " << mapFile << endl;
-            return true;
-        }
-        else {
-            command->saveEffect(commandString + " is not a valid command string. The Map file provided does not exist or is not a .map file.");
-            cout << commandString + " is not a valid command string. The Map file provided does not exist or is not a .map file." << endl;
-            return false;
-        }
-    }
-    //Check if the addplayer <playername> command has a playername
-    else if (isAddplayerCommand) {
-        string playerName = commandString.substr(addplayerStringSize + 1, commandString.size() - addplayerStringSize);
-        if (playerName == "" || playerName.find_first_not_of(' ') == playerName.npos) {
-            command->saveEffect(commandString + " is not a valid command string. There is no player name provided.");
-            cout << commandString + " is not a valid command string. There is no player name provided." << endl;
-            return false;
-        }
-        else {
-            cout << "Adding player: " << playerName << endl;
-            return true;
-        }
-    }
-}
-
 //Check if the valid command can be used in the current game state
-bool CommandProcessor::validate(Command* command, GameStates currentGameState) {
+bool validateCommandWithCurrentState(Command* command, GameStates currentGameState) {
 
     switch (currentGameState) {
     case START:
@@ -180,7 +127,64 @@ bool CommandProcessor::validate(Command* command, GameStates currentGameState) {
     }
 
     command->saveEffect(command->getCommand() + " is not valid in the current game state");
+    cout << command->getCommand() + " is not valid in the current game state" << endl;
+    return false;
+    
+}
 
+//Check if the valid command can be used in the current game state
+bool CommandProcessor::validate(Command* command, GameStates currentGameState) {
+
+    string commandString = command->getCommand();
+    bool isCommandValid = false;
+    const int loadmapStringSize = 7;
+    const int addplayerStringSize = 9;
+
+    bool isLoadmapCommand = commandString.find("loadmap") == 0 && (commandString.size() > loadmapStringSize) ? isspace(commandString.at(loadmapStringSize)) : false;
+    bool isAddplayerCommand = commandString.find("addplayer") == 0 && (commandString.size() > addplayerStringSize) ? isspace(commandString.at(addplayerStringSize)) : false;
+
+
+    //return true if the command given is in the list of valid commands
+    if (CommandStrings::isStringCommandString(commandString)) isCommandValid = true;
+
+    bool isLoadmapOrAddplayer = isLoadmapCommand || isAddplayerCommand;
+
+    //return false if the command given is neither in the list of valid commands or a command to add a
+    //player (addplayer) or load a map (loadmap)
+    if (!isLoadmapOrAddplayer && !CommandStrings::isStringCommandString(commandString)) {
+        command->saveEffect(commandString + " is not a valid command string!");
+        cout << commandString + " is not a valid command string!" << endl;
+    }
+
+    //Check if the loadmap <filename> command has a valid filename
+    if (isLoadmapCommand) {
+        string mapFile = commandString.substr(loadmapStringSize + 1, commandString.size() - loadmapStringSize);
+        ifstream infile(mapFile.c_str());
+        if (mapFile != "" && infile.good() && has_suffix(mapFile, ".map")) {
+            cout << "Loading map: " << mapFile << endl;
+            isCommandValid = true;
+        }
+        else {
+            command->saveEffect(commandString + " is not a valid command string. The Map file provided does not exist or is not a .map file.");
+            cout << commandString + " is not a valid command string. The Map file provided does not exist or is not a .map file." << endl;
+        }
+    }
+    //Check if the addplayer <playername> command has a playername
+    else if (isAddplayerCommand) {
+        string playerName = commandString.substr(addplayerStringSize + 1, commandString.size() - addplayerStringSize);
+        if (playerName == "" || playerName.find_first_not_of(' ') == playerName.npos) {
+            command->saveEffect(commandString + " is not a valid command string. There is no player name provided.");
+            cout << commandString + " is not a valid command string. There is no player name provided." << endl;
+        }
+        else {
+            cout << "Adding player: " << playerName << endl;
+            isCommandValid = true;
+        }
+    }
+
+    if (isCommandValid) {
+        return validateCommandWithCurrentState(command, currentGameState);
+    }
     return false;
 }
 
