@@ -20,7 +20,8 @@ enum GameStates {
     ASSIGNREINFORCEMENTS,
     ISSUEORDERS,
     EXECUTEORDERS,
-    WIN
+    WIN,
+    EXITPROGRAM
 };
 
 class Command {
@@ -48,7 +49,7 @@ public:
 class CommandProcessor {
 public:
     CommandProcessor();
-    static bool validate(Command* command, GameStates currentGameState);
+    static bool validate(Command* command, GameStates &currentGameState);
     void getCommand();
     vector<Command*> getCommandsList();
     virtual ~CommandProcessor();

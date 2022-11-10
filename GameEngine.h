@@ -30,11 +30,11 @@ class GameEngine {
         bool hasGameBeenEnded(string command);
         bool hasPlayerWon();
 
-        bool changeStateFromCommand(string commandString);
         // this one can be removed
         bool setGameStateIfValid(GameStates newState, string commandString);
 
         string getGameStateAsString() const;
+        friend ostream& operator<<(ostream&, const GameEngine&);
 
     public:
         GameEngine();
@@ -42,9 +42,14 @@ class GameEngine {
         GameEngine(const GameEngine&);
 
         GameEngine &operator = (const GameEngine &engine);
-        friend ostream& operator << (ostream&, const GameEngine&);
+        bool changeStateFromCommand(string commandString);
+
+       // friend ostream& operator << (ostream&, const GameEngine&);
 
         void startNewGame();
 
         void startupPhase();
+
+        CommandProcessor* getCommandProcessor();
+        GameStates getCurrentGameState();
 };

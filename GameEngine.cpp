@@ -37,6 +37,13 @@ GameEngine &GameEngine::operator = (const GameEngine &engine) {
     return *this;
 }
 
+CommandProcessor* GameEngine::getCommandProcessor() {
+    return this->commandProcessor;
+}
+
+GameStates GameEngine::getCurrentGameState() {
+    return this->currentGameState;
+}
 /*
  * Stream insertion operator for GameEngine. Displays the current state of the game.
  * */
@@ -76,6 +83,9 @@ string GameEngine::getGameStateAsString() const {
             break;
         case WIN:
             return "Win";
+            break;
+        case EXITPROGRAM:
+            return "Exit Program";
             break;
         default:
             return "Error: current Game state is not valid!";
@@ -150,11 +160,11 @@ bool GameEngine::changeStateFromCommand(string commandString) {
         return false;
     }
 
-    if (commandString.find("loadmap")) {
+    if (commandString.find("loadmap") != std::string::npos) {
         this->currentGameState = MAPLOADED;
     } else if (commandString == CommandStrings::validateMap) {
         this->currentGameState = MAPVALIDATED;
-    } else if (commandString.find("addplayer")) {
+    } else if (commandString.find("addplayer") != std::string::npos) {
         this->currentGameState = PLAYERSADDED;
     } else if (commandString == CommandStrings::gameStart) {
         this->currentGameState = ASSIGNREINFORCEMENTS;

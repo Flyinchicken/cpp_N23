@@ -96,26 +96,26 @@ bool has_suffix(const std::string& str, const std::string& suffix)
 }
 
 //Check if the valid command can be used in the current game state
-bool validateCommandWithCurrentState(Command* command, GameStates currentGameState) {
+bool validateCommandWithCurrentState(Command* command, GameStates &currentGameState) {
 
     switch (currentGameState) {
     case START:
-        if (command->getCommand().find("loadmap")) {
+        if (command->getCommand().find("loadmap") != std::string::npos) {
             return true;
         }
         break;
     case MAPLOADED:
-        if (command->getCommand().find("loadmap") || command->getCommand() == CommandStrings::validateMap) {
+        if (command->getCommand().find("loadmap") != std::string::npos || command->getCommand() == CommandStrings::validateMap) {
             return true;
         }
         break;
     case MAPVALIDATED:
-        if (command->getCommand().find("addplayer")) {
+        if (command->getCommand().find("addplayer") != std::string::npos) {
             return true;
         }
         break;
     case PLAYERSADDED:
-        if (command->getCommand().find("addplayer") || command->getCommand() == CommandStrings::gameStart) {
+        if (command->getCommand().find("addplayer") != std::string::npos || command->getCommand() == CommandStrings::gameStart) {
             return true;
         }
         break;
@@ -133,7 +133,7 @@ bool validateCommandWithCurrentState(Command* command, GameStates currentGameSta
 }
 
 //Check if the valid command can be used in the current game state
-bool CommandProcessor::validate(Command* command, GameStates currentGameState) {
+bool CommandProcessor::validate(Command* command, GameStates &currentGameState) {
 
     string commandString = command->getCommand();
     bool isCommandValid = false;
@@ -177,7 +177,6 @@ bool CommandProcessor::validate(Command* command, GameStates currentGameState) {
             cout << commandString + " is not a valid command string. There is no player name provided." << endl;
         }
         else {
-            cout << "Adding player: " << playerName << endl;
             isCommandValid = true;
         }
     }
@@ -190,7 +189,7 @@ bool CommandProcessor::validate(Command* command, GameStates currentGameState) {
 
 
 string CommandProcessor::readCommand() {
-    cout << "Give a command: (Type 'end' when you wish to stop) " << endl;
+    cout << "Give a command (Type 'end' when you wish to stop): " << endl;
     string commandStr;
     getline(cin, commandStr);
     if (commandStr == "") {
@@ -245,7 +244,7 @@ FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
 }
 
 string FileCommandProcessorAdapter::readCommand() {
-    cout << "Type the path of the file where your commands are: (Type 'end' to stop)" << endl;
+    cout << "Type the path of the file where your commands are (Type 'end' to stop): " << endl;
     string path;
     getline(cin, path);
     if (path == "") {
