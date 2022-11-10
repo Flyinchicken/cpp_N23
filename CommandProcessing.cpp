@@ -13,7 +13,9 @@ using std::ifstream;
 //
 
 // Define command string constants
+const string CommandStrings::loadMap = "loadmap";
 const string CommandStrings::validateMap = "validatemap";
+const string CommandStrings::addPlayer = "addplayer";
 const string CommandStrings::gameStart = "gamestart";
 const string CommandStrings::replay = "replay";
 const string CommandStrings::quit = "quit";
