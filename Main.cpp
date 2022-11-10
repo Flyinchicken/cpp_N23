@@ -14,6 +14,8 @@ string filePath = "";
 int main(int argc, char** argv)
 {
     testCommandProcessor(argc, argv);
+
+    testStartupPhase();
     
     //testCommandProcessor();
 

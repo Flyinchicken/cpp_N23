@@ -50,10 +50,12 @@ public:
 class CommandProcessor {
 public:
     CommandProcessor();
-    static bool validate(Command* command, GameStates currentGameState);
+    bool validate(Command* command, GameStates currentGameState);
     void getCommand();
     vector<Command*> getCommandsList();
     virtual ~CommandProcessor();
+
+    vector<string> splitStringByDelim(string toSplit, char delim);
 protected:
     vector<Command*> commandsList;
     virtual void readCommand();
