@@ -9,6 +9,8 @@ using std::string;
 using std::ostream;
 using std::vector;
 
+extern string filePath;
+
 /**
  * Represents the possible states of a Warzone game.
 */
@@ -24,55 +26,53 @@ enum GameStates {
 };
 
 class Command {
-    public:
-        Command();
-        Command(string commandString);
-        ~Command();
+public:
+    Command();
+    Command(string commandString);
+    ~Command();
 
-        void saveEffect(string effectString);
-        string getEffect();
+    void saveEffect(string effectString);
+    string getEffect();
 
-        string getCommand();
-    private:
-        string command;
-        string effect;
+    string getCommand();
+private:
+    string command;
+    string effect;
 };
 
 class FileProcessor {
-    public:
-        FileProcessor();
-        vector<string> processCommands(string filePath);
-        ~FileProcessor();
+public:
+    FileProcessor();
+    vector<string> processCommands(string filePath);
+    ~FileProcessor();
 };
 
 class CommandProcessor {
-    public:
-        CommandProcessor();
-        static bool validate(Command *command, GameStates currentGameState);
-        void getCommand();
-        vector<Command*> getCommandsList();
-        virtual ~CommandProcessor();
-    protected:
-        vector<Command*> commandsList;
-        virtual string readCommand();
-        void saveCommand(string command);
+public:
+    CommandProcessor();
+    static bool validate(Command* command, GameStates currentGameState);
+    void getCommand();
+    vector<Command*> getCommandsList();
+    virtual ~CommandProcessor();
+protected:
+    vector<Command*> commandsList;
+    virtual void readCommand();
+    void saveCommand(string command);
 };
-
-bool validateLoadmapAndAddplayer(Command* command);
 
 class FileCommandProcessorAdapter : public CommandProcessor {
 public:
     FileCommandProcessorAdapter();
-    FileCommandProcessorAdapter(FileProcessor *file);
+    FileCommandProcessorAdapter(FileProcessor* file);
     ~FileCommandProcessorAdapter();
 private:
     FileProcessor* fileReader;
-    string readCommand();
+    void readCommand();
 };
 
 /**
  * Struct that contains all definitions for command strings a user may input in a game of Warzone.
- * 
+ *
  * As per go-ahead from prof, does not contain a definition for a copy constrctor or assignment operator since the
  * strings are static and are always going to be the same.
 */
