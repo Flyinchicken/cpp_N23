@@ -96,26 +96,26 @@ bool has_suffix(const std::string& str, const std::string& suffix)
 }
 
 //Check if the valid command can be used in the current game state
-bool validateCommandWithCurrentState(Command* command, GameStates &currentGameState) {
+bool validateCommandWithCurrentState(Command* command, GameStates currentGameState) {
 
     switch (currentGameState) {
     case START:
-        if (command->getCommand().find("loadmap") != std::string::npos) {
+        if (command->getCommand().find("loadmap")) {
             return true;
         }
         break;
     case MAPLOADED:
-        if (command->getCommand().find("loadmap") != std::string::npos || command->getCommand() == CommandStrings::validateMap) {
+        if (command->getCommand().find("loadmap") || command->getCommand() == CommandStrings::validateMap) {
             return true;
         }
         break;
     case MAPVALIDATED:
-        if (command->getCommand().find("addplayer") != std::string::npos) {
+        if (command->getCommand().find("addplayer")) {
             return true;
         }
         break;
     case PLAYERSADDED:
-        if (command->getCommand().find("addplayer") != std::string::npos || command->getCommand() == CommandStrings::gameStart) {
+        if (command->getCommand().find("addplayer") || command->getCommand() == CommandStrings::gameStart) {
             return true;
         }
         break;
@@ -129,11 +129,11 @@ bool validateCommandWithCurrentState(Command* command, GameStates &currentGameSt
     command->saveEffect(command->getCommand() + " is not valid in the current game state");
     cout << command->getCommand() + " is not valid in the current game state" << endl;
     return false;
-    
+
 }
 
 //Check if the valid command can be used in the current game state
-bool CommandProcessor::validate(Command* command, GameStates &currentGameState) {
+bool CommandProcessor::validate(Command* command, GameStates currentGameState) {
 
     string commandString = command->getCommand();
     bool isCommandValid = false;
@@ -177,6 +177,7 @@ bool CommandProcessor::validate(Command* command, GameStates &currentGameState) 
             cout << commandString + " is not a valid command string. There is no player name provided." << endl;
         }
         else {
+            cout << "Adding player: " << playerName << endl;
             isCommandValid = true;
         }
     }
@@ -188,14 +189,18 @@ bool CommandProcessor::validate(Command* command, GameStates &currentGameState) 
 }
 
 
-string CommandProcessor::readCommand() {
-    cout << "Give a command (Type 'end' when you wish to stop): " << endl;
-    string commandStr;
-    getline(cin, commandStr);
-    if (commandStr == "") {
+void CommandProcessor::readCommand() {
+    while (true) {
+        cout << "Give a command: (Type 'end' when you wish to stop) " << endl;
+        string commandStr;
         getline(cin, commandStr);
+        if (commandStr != "") {
+            if (commandStr == "end") {
+                return;
+            }
+            this->saveCommand(commandStr);
+        }
     }
-    return commandStr;
 }
 
 void CommandProcessor::saveCommand(string command) {
@@ -203,17 +208,7 @@ void CommandProcessor::saveCommand(string command) {
 }
 
 void CommandProcessor::getCommand() {
-    while (true) {
-        string inputCommand = this->readCommand();
-
-        cout << inputCommand << endl;
-
-        if (inputCommand == "end") {
-            return;
-        }
-
-        this->saveCommand(inputCommand);
-    }
+    this->readCommand();
 }
 
 vector<Command*> CommandProcessor::getCommandsList() {
@@ -243,39 +238,25 @@ FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
 
 }
 
-string FileCommandProcessorAdapter::readCommand() {
-    cout << "Type the path of the file where your commands are (Type 'end' to stop): " << endl;
-    string path;
-    getline(cin, path);
-    if (path == "") {
-        getline(cin, path);
-    }
+void FileCommandProcessorAdapter::readCommand() {
 
-    if (path == "end") {
-        return path;
-    }
+    this->saveCommand("Openning file " + filePath);
 
-    ifstream input(path);
+    ifstream input(filePath);
 
-    while (input.fail() && path != "")
+    cout << filePath << endl;
+
+    if (input.fail() && filePath != "")
     {
-        if (path == "end") {
-            return path;
-        }
-        input.clear();
-        cout << "Incorrect file path. Please provide a valid file." << endl;
-        getline(cin, path);
-        input.open(path);
+        cout << "Incorrect file path. Please provide a valid file when you execute the program." << endl;
+        return;
     }
-    input.clear();
 
     vector<string> commands;
-    commands = this->fileReader->processCommands(path);
+    commands = this->fileReader->processCommands(filePath);
 
     for (string i : commands)
         this->saveCommand(i);
-
-    return "Opening " + path;
 }
 
 

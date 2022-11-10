@@ -1,4 +1,3 @@
-#pragma once
 #include<iostream> //The Code uses the ostream, cout, etc
 #include "Card.h" //Below is the implementation of all the members of the class Card, Deck and Hand
 #include<string> //uses strings and to_string

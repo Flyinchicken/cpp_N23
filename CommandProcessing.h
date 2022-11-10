@@ -9,6 +9,8 @@ using std::string;
 using std::ostream;
 using std::vector;
 
+extern string filePath;
+
 /**
  * Represents the possible states of a Warzone game.
 */
@@ -20,8 +22,7 @@ enum GameStates {
     ASSIGNREINFORCEMENTS,
     ISSUEORDERS,
     EXECUTEORDERS,
-    WIN,
-    EXITPROGRAM
+    WIN
 };
 
 class Command {
@@ -49,13 +50,13 @@ public:
 class CommandProcessor {
 public:
     CommandProcessor();
-    static bool validate(Command* command, GameStates &currentGameState);
+    static bool validate(Command* command, GameStates currentGameState);
     void getCommand();
     vector<Command*> getCommandsList();
     virtual ~CommandProcessor();
 protected:
     vector<Command*> commandsList;
-    virtual string readCommand();
+    virtual void readCommand();
     void saveCommand(string command);
 };
 
@@ -66,7 +67,7 @@ public:
     ~FileCommandProcessorAdapter();
 private:
     FileProcessor* fileReader;
-    string readCommand();
+    void readCommand();
 };
 
 /**
