@@ -12,7 +12,13 @@ using std::endl;
  * */
 GameEngine::GameEngine() {
     this->currentGameState = START;
-    this->commandProcessor = new CommandProcessor();
+    worldMap = nullptr;
+
+    if (filePath.empty()) {
+        this->commandProcessor = new CommandProcessor();
+    } else {
+        this->commandProcessor = new FileCommandProcessorAdapter();
+    }    
 }
 
 /**
@@ -20,7 +26,10 @@ GameEngine::GameEngine() {
  * */
 GameEngine::~GameEngine() {
     delete this->commandProcessor;
-    delete this->worldMap;
+
+    if (worldMap != nullptr) {
+        delete worldMap;
+    }
 }
 
 /**
@@ -171,80 +180,6 @@ bool GameEngine::changeStateFromCommand(string commandString) {
 }
 
 /**
- * Changes the current state of the game based on what the user would like to change the state to. Will
- * only change the state if it is a valid state transition.
- * For example: 
- *      If user has input the command "validatemap" but the current state is "Start", it will reject this change.
- *      If user has input the command "addplayer" when the current state is "playersadded", it will accept this change
- *      (note however in this instance that the current state will simply be set to the same value it previously had).
- * 
- * @param newState The numeric/enum representation of what the new state of the game should be. This is based off what
- *                 command string the user input to the console.
- * @param commandString The command string the user input to console.
- * @returns Whether or not a state transition has occured
-*/
-/*bool GameEngine::setGameStateIfValid(GameStates newState, string commandString) {
-    // switch (currentGameState) {
-    //     case START:
-    //         if (newState == MAPLOADED) {
-    //             currentGameState = newState;
-    //             return true;
-    //         }
-    //         break;
-    //     case MAPLOADED:
-    //         if (newState == MAPLOADED || newState == MAPVALIDATED) {
-    //             currentGameState = newState;
-    //             return true;
-    //         }
-    //         break;
-    //     case MAPVALIDATED:
-    //         if (newState == PLAYERSADDED) {
-    //             currentGameState = newState;
-    //             return true;
-    //         }
-    //         break;
-    //     case PLAYERSADDED:
-    //         if (newState == PLAYERSADDED || (newState == ASSIGNREINFORCEMENTS && commandString != CommandStrings::endExecOrders)) {
-    //             currentGameState = newState;
-    //             return true;
-    //         }
-    //         break;
-    //     case ASSIGNREINFORCEMENTS:
-    //         if (newState == ISSUEORDERS) {
-    //             currentGameState = newState;
-    //             return true;
-    //         }
-    //         break;
-    //     case ISSUEORDERS:
-    //         if (newState == ISSUEORDERS || (newState == EXECUTEORDERS && commandString != CommandStrings::execOrder)) {
-    //             currentGameState = newState;
-    //             return true;
-    //         }
-    //         break;
-    //     case EXECUTEORDERS:
-    //         if ((newState == EXECUTEORDERS && commandString != CommandStrings::endIssueOrders) 
-    //             || (newState == ASSIGNREINFORCEMENTS && commandString != CommandStrings::assignCountries) 
-    //             || newState == WIN
-    //         ) {
-    //             currentGameState = newState;
-    //             return true;
-    //         }
-    //         break;
-    //     case WIN:
-    //         if (newState == START) {
-    //             currentGameState = newState;
-    //             cout << "Starting new game..." << endl;
-    //             return true;
-    //         }
-    //         break;
-    //     default:
-    //         cout << "Error: current state is not valid!" << endl;
-    // }
-
-    // return false;
-}*/
-
-/**
  * Checks if the current game state is "Win".
  * 
  * @returns Whether or not a player has won
@@ -259,8 +194,22 @@ bool GameEngine::hasPlayerWon() {
 void GameEngine::startupPhase() {
     bool inStartup = true;
 
+    int lastIndex = -1;
+
     while (inStartup) {
-        
+        commandProcessor->getCommand();
+
+        vector<Command*> commands = commandProcessor->getCommandsList();
+
+        for(int i = lastIndex == -1 ? 0 : lastIndex; i < commands.size(); i++) {
+            if (commandProcessor->validate(commands[i], currentGameState)) {
+                processCommand(commands[i]);
+            } 
+            
+            cout << commands[i]->getEffect() << commands[i]->getCommand() << endl;
+        }
+
+        lastIndex = commands.size();
     }
 }
 
@@ -271,19 +220,19 @@ void GameEngine::startupPhase() {
  * @param command The command to process
 */
 void GameEngine::processCommand(Command *command) {
-    string globalFilePath = "";
+    string commandString = commandProcessor->splitStringByDelim(command->getCommand(), ' ').front();
 
-    if (command->getCommand() == CommandStrings::loadMap) {
+    if (commandString == CommandStrings::loadMap) {
         loadMap(command);
     }
-    else if (command->getCommand() == CommandStrings::validateMap) {
+    else if (commandString == CommandStrings::validateMap) {
         validateMap(command);
     }
-    else if (command->getCommand() == CommandStrings::addPlayer) {
-
+    else if (commandString == CommandStrings::addPlayer) {
+        addPlayer(command);
     }
     else if (command->getCommand() == CommandStrings::gameStart) {
-        
+        gameStart(command);
     }
 }
 
@@ -294,9 +243,11 @@ void GameEngine::processCommand(Command *command) {
 */
 void GameEngine::loadMap(Command *command) {
     MapLoader mapLoader;
-    worldMap = mapLoader.LoadMap(filePath);
+    string mapName = commandProcessor->splitStringByDelim(command->getCommand(), ' ').back();
 
-    command->saveEffect("Successfully loaded map file ");
+    worldMap = mapLoader.LoadMap(mapName);
+
+    command->saveEffect("Successfully loaded map file " + mapName + ". State changed to MAPLOADED");
     
     setGameState(MAPLOADED);
 }
@@ -312,9 +263,17 @@ void GameEngine::validateMap(Command *command) {
         command->saveEffect("Map was successfully validated. State changed to MAPVALIDATED");
     } else {
         command->saveEffect("MAP was not a valid map. No state changes occured");
-        cout << "Invalid Map" << endl;
     }
 }
+
+void GameEngine::addPlayer(Command *command) {
+
+}
+
+void GameEngine::gameStart(Command *command) {
+
+}
+
 
 /**
  * Sets current game state based on input new state.

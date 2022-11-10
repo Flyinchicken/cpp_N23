@@ -22,6 +22,8 @@ class GameEngine {
         CommandProcessor *commandProcessor;
 
         Map *worldMap;
+
+        vector<Player*> playerList;
         
         void displayWelcomeMessage();
         void displayFarewellMessage();
@@ -36,10 +38,10 @@ class GameEngine {
         void processCommand(Command *command);
         void loadMap(Command *command);
         void validateMap(Command *command);
+        void addPlayer(Command *command);
+        void gameStart(Command *command);
 
         bool changeStateFromCommand(string commandString);
-        // this one can be removed
-        bool setGameStateIfValid(GameStates newState, string commandString);
 
         string getGameStateAsString() const;
 
