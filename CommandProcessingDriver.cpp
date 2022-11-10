@@ -46,7 +46,7 @@ void testCommandProcessor(int argc, char** argv) {
     for (Command* i : commands) {
         if (i->getCommand().find("Opening") == std::string::npos) {
             cout << "========================================" << endl;
-            cout << "Command from console: " << i->getCommand() << endl;
+            cout << "Command: " << i->getCommand() << endl;
             cout << *game << endl; //print the state of the game
             if (processor->validate(i, game->getCurrentGameState())) {
                 cout << "Command is valid in the current state" << endl;
