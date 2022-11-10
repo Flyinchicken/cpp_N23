@@ -34,6 +34,8 @@ class GameEngine {
         bool hasPlayerWon();
 
         void processCommand(Command *command);
+        void loadMap(Command *command);
+        void validateMap(Command *command);
 
         bool changeStateFromCommand(string commandString);
         // this one can be removed

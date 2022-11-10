@@ -274,25 +274,45 @@ void GameEngine::processCommand(Command *command) {
     string globalFilePath = "";
 
     if (command->getCommand() == CommandStrings::loadMap) {
-        MapLoader mapLoader;
-        worldMap = mapLoader.LoadMap(globalFilePath);
-        command->saveEffect("Successfully loaded map file ");
-        setGameState(MAPLOADED);
+        loadMap(command);
     }
     else if (command->getCommand() == CommandStrings::validateMap) {
-        if (worldMap->validate()) {
-            setGameState(MAPVALIDATED);
-            command->saveEffect("Map was successfully validated. State changed to MAPVALIDATED");
-        } else {
-            command->saveEffect("MAP was not a valid map");
-            cout << "Invalid Map" << endl;
-        }
+        validateMap(command);
     }
     else if (command->getCommand() == CommandStrings::addPlayer) {
 
     }
     else if (command->getCommand() == CommandStrings::gameStart) {
         
+    }
+}
+
+/**
+ * Loads a map file into the worldMap object
+ * 
+ * @param command The command to save the effect of loading the map into
+*/
+void GameEngine::loadMap(Command *command) {
+    MapLoader mapLoader;
+    worldMap = mapLoader.LoadMap(filePath);
+
+    command->saveEffect("Successfully loaded map file ");
+    
+    setGameState(MAPLOADED);
+}
+
+/**
+ * Validates loaded world map file.
+ * 
+ * @param command The command to save the effect of validating the map into
+*/
+void GameEngine::validateMap(Command *command) {
+    if (worldMap->validate()) {
+        setGameState(MAPVALIDATED);
+        command->saveEffect("Map was successfully validated. State changed to MAPVALIDATED");
+    } else {
+        command->saveEffect("MAP was not a valid map. No state changes occured");
+        cout << "Invalid Map" << endl;
     }
 }
 
