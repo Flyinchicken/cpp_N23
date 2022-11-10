@@ -40,11 +40,11 @@ private:
     string effect;
 };
 
-class FileProcessor {
+class FileLineReader {
 public:
-    FileProcessor();
+    FileLineReader();
     vector<string> processCommands(string filePath);
-    ~FileProcessor();
+    ~FileLineReader();
 };
 
 class CommandProcessor {
@@ -63,10 +63,10 @@ protected:
 class FileCommandProcessorAdapter : public CommandProcessor {
 public:
     FileCommandProcessorAdapter();
-    FileCommandProcessorAdapter(FileProcessor* file);
+    FileCommandProcessorAdapter(FileLineReader* file);
     ~FileCommandProcessorAdapter();
 private:
-    FileProcessor* fileReader;
+    FileLineReader* fileReader;
     void readCommand();
 };
 
