@@ -49,7 +49,5 @@ class GameEngine {
         void startNewGame();
 
         void startupPhase();
-
-        CommandProcessor* getCommandProcessor();
         GameStates getCurrentGameState();
 };

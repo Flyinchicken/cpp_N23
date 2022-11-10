@@ -100,22 +100,22 @@ bool validateCommandWithCurrentState(Command* command, GameStates currentGameSta
 
     switch (currentGameState) {
     case START:
-        if (command->getCommand().find("loadmap")) {
+        if (command->getCommand().find("loadmap") != std::string::npos) {
             return true;
         }
         break;
     case MAPLOADED:
-        if (command->getCommand().find("loadmap") || command->getCommand() == CommandStrings::validateMap) {
+        if (command->getCommand().find("loadmap") != std::string::npos || command->getCommand() == CommandStrings::validateMap) {
             return true;
         }
         break;
     case MAPVALIDATED:
-        if (command->getCommand().find("addplayer")) {
+        if (command->getCommand().find("addplayer") != std::string::npos) {
             return true;
         }
         break;
     case PLAYERSADDED:
-        if (command->getCommand().find("addplayer") || command->getCommand() == CommandStrings::gameStart) {
+        if (command->getCommand().find("addplayer") != std::string::npos || command->getCommand() == CommandStrings::gameStart) {
             return true;
         }
         break;
@@ -160,14 +160,15 @@ bool CommandProcessor::validate(Command* command, GameStates currentGameState) {
     if (isLoadmapCommand) {
         string mapFile = commandString.substr(loadmapStringSize + 1, commandString.size() - loadmapStringSize);
         ifstream infile(mapFile.c_str());
+
         if (mapFile != "" && infile.good() && has_suffix(mapFile, ".map")) {
-            cout << "Loading map: " << mapFile << endl;
             isCommandValid = true;
         }
         else {
             command->saveEffect(commandString + " is not a valid command string. The Map file provided does not exist or is not a .map file.");
             cout << commandString + " is not a valid command string. The Map file provided does not exist or is not a .map file." << endl;
         }
+        infile.clear();
     }
     //Check if the addplayer <playername> command has a playername
     else if (isAddplayerCommand) {
@@ -177,7 +178,6 @@ bool CommandProcessor::validate(Command* command, GameStates currentGameState) {
             cout << commandString + " is not a valid command string. There is no player name provided." << endl;
         }
         else {
-            cout << "Adding player: " << playerName << endl;
             isCommandValid = true;
         }
     }
@@ -240,7 +240,7 @@ FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
 
 void FileCommandProcessorAdapter::readCommand() {
 
-    this->saveCommand("Openning file " + filePath);
+    this->saveCommand("Opening file " + filePath);
 
     ifstream input(filePath);
 
