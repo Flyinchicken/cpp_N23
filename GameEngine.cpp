@@ -203,7 +203,7 @@ void GameEngine::startupPhase() {
 
         for(int i = lastIndex == -1 ? 0 : lastIndex; i < commands.size(); i++) {
             if (commandProcessor->validate(commands[i], currentGameState)) {
-                processCommand(commands[i]);
+                inStartup = processCommand(commands[i]);
             } 
             
             cout << commands[i]->getEffect() << commands[i]->getCommand() << endl;
@@ -218,8 +218,9 @@ void GameEngine::startupPhase() {
  * Assumes the command has already been validated.
  * 
  * @param command The command to process
+ * @return If the startup phase should continue
 */
-void GameEngine::processCommand(Command *command) {
+bool GameEngine::processCommand(Command *command) {
     string commandString = commandProcessor->splitStringByDelim(command->getCommand(), ' ').front();
 
     if (commandString == CommandStrings::loadMap) {
@@ -233,7 +234,10 @@ void GameEngine::processCommand(Command *command) {
     }
     else if (command->getCommand() == CommandStrings::gameStart) {
         gameStart(command);
+        return false;
     }
+
+    return true;
 }
 
 /**

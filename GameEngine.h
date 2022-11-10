@@ -35,7 +35,7 @@ class GameEngine {
         bool hasGameBeenEnded(string command);
         bool hasPlayerWon();
 
-        void processCommand(Command *command);
+        bool processCommand(Command *command);
         void loadMap(Command *command);
         void validateMap(Command *command);
         void addPlayer(Command *command);
