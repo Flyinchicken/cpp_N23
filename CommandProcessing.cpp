@@ -228,10 +228,10 @@ File Processor Adapter
 
 FileCommandProcessorAdapter::FileCommandProcessorAdapter() {
     CommandProcessor();
-    this->fileReader = new FileProcessor();
+    this->fileReader = new FileLineReader();
 }
 
-FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileProcessor* file) {
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileLineReader* file) {
     CommandProcessor();
     this->fileReader = file;
 }
@@ -263,19 +263,19 @@ void FileCommandProcessorAdapter::readCommand() {
 
 
 /*
-File Processor
+File Line Reader
 
 */
 
-FileProcessor::FileProcessor() {
+FileLineReader::FileLineReader() {
 
 }
 
-FileProcessor::~FileProcessor() {
+FileLineReader::~FileLineReader() {
 
 }
 
-vector<string> FileProcessor::processCommands(string filePath) {
+vector<string> FileLineReader::processCommands(string filePath) {
 
     vector<string> commands;
     string tempCommand;
