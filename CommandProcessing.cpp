@@ -191,14 +191,18 @@ bool CommandProcessor::validate(Command* command, GameStates currentGameState) {
 }
 
 
-string CommandProcessor::readCommand() {
-    cout << "Give a command: (Type 'end' when you wish to stop) " << endl;
-    string commandStr;
-    getline(cin, commandStr);
-    if (commandStr == "") {
+void CommandProcessor::readCommand() {
+    while(true){
+        cout << "Give a command: (Type 'end' when you wish to stop) " << endl;
+        string commandStr;
         getline(cin, commandStr);
+        if (commandStr != "") {
+            if(commandStr == "end"){
+                return;
+            }
+            this->saveCommand(commandStr);
+        }
     }
-    return commandStr;
 }
 
 void CommandProcessor::saveCommand(string command) {
@@ -206,17 +210,7 @@ void CommandProcessor::saveCommand(string command) {
 }
 
 void CommandProcessor::getCommand() {
-    while (true) {
-        string inputCommand = this->readCommand();
-
-        cout << inputCommand << endl;
-
-        if (inputCommand == "end") {
-            return;
-        }
-
-        this->saveCommand(inputCommand);
-    }
+    this->readCommand();
 }
 
 vector<Command*> CommandProcessor::getCommandsList() {
@@ -246,39 +240,25 @@ FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
 
 }
 
-string FileCommandProcessorAdapter::readCommand() {
-    cout << "Type the path of the file where your commands are: (Type 'end' to stop)" << endl;
-    string path;
-    getline(cin, path);
-    if (path == "") {
-        getline(cin, path);
-    }
+void FileCommandProcessorAdapter::readCommand() {
+    
+    this->saveCommand("Openning file " + filePath);
 
-    if (path == "end") {
-        return path;
-    }
+    ifstream input(filePath);
 
-    ifstream input(path);
+    cout << filePath << endl;
 
-    while (input.fail() && path != "")
+    if (input.fail() && filePath != "")
     {
-        if (path == "end") {
-            return path;
-        }
-        input.clear();
-        cout << "Incorrect file path. Please provide a valid file." << endl;
-        getline(cin, path);
-        input.open(path);
+        cout << "Incorrect file path. Please provide a valid file when you execute the program." << endl;
+        return;
     }
-    input.clear();
 
     vector<string> commands;
-    commands = this->fileReader->processCommands(path);
+    commands = this->fileReader->processCommands(filePath);
 
     for (string i : commands)
         this->saveCommand(i);
-
-    return "Opening " + path;
 }
 
 
