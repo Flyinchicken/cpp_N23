@@ -194,12 +194,12 @@ vector<string> CommandProcessor::splitStringByDelim(string toSplit, char delim) 
 
 
 void CommandProcessor::readCommand() {
-    while(true){
+    while (true) {
         cout << "Give a command: (Type 'end' when you wish to stop) " << endl;
         string commandStr;
         getline(cin, commandStr);
         if (commandStr != "") {
-            if(commandStr == "end"){
+            if (commandStr == "end") {
                 return;
             }
             this->saveCommand(commandStr);
@@ -243,8 +243,8 @@ FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
 }
 
 void FileCommandProcessorAdapter::readCommand() {
-    
-    this->saveCommand("Openning file " + filePath);
+
+    this->saveCommand("Opening file " + filePath);
 
     ifstream input(filePath);
 

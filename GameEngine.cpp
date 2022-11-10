@@ -48,6 +48,11 @@ GameEngine &GameEngine::operator = (const GameEngine &engine) {
     return *this;
 }
 
+
+GameStates GameEngine::getCurrentGameState() {
+    return this->currentGameState;
+}
+
 /*
  * Stream insertion operator for GameEngine. Displays the current state of the game.
  * */
@@ -161,11 +166,11 @@ bool GameEngine::changeStateFromCommand(string commandString) {
         return false;
     }
 
-    if (commandString.find("loadmap")) {
+    if (commandString.find("loadmap") != std::string::npos) {
         this->currentGameState = MAPLOADED;
     } else if (commandString == CommandStrings::validateMap) {
         this->currentGameState = MAPVALIDATED;
-    } else if (commandString.find("addplayer")) {
+    } else if (commandString.find("addplayer") != std::string::npos) {
         this->currentGameState = PLAYERSADDED;
     } else if (commandString == CommandStrings::gameStart) {
         this->currentGameState = ASSIGNREINFORCEMENTS;

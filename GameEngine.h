@@ -44,6 +44,7 @@ class GameEngine {
         bool changeStateFromCommand(string commandString);
 
         string getGameStateAsString() const;
+        friend ostream& operator<<(ostream&, const GameEngine&);
 
     public:
         GameEngine();
@@ -51,10 +52,13 @@ class GameEngine {
         GameEngine(const GameEngine&);
 
         GameEngine &operator = (const GameEngine &engine);
-        friend ostream& operator << (ostream&, const GameEngine&);
+        bool changeStateFromCommand(string commandString);
+
+       // friend ostream& operator << (ostream&, const GameEngine&);
 
         void startNewGame();
 
         void startupPhase();
+        GameStates getCurrentGameState();
         void setGameState(GameStates newState);
 };
