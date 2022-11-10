@@ -9,6 +9,8 @@ using std::string;
 using std::ostream;
 using std::vector;
 
+extern string filePath;
+
 /**
  * Represents the possible states of a Warzone game.
 */
@@ -54,7 +56,7 @@ public:
     virtual ~CommandProcessor();
 protected:
     vector<Command*> commandsList;
-    virtual string readCommand();
+    virtual void readCommand();
     void saveCommand(string command);
 };
 
@@ -65,7 +67,7 @@ public:
     ~FileCommandProcessorAdapter();
 private:
     FileProcessor* fileReader;
-    string readCommand();
+    void readCommand();
 };
 
 /**
