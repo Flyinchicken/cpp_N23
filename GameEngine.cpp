@@ -1,4 +1,5 @@
 #include "GameEngine.h"
+#include "MapLoader.h"
 
 #include <iostream>
 
@@ -19,6 +20,7 @@ GameEngine::GameEngine() {
  * */
 GameEngine::~GameEngine() {
     delete this->commandProcessor;
+    delete this->worldMap;
 }
 
 /**
@@ -255,7 +257,52 @@ bool GameEngine::hasPlayerWon() {
  * Command-based user interaction mechanism to start the game
 */
 void GameEngine::startupPhase() {
+    bool inStartup = true;
 
+    while (inStartup) {
+        
+    }
+}
+
+/**
+ * Processes a Command object and performs any necessary actions and state changes necessary.
+ * Assumes the command has already been validated.
+ * 
+ * @param command The command to process
+*/
+void GameEngine::processCommand(Command *command) {
+    string globalFilePath = "";
+
+    if (command->getCommand() == CommandStrings::loadMap) {
+        MapLoader mapLoader;
+        worldMap = mapLoader.LoadMap(globalFilePath);
+        command->saveEffect("Successfully loaded map file ");
+        setGameState(MAPLOADED);
+    }
+    else if (command->getCommand() == CommandStrings::validateMap) {
+        if (worldMap->validate()) {
+            setGameState(MAPVALIDATED);
+            command->saveEffect("Map was successfully validated. State changed to MAPVALIDATED");
+        } else {
+            command->saveEffect("MAP was not a valid map");
+            cout << "Invalid Map" << endl;
+        }
+    }
+    else if (command->getCommand() == CommandStrings::addPlayer) {
+
+    }
+    else if (command->getCommand() == CommandStrings::gameStart) {
+        
+    }
+}
+
+/**
+ * Sets current game state based on input new state.
+ * 
+ * @param newGameState What to change the current game state to
+*/
+void GameEngine::setGameState(GameStates newGameState) {
+    currentGameState = newGameState;
 }
 
 /**
