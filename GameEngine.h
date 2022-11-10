@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CommandProcessing.h"
+#include "Map.h"
 
 #include <string>
 #include <ostream>
@@ -19,6 +20,8 @@ class GameEngine {
         GameStates currentGameState;                // Not a pointer type as per prof. Paquet's permission
 
         CommandProcessor *commandProcessor;
+
+        Map *worldMap;
         
         void displayWelcomeMessage();
         void displayFarewellMessage();
@@ -29,6 +32,10 @@ class GameEngine {
 
         bool hasGameBeenEnded(string command);
         bool hasPlayerWon();
+
+        void processCommand(Command *command);
+        void loadMap(Command *command);
+        void validateMap(Command *command);
 
         bool changeStateFromCommand(string commandString);
         // this one can be removed
@@ -47,4 +54,5 @@ class GameEngine {
         void startNewGame();
 
         void startupPhase();
+        void setGameState(GameStates newState);
 };

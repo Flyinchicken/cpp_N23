@@ -11,3 +11,11 @@ void testGameStates() {
     
     delete ge;  
 }
+
+void testStartupPhase() {
+    GameEngine *ge = new GameEngine();
+
+    ge->startupPhase();
+
+    delete ge;
+}
