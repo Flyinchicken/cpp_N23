@@ -2,6 +2,7 @@
 
 #include "CommandProcessing.h"
 #include "Map.h"
+#include "Player.h"
 
 #include <string>
 #include <ostream>

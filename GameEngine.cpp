@@ -265,8 +265,8 @@ void GameEngine::loadMap(Command* command) {
 
     worldMap = mapLoader.LoadMap(mapName);
 
-    command->saveEffect("Successfully loaded map file " + mapName + ". State changed to MAPLOADED");
-
+    command->saveEffect("Successfully loaded map file " + mapName + ". State changed to MAPLOADED ");
+    
     setGameState(MAPLOADED);
 }
 
@@ -278,19 +278,24 @@ void GameEngine::loadMap(Command* command) {
 void GameEngine::validateMap(Command* command) {
     if (worldMap->validate()) {
         setGameState(MAPVALIDATED);
-        command->saveEffect("Map was successfully validated. State changed to MAPVALIDATED");
-    }
-    else {
+        command->saveEffect("Map was successfully validated. State changed to MAPVALIDATED ");
+    } else {
         command->saveEffect("MAP was not a valid map. No state changes occured");
     }
 }
 
-void GameEngine::addPlayer(Command* command) {
-
+void GameEngine::addPlayer(Command *command) {
+    string playerName = commandProcessor->splitStringByDelim(command->getCommand(), ' ').back();
+    Player* player = new Player();
+    player->setName(playerName);
+    playerList.push_back(player);
+    setGameState(PLAYERSADDED);
+    command->saveEffect("Player " + playerName + " was added successfully ");
 }
 
-void GameEngine::gameStart(Command* command) {
-
+void GameEngine::gameStart(Command *command) {
+    setGameState(ASSIGNREINFORCEMENTS);
+    command->saveEffect("Map added and validated successfully. All players added. Transitioned from start up phase into main game loop! ");
 }
 
 
@@ -329,7 +334,6 @@ void GameEngine::mainGameLoop() {
  * calculate and assign armies to each player
 */
 void GameEngine::reinforcementPhase() {
-
     for (Player* i : playerList) {
         int pool = i->getTerritories().size();
         // INSERT CODE TO SEE IF PLAYER OWNS A CONTINENT AND ADD THE BONUS

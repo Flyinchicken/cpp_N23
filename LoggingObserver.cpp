@@ -13,11 +13,11 @@ void Subject::attach(Observer* observer){
 }
 
 void Subject::detach(Observer* observer){
-    // for(int i = 0; i < observers->size(); i++){
-    //     if(observers->at(i) == observer){
-    //         observers->erase(i);
-    //     }
-    // }
+    for(int i = 0; i < observers->size(); i++){
+        if(observers->at(i) == observer){
+            observers->erase(observers->begin()+i);
+        }
+    }
 }
 
 void Subject::notify(){
