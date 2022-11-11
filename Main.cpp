@@ -15,7 +15,7 @@ string filePath = "";
 
 int main(int argc, char** argv)
 {
-    Player* play = new Player();
+    
     //testCommandProcessor(argc, argv);
 
     //testLoggingObserver();
