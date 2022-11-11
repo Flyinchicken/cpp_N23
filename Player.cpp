@@ -52,6 +52,7 @@ Player::Player(const Player &player)
     this->orderslist = new OrdersList(*(player.orderslist));
     this->hand = new Hand(*(player.hand));
     this->territories = vector<Territory*>(player.territories);
+    this->reinforcementPool = player.reinforcementPool;
 }
 
 //Assignment operator
@@ -61,6 +62,7 @@ Player &Player::operator=(const Player &player)
     this->orderslist = new OrdersList(*(player.orderslist));
     this->hand = new Hand(*(player.hand));
     this->territories = vector<Territory*>(player.territories);
+    this->reinforcementPool = player.reinforcementPool;
 
     return *this;
 }
@@ -78,9 +80,9 @@ OrdersList Player::getOrdersList() const
 }
 
 //hand getter returning the player's hand
-Hand Player::getHand() const
+Hand* Player::getHand()
 {
-    return *hand;
+    return hand;
 }
 
 //territories getter returning the player's owned countries
@@ -88,6 +90,10 @@ vector<Territory*> Player::getTerritories() const
 {
     return territories;
 }
+
+int Player::getReinforcementPool(){
+    return reinforcementPool;
+} 
 
 //name setter
 void Player::setName(string newName)
@@ -111,6 +117,10 @@ void Player::setHand(Hand *newHand)
 void Player::setTerritories(vector<Territory*> newTerritories)
 {
     this->territories = newTerritories;
+}
+
+void Player::setReinforcementPool(int pool){
+    this->reinforcementPool = reinforcementPool;
 }
 
 //orders created adding to the player's orderslist

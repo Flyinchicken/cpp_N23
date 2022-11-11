@@ -50,13 +50,14 @@ public:
 	void move(int old_position, int new_position);
 	void push_back(Order* order);
 	void print();
+	vector<Order*> order_list;
 
 private:
 	// friend stream insertion operator to the class to access private member
 	friend std::ostream&
 		operator<<(std::ostream&, const OrdersList&);
 	// All data members of user-defined class type must be of pointer type.
-	vector<Order*> order_list;
+
 };
 
 // The different kinds of orders are:

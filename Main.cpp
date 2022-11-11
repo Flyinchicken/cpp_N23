@@ -1,5 +1,6 @@
 #include "GameEngineDriver.h"
 
+#include "Player.h"
 #include <iostream>
 #include "MapDriver.h"
 #include "OrdersDriver.h"
@@ -12,15 +13,16 @@ using namespace std;
 
 string filePath = "";
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
-    testCommandProcessor(argc, argv);
+    Player* play = new Player();
+    //testCommandProcessor(argc, argv);
 
-    // testLoggingObserver();
+    //testLoggingObserver();
 
-    // testStartupPhase();
+    //testStartupPhase();
 
-    // testCommandProcessor();
+    //testCommandProcessor();
 
     /*std::cout << "Welcome everyone!" << std::endl;
 
