@@ -6,6 +6,7 @@
 #include "CardDriver.h"
 #include "PlayerDriver.h"
 #include "CommandProcessingDriver.h"
+#include "LoggingObserverDriver.h"
 
 using namespace std;
 
@@ -15,6 +16,8 @@ int main(int argc, char** argv)
 {
     testCommandProcessor(argc, argv);
 
+    //testLoggingObserver();
+ 
     testStartupPhase();
     
     //testCommandProcessor();

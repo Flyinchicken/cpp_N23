@@ -59,6 +59,16 @@ class GameEngine {
         void startNewGame();
 
         void startupPhase();
+
+        void mainGameLoop();
+
+        void reinforcementPhase();
+
+        void issueOrdersPhase();
+
+        void executeOrdersPhase();
+
+
         GameStates getCurrentGameState();
         void setGameState(GameStates newState);
 };
