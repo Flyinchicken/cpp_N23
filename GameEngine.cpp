@@ -350,6 +350,8 @@ void GameEngine::issueOrdersPhase() {
 
     for(Player* player : playerList){
         player->setTurn(false);
+        player->numAttacks = 0;
+        player->numDefense = 0;
     }
 
     while (finishedPlayers != currentPlayers) {
