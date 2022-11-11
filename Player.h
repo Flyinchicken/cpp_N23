@@ -1,0 +1,63 @@
+#ifndef PLAYER_H
+#define PLAYER_H
+
+#include "Orders.h"
+#include "Card.h"
+#include "Map.h"
+#include <string>
+#include <list>
+#include <vector>
+#include <ostream>
+using namespace std;
+
+class Territory;
+class OrdersList;
+class Hand;
+
+class Player
+{
+private:
+	//stream operator to access private members
+	friend ostream& operator<<(ostream& outs, Player& theObject);
+
+	//Player object members
+	string name;
+	OrdersList* orderslist;
+	vector<Territory*> territories;
+	Hand* hand;
+	int reinforcementPool = 0;
+
+public:
+
+	Player();
+	~Player();
+	//copy constructor
+	Player(const Player& player);
+	//assignment operator
+	Player& operator=(const Player& player);
+	Player(string name);
+	Player(string playerName, Hand* newHand, OrdersList* newOrdersList, vector<Territory*> newTerritories);
+
+	//Player's actions
+	vector<Territory*> toDefend();
+	vector<Territory*> toAttack();
+	void issueOrder();
+
+	//helper method
+	void cardOrder(int);
+
+	//getters
+	string getName() const;
+	OrdersList getOrdersList() const;
+	Hand* getHand();
+	vector<Territory*> getTerritories() const;
+	int getReinforcementPool();
+
+	//setters
+	void setName(string name);
+	void setOrdersList(OrdersList* list);
+	void setHand(Hand* hand);
+	void setTerritories(vector<Territory*> territories);
+	void setReinforcementPool(int pool);
+};
+#endif
