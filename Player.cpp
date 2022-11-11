@@ -6,25 +6,25 @@
 using namespace std;
 #include <iostream>
 
-//Default constructor
+// Default constructor
 Player::Player()
 {
     this->name = "Player";
     this->orderslist = new OrdersList();
     this->hand = new Hand();
-    this->territories = vector<Territory*>();
+    this->territories = vector<Territory *>();
 }
 
-//Non-default constructor accepting a player name
-//The Hand and list of territories are created using the setter to avoid ambiguous behavior (infinite loop)
+// Non-default constructor accepting a player name
+// The Hand and list of territories are created using the setter to avoid ambiguous behavior (infinite loop)
 Player::Player(string playerName)
 {
     this->name = playerName;
     this->orderslist = new OrdersList();
 }
 
-//Non-default constructor accepting all members
-Player::Player(string playerName, Hand* newHand, OrdersList* newOrdersList, vector<Territory*> newTerritories)
+// Non-default constructor accepting all members
+Player::Player(string playerName, Hand *newHand, OrdersList *newOrdersList, vector<Territory *> newTerritories)
 {
     this->name = playerName;
     this->orderslist = newOrdersList;
@@ -32,7 +32,7 @@ Player::Player(string playerName, Hand* newHand, OrdersList* newOrdersList, vect
     this->territories = newTerritories;
 }
 
-//Destructor deleting all pointer members
+// Destructor deleting all pointer members
 Player::~Player()
 {
     delete this->orderslist;
@@ -45,93 +45,95 @@ Player::~Player()
     this->territories.clear();
 }
 
-//Copy constructor
+// Copy constructor
 Player::Player(const Player &player)
 {
     this->name = player.name;
     this->orderslist = new OrdersList(*(player.orderslist));
     this->hand = new Hand(*(player.hand));
-    this->territories = vector<Territory*>(player.territories);
+    this->territories = vector<Territory *>(player.territories);
     this->reinforcementPool = player.reinforcementPool;
 }
 
-//Assignment operator
+// Assignment operator
 Player &Player::operator=(const Player &player)
 {
     this->name = player.name;
     this->orderslist = new OrdersList(*(player.orderslist));
     this->hand = new Hand(*(player.hand));
-    this->territories = vector<Territory*>(player.territories);
+    this->territories = vector<Territory *>(player.territories);
     this->reinforcementPool = player.reinforcementPool;
 
     return *this;
 }
 
-//name getter returning the name of the player
+// name getter returning the name of the player
 string Player::getName() const
 {
     return name;
 }
 
-//ordersList getter returning the player's list of orders
+// ordersList getter returning the player's list of orders
 OrdersList Player::getOrdersList() const
 {
     return *orderslist;
 }
 
-//hand getter returning the player's hand
-Hand* Player::getHand()
+// hand getter returning the player's hand
+Hand *Player::getHand()
 {
     return hand;
 }
 
-//territories getter returning the player's owned countries
-vector<Territory*> Player::getTerritories() const
+// territories getter returning the player's owned countries
+vector<Territory *> Player::getTerritories() const
 {
     return territories;
 }
 
-int Player::getReinforcementPool(){
+int Player::getReinforcementPool()
+{
     return reinforcementPool;
-} 
+}
 
-//name setter
+// name setter
 void Player::setName(string newName)
 {
     name = newName;
 }
 
-//orderslist setter
+// orderslist setter
 void Player::setOrdersList(OrdersList *newList)
 {
     this->orderslist = newList;
 }
 
-//hand setter
+// hand setter
 void Player::setHand(Hand *newHand)
 {
     this->hand = newHand;
 }
 
-//territories setter
-void Player::setTerritories(vector<Territory*> newTerritories)
+// territories setter
+void Player::setTerritories(vector<Territory *> newTerritories)
 {
     this->territories = newTerritories;
 }
 
-void Player::setReinforcementPool(int pool){
+void Player::setReinforcementPool(int pool)
+{
     this->reinforcementPool = reinforcementPool;
 }
 
-//orders created adding to the player's orderslist
+// orders created adding to the player's orderslist
 void Player::issueOrder()
 {
     Deploy *deploy = new Deploy();
-    Advance* advance = new Advance();
-    Bomb* bomb = new Bomb();
-    Blockade* blockade = new Blockade();
-    Airlift* airlift = new Airlift();
-    Negotiate* negotiate = new Negotiate();
+    Advance *advance = new Advance();
+    Bomb *bomb = new Bomb();
+    Blockade *blockade = new Blockade();
+    Airlift *airlift = new Airlift();
+    Negotiate *negotiate = new Negotiate();
 
     this->orderslist->push_back(deploy);
     this->orderslist->push_back(advance);
@@ -141,10 +143,10 @@ void Player::issueOrder()
     this->orderslist->push_back(negotiate);
 }
 
-//helper method to get a specific order which adds to the player's orderslist
+// helper method to get a specific order which adds to the player's orderslist
 void Player::cardOrder(int orderNumber)
 {
-    Order* newOrder{};
+    Order *newOrder{};
     switch (orderNumber)
     {
     case 1:
@@ -176,39 +178,44 @@ void Player::cardOrder(int orderNumber)
     }
 }
 
-//return a list of arbitrary territories to defend
-vector<Territory*> Player::toDefend() {
-    Territory* t1 = new Territory(new string("territoryTD 1"), new string("continentTD 1"), 3, false, this);
-    Territory* t2 = new Territory(new string("territoryTD 2"), new string("continentTD 2"), 3, false, this);
-    vector<Territory*> territories;
+// return a list of arbitrary territories to defend
+vector<Territory *> Player::toDefend()
+{
+    Territory *t1 = new Territory(new string("territoryTD 1"), new string("continentTD 1"), 3, false, this);
+    Territory *t2 = new Territory(new string("territoryTD 2"), new string("continentTD 2"), 3, false, this);
+    vector<Territory *> territories;
     territories.push_back(t1);
     territories.push_back(t2);
 
-    for (int i = 0; i < territories.size(); i++) {
+    for (int i = 0; i < territories.size(); i++)
+    {
         cout << (*territories.at(i)->getTerritoryName()) << endl;
     }
     return territories;
 }
 
-//return a list of arbitrary territories to attack
-vector<Territory*> Player::toAttack() {
-    Territory* t1 = new Territory(new string("territoryTA 1"), new string("continentTA 1"), 3, false, this);
-    Territory* t2 = new Territory(new string("territoryTA 2"), new string("continentTA 2"), 3, false, this);
-    vector<Territory*> territories;
+// return a list of arbitrary territories to attack
+vector<Territory *> Player::toAttack()
+{
+    Territory *t1 = new Territory(new string("territoryTA 1"), new string("continentTA 1"), 3, false, this);
+    Territory *t2 = new Territory(new string("territoryTA 2"), new string("continentTA 2"), 3, false, this);
+    vector<Territory *> territories;
     territories.push_back(t1);
     territories.push_back(t2);
-    for (int i = 0; i < territories.size(); i++) {
+    for (int i = 0; i < territories.size(); i++)
+    {
         cout << (*territories.at(i)->getTerritoryName()) << endl;
     }
     return territories;
 }
 
-//stream operator that prints the player's owned countries
+// stream operator that prints the player's owned countries
 ostream &operator<<(ostream &outs, Player &player)
 {
     outs << player.getName() << "'s owned territories: " << endl;
 
-    for (int i = 0; i < player.territories.size(); i++) {
+    for (int i = 0; i < player.territories.size(); i++)
+    {
         outs << (*player.territories.at(i)->getTerritoryName()) << endl;
     }
 
