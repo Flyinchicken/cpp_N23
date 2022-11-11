@@ -336,7 +336,7 @@ void GameEngine::mainGameLoop() {
 void GameEngine::reinforcementPhase() {
     for (Player* i : playerList) {
         int pool = i->getTerritories().size();
-        // INSERT CODE TO SEE IF PLAYER OWNS A CONTINENT AND ADD THE BONUS
+        // INSERT CODE TO SEE IF PLAYER OWNS A CONTINENT AND ADD THE BONUS IMPORTANT TO DO
 
         i->setReinforcementPool(pool);
     }
