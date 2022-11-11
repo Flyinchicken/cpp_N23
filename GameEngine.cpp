@@ -262,8 +262,8 @@ void GameEngine::loadMap(Command* command) {
 
     worldMap = mapLoader.LoadMap(mapName);
 
-    command->saveEffect("Successfully loaded map file " + mapName + ". State changed to MAPLOADED");
-
+    command->saveEffect("Successfully loaded map file " + mapName + ". State changed to MAPLOADED ");
+    
     setGameState(MAPLOADED);
 }
 
@@ -275,19 +275,24 @@ void GameEngine::loadMap(Command* command) {
 void GameEngine::validateMap(Command* command) {
     if (worldMap->validate()) {
         setGameState(MAPVALIDATED);
-        command->saveEffect("Map was successfully validated. State changed to MAPVALIDATED");
-    }
-    else {
+        command->saveEffect("Map was successfully validated. State changed to MAPVALIDATED ");
+    } else {
         command->saveEffect("MAP was not a valid map. No state changes occured");
     }
 }
 
-void GameEngine::addPlayer(Command* command) {
-
+void GameEngine::addPlayer(Command *command) {
+    string playerName = commandProcessor->splitStringByDelim(command->getCommand(), ' ').back();
+    Player* player = new Player();
+    player->setName(playerName);
+    playerList.push_back(player);
+    setGameState(PLAYERSADDED);
+    command->saveEffect("Player " + playerName + " was added successfully ");
 }
 
-void GameEngine::gameStart(Command* command) {
-
+void GameEngine::gameStart(Command *command) {
+    setGameState(ASSIGNREINFORCEMENTS);
+    command->saveEffect("Map added and validated successfully. All players added. Transitioned from start up phase into main game loop! ");
 }
 
 
@@ -304,127 +309,41 @@ void GameEngine::setGameState(GameStates newGameState) {
  * gamestart command triggers state change to ASSIGNREINFORCEMENT and call mainGameLoop
  * Loop between reinforcement, issuing orders, and execute orders.
 */
-void GameEngine::mainGameLoop() {
-    //********For Assignement 2 only**********
-    currentGameState = ASSIGNREINFORCEMENTS;
-    //****************************************
-    while (currentGameState != WIN) {
-        if (currentGameState == ASSIGNREINFORCEMENTS) {
-            reinforcementPhase();
-        }
-        else if (currentGameState == ISSUEORDERS) {
-            issueOrdersPhase();
-        }
-        else {
-            executeOrdersPhase();
-        }
+// void GameEngine::mainGameLoop(){
+//     //********For Assignement 2 only**********
+//     currentGameState = ASSIGNREINFORCEMENTS;
+//     //****************************************
+//     while(currentGameState == ASSIGNREINFORCEMENTS || currentGameState == ISSUEORDERS || currentGameState == EXECUTEORDERS){
+//         if(currentGameState == ASSIGNREINFORCEMENTS){
+//             reinforcementPhase();
+//         } else if (currentGameState == ISSUEORDERS){
+//             issueOrdersPhase();
+//         } else {
+//             executeOrdersPhase();
+//         }
 
-    }
-}
+//     }
+// }
 
 /**
  * calculate and assign armies to each player
 */
-void GameEngine::reinforcementPhase() {
+// void reinforcementPhase(){
+//     // need a list of players, each player's territory count
+//     // for(auto& i : players){
+//     //     i.getTerritoryCount() / 3
 
-    for (Player* i : playerList) {
-        int pool = i->getTerritories().size();
-        // INSERT CODE TO SEE IF PLAYER OWNS A CONTINENT AND ADD THE BONUS
+//     // }
 
-        i->setReinforcementPool(pool);
-    }
-}
+// }
 
-void GameEngine::issueOrdersPhase() {
+// void issueOrdersPhase(){
 
-    // vector<bool> turnEnded;
+// }
 
-    // int currentPlayers = playerList.size();
-    // for (int i = 0; i < currentPlayers; i++)
-    // {
-    //     turnEnded.push_back(false);
-    // }
+// void executeOrdersPhase(){
 
-    // int finishedPlayers = 0;
-
-    // while (finishedPlayers != playerList.size()) {
-
-    //     for (int i = 0; i < playerList.size(); i++)
-    //     {
-    //         if (turnEnded[i]) {
-    //             continue; //Player has ended turn so we done
-    //         }
-
-    //         Player* temp = playerList.at(i);
-
-    //         if (temp->getOrdersList().order_list.size() > 6) {
-    //             if (!temp->getHand()->getHand().empty()) {
-    //                 vector<Card*> cards = temp->getHand()->getHand();
-    //                 cards[0]->play(temp->getHand());
-    //             }
-    //             turnEnded[i] = true;
-    //             finishedPlayers++;
-    //         }
-
-    //         if (temp->getReinforcementPool() > 4) {
-    //             temp->issueOrder(); //Deploy order, should take certain params
-    //             temp->setReinforcementPool(temp->getReinforcementPool() - 5);
-    //         }
-    //         else if (temp->getReinforcementPool() > 0) {
-    //             temp->issueOrder(); //Deply order but now with the rest of the reinforcement pool
-    //             temp->setReinforcementPool(0);
-    //         }
-    //         else {
-    //             vector<Territory*> potentialAttacks = temp->toAttack();
-    //             if (potentialAttacks.empty())
-    //             {
-    //                 if (!temp->getHand()->getHand().empty()) {
-    //                     vector<Card*> cards = temp->getHand()->getHand();
-    //                     cards[0]->play(temp->getHand());
-    //                 }
-    //                 turnEnded[i] = true;
-    //                 finishedPlayers++;
-    //             }
-
-    //             vector<string> namesOfTarget;
-    //             for (Territory* i : potentialAttacks) {
-    //                 namesOfTarget.push_back(*i->getTerritoryName());
-    //             }
-
-    //             vector<Territory*> outposts = temp->toDefend();
-
-    //             if (!potentialAttacks.empty()) {
-    //                 bool hasAttacked = false;
-    //                 for (Territory* i : outposts) {
-    //                     if (hasAttacked) {
-    //                         break;
-    //                     }
-
-    //                     vector<string> adj = worldMap->getNeighbours(*i->getTerritoryName());
-    //                     for (string p : adj) {
-    //                         vector<string>::iterator it = find(namesOfTarget.begin(), namesOfTarget.end(), p);
-    //                         if (it != namesOfTarget.end()) {
-    //                             temp->issueOrder(); //Atttack order, should have target and destination territorry
-    //                             hasAttacked = true;
-    //                             break;
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    // }
-}
-
-void GameEngine::executeOrdersPhase() {
-
-    // for (Player* i : playerList) {
-    //     for (Order* p : i->getOrdersList().order_list) {
-    //         p->execute();
-    //     }
-    // }
-}
+// }
 
 
 /**

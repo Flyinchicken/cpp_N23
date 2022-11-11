@@ -12,13 +12,13 @@ void testGameStates() {
     delete ge;  
 }
 
-void testMainGameLoop(){
-    GameEngine *ge = new GameEngine();
+// void testMainGameLoop(){
+//     GameEngine *ge = new GameEngine();
 
-    ge->mainGameLoop();
+//     ge->mainGameLoop();
     
-    delete ge; 
-}
+//     delete ge; 
+// }
 
 void testStartupPhase() {
     GameEngine *ge = new GameEngine();
