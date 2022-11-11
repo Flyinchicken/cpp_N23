@@ -135,11 +135,11 @@ void Player::setTurn(bool turn){
 void Player::issueOrder()
 {
     if (this->getReinforcementPool() > 4) {
-        this->orderslist->push_back(new Deploy()); //Deploy order, should take certain params
+        this->orderslist->push_back(new Deploy()); //Deploy order, should take certain params IMPORTANT TO DO need to modify order class
         this->setReinforcementPool(this->getReinforcementPool() - 5);
     }
     else if (this->getReinforcementPool() > 0) {
-        this->orderslist->push_back(new Deploy()); //Deply order but now with the rest of the reinforcement pool
+        this->orderslist->push_back(new Deploy()); //Deply order but now with the rest of the reinforcement pool IMPORTANT TO DO need to modify order class
         this->setReinforcementPool(0);
     }
     else {
@@ -149,7 +149,7 @@ void Player::issueOrder()
         if (potentialAttacks.size() > numAttacks){ //If we can attack any territory that we have not yet attacked
             
             Territory * target = potentialAttacks.at(numAttacks);
-            vector<Territory*> adj; //Should be equal to the adjacent territories of target
+            vector<Territory*> adj; //Should be equal to the adjacent territories of target IMPORTANT TO DO
             for(Territory * p: adj){
                 vector<Territory*>::iterator it = find(outposts.begin(), outposts.end(), p); //Tries to find which territory should be the source
                 if(it != outposts.end()){
@@ -172,7 +172,7 @@ void Player::issueOrder()
                 }
 
                 Territory* target = outposts.at(i);
-                vector<Territory*> adj; //Should be equal to the adjacents of target
+                vector<Territory*> adj; //Should be equal to the adjacents of target IMPORTANT TO DO
                 
                 for(Territory* tempAdj: adj){
                     vector<Territory*>::iterator it = find(reinforcers.begin(), reinforcers.end(), tempAdj); //Tries to find where it can take troops from to defend from the territory with the most troops
@@ -180,7 +180,7 @@ void Player::issueOrder()
                         int index = outposts.size() - 1 - (it - reinforcers.begin());
                         if(index > i){
                             Territory* source = outposts.at(index);
-                            this->orderslist->push_back(new Advance()); //Should take source and target as argument
+                            this->orderslist->push_back(new Advance()); //Should take source and target as argument IMPORTANT TO DO. Need to modify order class
                             hasDefended = true;
                             numDefense = i + 1;
                             break;
