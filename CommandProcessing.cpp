@@ -2,18 +2,22 @@
 
 #include <iostream>
 #include <cctype>
+#include <sstream>
 
 using std::cin;
 using std::endl;
 using std::cout;
 using std::ifstream;
+using std::stringstream;
 
 //
 //  COMMAND STRINGS
 //
 
 // Define command string constants
+const string CommandStrings::loadMap = "loadmap";
 const string CommandStrings::validateMap = "validatemap";
+const string CommandStrings::addPlayer = "addplayer";
 const string CommandStrings::gameStart = "gamestart";
 const string CommandStrings::replay = "replay";
 const string CommandStrings::quit = "quit";
@@ -26,7 +30,9 @@ const string CommandStrings::quit = "quit";
 */
 bool CommandStrings::isStringCommandString(string input) {
     return
-        input == validateMap
+        input == loadMap
+        || input == validateMap
+        || input == addPlayer
         || input == gameStart
         || input == replay
         || input == quit;
@@ -96,106 +102,104 @@ bool has_suffix(const std::string& str, const std::string& suffix)
 }
 
 //Check if the valid command can be used in the current game state
-bool validateCommandWithCurrentState(Command* command, GameStates currentGameState) {
+bool CommandProcessor::validate(Command* command, GameStates currentGameState) {
+    stringstream commandStream(command->getCommand());
+    vector<string> segmentList;
+    string commandSegment;
 
-    switch (currentGameState) {
-    case START:
-        if (command->getCommand().find("loadmap")) {
-            return true;
-        }
-        break;
-    case MAPLOADED:
-        if (command->getCommand().find("loadmap") || command->getCommand() == CommandStrings::validateMap) {
-            return true;
-        }
-        break;
-    case MAPVALIDATED:
-        if (command->getCommand().find("addplayer")) {
-            return true;
-        }
-        break;
-    case PLAYERSADDED:
-        if (command->getCommand().find("addplayer") || command->getCommand() == CommandStrings::gameStart) {
-            return true;
-        }
-        break;
-    case WIN:
-        if (command->getCommand() == CommandStrings::replay || command->getCommand() == CommandStrings::quit) {
-            return true;
-        }
-        break;
+    while (getline(commandStream, commandSegment, ' ')) {
+        segmentList.push_back(commandSegment);
     }
+
+    // There can only be two params
+    if (segmentList.size() > 2) {
+        command->saveEffect(command->getCommand() + " has too many parameters");
+
+        return false;
+    }
+    
+    string commandString = segmentList.front();
+
+    // Check to make sure 1st param is a valid command
+    if (!CommandStrings::isStringCommandString(commandString)) {
+        command->saveEffect(commandString + " is not a valid command string");
+
+        return false;
+    }
+
+    // Check to make sure has correct params
+    if ((commandString == CommandStrings::loadMap || commandString == CommandStrings::addPlayer) && segmentList.size() != 2) {
+        command->saveEffect(commandString + " must have only one valid parameter, separated by a white space");
+
+        return false;
+    }
+    if (commandString != CommandStrings::loadMap && commandString != CommandStrings::addPlayer && segmentList.size() != 1) {
+        command->saveEffect(commandString + " cannot have any parameters");
+
+        return false;
+    }
+
+    // Check is valid in gamestate
+    switch (currentGameState) {
+        case START:
+            if (commandString == CommandStrings::loadMap) {
+                return true;
+            }
+            break;
+        case MAPLOADED:
+            if (commandString == CommandStrings::loadMap || commandString == CommandStrings::validateMap) {
+                return true;
+            }
+            break;
+        case MAPVALIDATED:
+            if (commandString == CommandStrings::addPlayer) {
+                return true;
+            }
+            break;
+        case PLAYERSADDED:
+            if (commandString == CommandStrings::addPlayer || commandString == CommandStrings::gameStart) {
+                return true;
+            }
+            break;
+        case WIN:
+            if (commandString == CommandStrings::replay || commandString == CommandStrings::quit) {
+                return true;
+            }
+            break;            
+    }    
 
     command->saveEffect(command->getCommand() + " is not valid in the current game state");
-    cout << command->getCommand() + " is not valid in the current game state" << endl;
-    return false;
     
+    return false;
 }
 
-//Check if the valid command can be used in the current game state
-bool CommandProcessor::validate(Command* command, GameStates currentGameState) {
+/**
+ * Splits a string by a char delimeter.
+ * 
+ * @param toSplit The string to split into pieces
+ * @param delim The char delimeter - where to split the string
+ * @returns A vector<string> of all the pieces of the string
+*/
+vector<string> CommandProcessor::splitStringByDelim(string toSplit, char delim) {
+    stringstream commandStream(toSplit);
+    vector<string> segmentList;
+    string segment;
 
-    string commandString = command->getCommand();
-    bool isCommandValid = false;
-    const int loadmapStringSize = 7;
-    const int addplayerStringSize = 9;
-
-    bool isLoadmapCommand = commandString.find("loadmap") == 0 && (commandString.size() > loadmapStringSize) ? isspace(commandString.at(loadmapStringSize)) : false;
-    bool isAddplayerCommand = commandString.find("addplayer") == 0 && (commandString.size() > addplayerStringSize) ? isspace(commandString.at(addplayerStringSize)) : false;
-
-
-    //return true if the command given is in the list of valid commands
-    if (CommandStrings::isStringCommandString(commandString)) isCommandValid = true;
-
-    bool isLoadmapOrAddplayer = isLoadmapCommand || isAddplayerCommand;
-
-    //return false if the command given is neither in the list of valid commands or a command to add a
-    //player (addplayer) or load a map (loadmap)
-    if (!isLoadmapOrAddplayer && !CommandStrings::isStringCommandString(commandString)) {
-        command->saveEffect(commandString + " is not a valid command string!");
-        cout << commandString + " is not a valid command string!" << endl;
+    while (getline(commandStream, segment, delim)) {
+        segmentList.push_back(segment);
     }
 
-    //Check if the loadmap <filename> command has a valid filename
-    if (isLoadmapCommand) {
-        string mapFile = commandString.substr(loadmapStringSize + 1, commandString.size() - loadmapStringSize);
-        ifstream infile(mapFile.c_str());
-        if (mapFile != "" && infile.good() && has_suffix(mapFile, ".map")) {
-            cout << "Loading map: " << mapFile << endl;
-            isCommandValid = true;
-        }
-        else {
-            command->saveEffect(commandString + " is not a valid command string. The Map file provided does not exist or is not a .map file.");
-            cout << commandString + " is not a valid command string. The Map file provided does not exist or is not a .map file." << endl;
-        }
-    }
-    //Check if the addplayer <playername> command has a playername
-    else if (isAddplayerCommand) {
-        string playerName = commandString.substr(addplayerStringSize + 1, commandString.size() - addplayerStringSize);
-        if (playerName == "" || playerName.find_first_not_of(' ') == playerName.npos) {
-            command->saveEffect(commandString + " is not a valid command string. There is no player name provided.");
-            cout << commandString + " is not a valid command string. There is no player name provided." << endl;
-        }
-        else {
-            cout << "Adding player: " << playerName << endl;
-            isCommandValid = true;
-        }
-    }
-
-    if (isCommandValid) {
-        return validateCommandWithCurrentState(command, currentGameState);
-    }
-    return false;
+    return segmentList;
 }
 
 
 void CommandProcessor::readCommand() {
-    while(true){
+    while (true) {
         cout << "Give a command: (Type 'end' when you wish to stop) " << endl;
         string commandStr;
         getline(cin, commandStr);
         if (commandStr != "") {
-            if(commandStr == "end"){
+            if (commandStr == "end") {
                 return;
             }
             this->saveCommand(commandStr);
@@ -226,10 +230,10 @@ File Processor Adapter
 
 FileCommandProcessorAdapter::FileCommandProcessorAdapter() {
     CommandProcessor();
-    this->fileReader = new FileProcessor();
+    this->fileReader = new FileLineReader();
 }
 
-FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileProcessor* file) {
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileLineReader* file) {
     CommandProcessor();
     this->fileReader = file;
 }
@@ -239,8 +243,8 @@ FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
 }
 
 void FileCommandProcessorAdapter::readCommand() {
-    
-    this->saveCommand("Openning file " + filePath);
+
+    this->saveCommand("Opening file " + filePath);
 
     ifstream input(filePath);
 
@@ -261,19 +265,19 @@ void FileCommandProcessorAdapter::readCommand() {
 
 
 /*
-File Processor
+File Line Reader
 
 */
 
-FileProcessor::FileProcessor() {
+FileLineReader::FileLineReader() {
 
 }
 
-FileProcessor::~FileProcessor() {
+FileLineReader::~FileLineReader() {
 
 }
 
-vector<string> FileProcessor::processCommands(string filePath) {
+vector<string> FileLineReader::processCommands(string filePath) {
 
     vector<string> commands;
     string tempCommand;

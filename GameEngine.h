@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CommandProcessing.h"
+#include "Map.h"
 
 #include <string>
 #include <ostream>
@@ -19,6 +20,10 @@ class GameEngine {
         GameStates currentGameState;                // Not a pointer type as per prof. Paquet's permission
 
         CommandProcessor *commandProcessor;
+
+        Map *worldMap;
+
+        vector<Player*> playerList;
         
         void displayWelcomeMessage();
         void displayFarewellMessage();
@@ -30,11 +35,16 @@ class GameEngine {
         bool hasGameBeenEnded(string command);
         bool hasPlayerWon();
 
+        bool processCommand(Command *command);
+        void loadMap(Command *command);
+        void validateMap(Command *command);
+        void addPlayer(Command *command);
+        void gameStart(Command *command);
+
         bool changeStateFromCommand(string commandString);
-        // this one can be removed
-        bool setGameStateIfValid(GameStates newState, string commandString);
 
         string getGameStateAsString() const;
+        friend ostream& operator<<(ostream&, const GameEngine&);
 
     public:
         GameEngine();
@@ -42,7 +52,9 @@ class GameEngine {
         GameEngine(const GameEngine&);
 
         GameEngine &operator = (const GameEngine &engine);
-        friend ostream& operator << (ostream&, const GameEngine&);
+        bool changeStateFromCommand(string commandString);
+
+       // friend ostream& operator << (ostream&, const GameEngine&);
 
         void startNewGame();
 
@@ -57,4 +69,6 @@ class GameEngine {
         void executeOrdersPhase();
 
 
+        GameStates getCurrentGameState();
+        void setGameState(GameStates newState);
 };

@@ -19,3 +19,11 @@ void testMainGameLoop(){
     
     delete ge; 
 }
+
+void testStartupPhase() {
+    GameEngine *ge = new GameEngine();
+
+    ge->startupPhase();
+
+    delete ge;
+}

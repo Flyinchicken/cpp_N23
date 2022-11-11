@@ -18,6 +18,8 @@ int main(int argc, char** argv)
 
     //testLoggingObserver();
  
+    testStartupPhase();
+    
     //testCommandProcessor();
 
     /*std::cout << "Welcome everyone!" << std::endl;

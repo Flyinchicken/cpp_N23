@@ -40,20 +40,22 @@ private:
     string effect;
 };
 
-class FileProcessor {
+class FileLineReader {
 public:
-    FileProcessor();
+    FileLineReader();
     vector<string> processCommands(string filePath);
-    ~FileProcessor();
+    ~FileLineReader();
 };
 
 class CommandProcessor {
 public:
     CommandProcessor();
-    static bool validate(Command* command, GameStates currentGameState);
+    bool validate(Command* command, GameStates currentGameState);
     void getCommand();
     vector<Command*> getCommandsList();
     virtual ~CommandProcessor();
+
+    vector<string> splitStringByDelim(string toSplit, char delim);
 protected:
     vector<Command*> commandsList;
     virtual void readCommand();
@@ -63,10 +65,10 @@ protected:
 class FileCommandProcessorAdapter : public CommandProcessor {
 public:
     FileCommandProcessorAdapter();
-    FileCommandProcessorAdapter(FileProcessor* file);
+    FileCommandProcessorAdapter(FileLineReader* file);
     ~FileCommandProcessorAdapter();
 private:
-    FileProcessor* fileReader;
+    FileLineReader* fileReader;
     void readCommand();
 };
 
