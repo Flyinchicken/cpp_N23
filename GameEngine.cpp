@@ -362,7 +362,7 @@ void GameEngine::issueOrdersPhase() {
                 continue; //Player has ended turn so we done
             }
 
-            if (temp->getOrdersList().order_list.size() > 6) {
+            if (temp->getOrdersList().order_list.size() > 5) {
                 if (!temp->getHand()->getHand().empty()) {
                     vector<Card*> cards = temp->getHand()->getHand();
                     cards[0]->play(temp->getHand());
