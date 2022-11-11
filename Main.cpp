@@ -6,6 +6,7 @@
 #include "CardDriver.h"
 #include "PlayerDriver.h"
 #include "CommandProcessingDriver.h"
+#include "LoggingObserverDriver.h"
 
 using namespace std;
 
@@ -14,7 +15,9 @@ string filePath = "";
 int main(int argc, char** argv)
 {
     testCommandProcessor(argc, argv);
-    
+
+    //testLoggingObserver();
+ 
     //testCommandProcessor();
 
     /*std::cout << "Welcome everyone!" << std::endl;
