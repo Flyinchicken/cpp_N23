@@ -2,6 +2,7 @@
 
 #include "CommandProcessing.h"
 #include "Map.h"
+#include "Player.h"
 
 #include <string>
 #include <ostream>
@@ -41,7 +42,7 @@ class GameEngine {
         void addPlayer(Command *command);
         void gameStart(Command *command);
 
-        bool changeStateFromCommand(string commandString);
+        // bool changeStateFromCommand(string commandString);
 
         string getGameStateAsString() const;
         friend ostream& operator<<(ostream&, const GameEngine&);
@@ -60,13 +61,13 @@ class GameEngine {
 
         void startupPhase();
 
-        void mainGameLoop();
+        // void mainGameLoop();
 
-        void reinforcementPhase();
+        // void reinforcementPhase();
 
-        void issueOrdersPhase();
+        // void issueOrdersPhase();
 
-        void executeOrdersPhase();
+        // void executeOrdersPhase();
 
 
         GameStates getCurrentGameState();

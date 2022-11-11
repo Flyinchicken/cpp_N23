@@ -276,11 +276,17 @@ void GameEngine::validateMap(Command *command) {
 }
 
 void GameEngine::addPlayer(Command *command) {
-
+    string playerName = commandProcessor->splitStringByDelim(command->getCommand(), ' ').back();
+    Player* player = new Player();
+    player->setName(playerName);
+    playerList.push_back(player);
+    setGameState(PLAYERSADDED);
+    command->saveEffect("Player " + playerName + " was added successfully");
 }
 
 void GameEngine::gameStart(Command *command) {
-
+    setGameState(ASSIGNREINFORCEMENTS);
+    command->saveEffect("Map added and validated successfully. All players added. Transitioned from start up phase into main game loop!");
 }
 
 
@@ -297,41 +303,41 @@ void GameEngine::setGameState(GameStates newGameState) {
  * gamestart command triggers state change to ASSIGNREINFORCEMENT and call mainGameLoop
  * Loop between reinforcement, issuing orders, and execute orders.
 */
-void GameEngine::mainGameLoop(){
-    //********For Assignement 2 only**********
-    currentGameState = ASSIGNREINFORCEMENTS;
-    //****************************************
-    while(currentGameState == ASSIGNREINFORCEMENTS || currentGameState == ISSUEORDERS || currentGameState == EXECUTEORDERS){
-        if(currentGameState == ASSIGNREINFORCEMENTS){
-            reinforcementPhase();
-        } else if (currentGameState == ISSUEORDERS){
-            issueOrdersPhase();
-        } else {
-            executeOrdersPhase();
-        }
+// void GameEngine::mainGameLoop(){
+//     //********For Assignement 2 only**********
+//     currentGameState = ASSIGNREINFORCEMENTS;
+//     //****************************************
+//     while(currentGameState == ASSIGNREINFORCEMENTS || currentGameState == ISSUEORDERS || currentGameState == EXECUTEORDERS){
+//         if(currentGameState == ASSIGNREINFORCEMENTS){
+//             reinforcementPhase();
+//         } else if (currentGameState == ISSUEORDERS){
+//             issueOrdersPhase();
+//         } else {
+//             executeOrdersPhase();
+//         }
 
-    }
-}
+//     }
+// }
 
 /**
  * calculate and assign armies to each player
 */
-void reinforcementPhase(){
-    // need a list of players, each player's territory count
-    // for(auto& i : players){
-    //     i.getTerritoryCount() / 3
+// void reinforcementPhase(){
+//     // need a list of players, each player's territory count
+//     // for(auto& i : players){
+//     //     i.getTerritoryCount() / 3
 
-    // }
+//     // }
 
-}
+// }
 
-void issueOrdersPhase(){
+// void issueOrdersPhase(){
 
-}
+// }
 
-void executeOrdersPhase(){
+// void executeOrdersPhase(){
 
-}
+// }
 
 
 /**
