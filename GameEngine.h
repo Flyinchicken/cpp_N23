@@ -41,8 +41,6 @@ class GameEngine {
         void addPlayer(Command *command);
         void gameStart(Command *command);
 
-        bool changeStateFromCommand(string commandString);
-
         string getGameStateAsString() const;
         friend ostream& operator<<(ostream&, const GameEngine&);
 

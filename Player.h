@@ -25,6 +25,7 @@ private:
 	OrdersList* orderslist;
 	vector<Territory*> territories;
 	Hand* hand;
+	int reinforcementPool = 0;
 
 public:
 
@@ -48,13 +49,15 @@ public:
 	//getters
 	string getName() const;
 	OrdersList getOrdersList() const;
-	Hand getHand() const;
+	Hand* getHand();
 	vector<Territory*> getTerritories() const;
+	int getReinforcementPool();
 
 	//setters
 	void setName(string name);
 	void setOrdersList(OrdersList* list);
 	void setHand(Hand* hand);
 	void setTerritories(vector<Territory*> territories);
+	void setReinforcementPool(int pool);
 };
 #endif
