@@ -16,9 +16,10 @@ GameEngine::GameEngine() {
 
     if (filePath.empty()) {
         this->commandProcessor = new CommandProcessor();
-    } else {
+    }
+    else {
         this->commandProcessor = new FileCommandProcessorAdapter();
-    }    
+    }
 }
 
 /**
@@ -35,16 +36,16 @@ GameEngine::~GameEngine() {
 /**
  * Copy constructor. Copies over the current game state.
  * */
-GameEngine::GameEngine(const GameEngine &engine) {
+GameEngine::GameEngine(const GameEngine& engine) {
     this->currentGameState = engine.currentGameState;
 }
 
 /**
  * Assignment operator. Copies over the current game state.
  * */
-GameEngine &GameEngine::operator = (const GameEngine &engine) {
+GameEngine& GameEngine::operator = (const GameEngine& engine) {
     this->currentGameState = engine.currentGameState;
-    
+
     return *this;
 }
 
@@ -56,7 +57,7 @@ GameStates GameEngine::getCurrentGameState() {
 /*
  * Stream insertion operator for GameEngine. Displays the current state of the game.
  * */
-ostream &operator << (ostream &out, const GameEngine &engine) {
+ostream& operator << (ostream& out, const GameEngine& engine) {
     out << "Current Game State: " << engine.getGameStateAsString() << endl;
 
     return out;
@@ -64,37 +65,37 @@ ostream &operator << (ostream &out, const GameEngine &engine) {
 
 /**
  * Returns the game state as its corresponding string representation
- * 
+ *
  * @returns Game state as a string name
  * */
 string GameEngine::getGameStateAsString() const {
     switch (currentGameState) {
-        case START:
-            return "Start";
-            break;
-        case MAPLOADED:
-            return "Map Loaded";
-            break;
-        case MAPVALIDATED:
-            return "Map Validated";
-            break;
-        case PLAYERSADDED:
-            return "Players Added";
-            break;
-        case ASSIGNREINFORCEMENTS:
-            return "Assign Reinforcements";
-            break;
-        case ISSUEORDERS:
-            return "Issue Orders";
-            break;
-        case EXECUTEORDERS:
-            return "Execute Orders";
-            break;
-        case WIN:
-            return "Win";
-            break;
-        default:
-            return "Error: current Game state is not valid!";
+    case START:
+        return "Start";
+        break;
+    case MAPLOADED:
+        return "Map Loaded";
+        break;
+    case MAPVALIDATED:
+        return "Map Validated";
+        break;
+    case PLAYERSADDED:
+        return "Players Added";
+        break;
+    case ASSIGNREINFORCEMENTS:
+        return "Assign Reinforcements";
+        break;
+    case ISSUEORDERS:
+        return "Issue Orders";
+        break;
+    case EXECUTEORDERS:
+        return "Execute Orders";
+        break;
+    case WIN:
+        return "Win";
+        break;
+    default:
+        return "Error: current Game state is not valid!";
     }
 }
 
@@ -132,7 +133,7 @@ void GameEngine::displayCurrentGameState() {
 
 /**
  * Prompts the user for input from the console and returns it.
- * 
+ *
  * @returns The user's console input command.
 */
 string GameEngine::getUserInput() {
@@ -146,7 +147,7 @@ string GameEngine::getUserInput() {
 
 /**
  * Checks if the user has input the "end" command while the game is in the "win" state.
- * 
+ *
  * @returns If the user has attempted to end the game after winning.
 */
 bool GameEngine::hasGameBeenEnded(string command) {
@@ -156,7 +157,7 @@ bool GameEngine::hasGameBeenEnded(string command) {
 /**
  * Parses a command string to its numeric/enum representation and changes the game state based both the numeric and string
  * value of the user input.
- * 
+ *
  * @param commandString The user input command string from the console
  * @returns Whether or not a state change has taken place. If a change has not occured, it is because the state change
  * was not a valid one.
@@ -168,15 +169,20 @@ bool GameEngine::changeStateFromCommand(string commandString) {
 
     if (commandString.find("loadmap") != std::string::npos) {
         this->currentGameState = MAPLOADED;
-    } else if (commandString == CommandStrings::validateMap) {
+    }
+    else if (commandString == CommandStrings::validateMap) {
         this->currentGameState = MAPVALIDATED;
-    } else if (commandString.find("addplayer") != std::string::npos) {
+    }
+    else if (commandString.find("addplayer") != std::string::npos) {
         this->currentGameState = PLAYERSADDED;
-    } else if (commandString == CommandStrings::gameStart) {
+    }
+    else if (commandString == CommandStrings::gameStart) {
         this->currentGameState = ASSIGNREINFORCEMENTS;
-    } else if (commandString == CommandStrings::replay) {
+    }
+    else if (commandString == CommandStrings::replay) {
         this->currentGameState = START;
-    } else {
+    }
+    else {
         cout << "Error: command string is invalid after being checked for validity!" << endl;
         return false;
     }
@@ -186,7 +192,7 @@ bool GameEngine::changeStateFromCommand(string commandString) {
 
 /**
  * Checks if the current game state is "Win".
- * 
+ *
  * @returns Whether or not a player has won
 */
 bool GameEngine::hasPlayerWon() {
@@ -206,11 +212,11 @@ void GameEngine::startupPhase() {
 
         vector<Command*> commands = commandProcessor->getCommandsList();
 
-        for(int i = lastIndex == -1 ? 0 : lastIndex; i < commands.size(); i++) {
+        for (int i = lastIndex == -1 ? 0 : lastIndex; i < commands.size(); i++) {
             if (commandProcessor->validate(commands[i], currentGameState)) {
                 inStartup = processCommand(commands[i]);
-            } 
-            
+            }
+
             cout << commands[i]->getEffect() << commands[i]->getCommand() << endl;
         }
 
@@ -221,11 +227,11 @@ void GameEngine::startupPhase() {
 /**
  * Processes a Command object and performs any necessary actions and state changes necessary.
  * Assumes the command has already been validated.
- * 
+ *
  * @param command The command to process
  * @return If the startup phase should continue
 */
-bool GameEngine::processCommand(Command *command) {
+bool GameEngine::processCommand(Command* command) {
     string commandString = commandProcessor->splitStringByDelim(command->getCommand(), ' ').front();
 
     if (commandString == CommandStrings::loadMap) {
@@ -247,46 +253,47 @@ bool GameEngine::processCommand(Command *command) {
 
 /**
  * Loads a map file into the worldMap object
- * 
+ *
  * @param command The command to save the effect of loading the map into
 */
-void GameEngine::loadMap(Command *command) {
+void GameEngine::loadMap(Command* command) {
     MapLoader mapLoader;
     string mapName = commandProcessor->splitStringByDelim(command->getCommand(), ' ').back();
 
     worldMap = mapLoader.LoadMap(mapName);
 
     command->saveEffect("Successfully loaded map file " + mapName + ". State changed to MAPLOADED");
-    
+
     setGameState(MAPLOADED);
 }
 
 /**
  * Validates loaded world map file.
- * 
+ *
  * @param command The command to save the effect of validating the map into
 */
-void GameEngine::validateMap(Command *command) {
+void GameEngine::validateMap(Command* command) {
     if (worldMap->validate()) {
         setGameState(MAPVALIDATED);
         command->saveEffect("Map was successfully validated. State changed to MAPVALIDATED");
-    } else {
+    }
+    else {
         command->saveEffect("MAP was not a valid map. No state changes occured");
     }
 }
 
-void GameEngine::addPlayer(Command *command) {
-    
+void GameEngine::addPlayer(Command* command) {
+
 }
 
-void GameEngine::gameStart(Command *command) {
+void GameEngine::gameStart(Command* command) {
 
 }
 
 
 /**
  * Sets current game state based on input new state.
- * 
+ *
  * @param newGameState What to change the current game state to
 */
 void GameEngine::setGameState(GameStates newGameState) {
@@ -297,16 +304,18 @@ void GameEngine::setGameState(GameStates newGameState) {
  * gamestart command triggers state change to ASSIGNREINFORCEMENT and call mainGameLoop
  * Loop between reinforcement, issuing orders, and execute orders.
 */
-void GameEngine::mainGameLoop(){
+void GameEngine::mainGameLoop() {
     //********For Assignement 2 only**********
     currentGameState = ASSIGNREINFORCEMENTS;
     //****************************************
-    while(currentGameState != WIN){
-        if(currentGameState == ASSIGNREINFORCEMENTS){
+    while (currentGameState != WIN) {
+        if (currentGameState == ASSIGNREINFORCEMENTS) {
             reinforcementPhase();
-        } else if (currentGameState == ISSUEORDERS){
+        }
+        else if (currentGameState == ISSUEORDERS) {
             issueOrdersPhase();
-        } else {
+        }
+        else {
             executeOrdersPhase();
         }
 
@@ -316,9 +325,9 @@ void GameEngine::mainGameLoop(){
 /**
  * calculate and assign armies to each player
 */
-void GameEngine::reinforcementPhase(){
-    
-    for(Player* i : playerList){
+void GameEngine::reinforcementPhase() {
+
+    for (Player* i : playerList) {
         int pool = i->getTerritories().size();
         // INSERT CODE TO SEE IF PLAYER OWNS A CONTINENT AND ADD THE BONUS
 
@@ -326,10 +335,10 @@ void GameEngine::reinforcementPhase(){
     }
 }
 
-void GameEngine::issueOrdersPhase(){
-    
+void GameEngine::issueOrdersPhase() {
+
     vector<bool> turnEnded;
-    
+
     int currentPlayers = playerList.size();
     for (int i = 0; i < currentPlayers; i++)
     {
@@ -338,18 +347,18 @@ void GameEngine::issueOrdersPhase(){
 
     int finishedPlayers = 0;
 
-    while(finishedPlayers != playerList.size()){
+    while (finishedPlayers != playerList.size()) {
 
         for (int i = 0; i < playerList.size(); i++)
         {
-            if(turnEnded[i]){
+            if (turnEnded[i]) {
                 continue; //Player has ended turn so we done
             }
 
-            Player * temp = playerList.at(i);
+            Player* temp = playerList.at(i);
 
-            if(temp->getOrdersList().order_list.size() > 6){
-                if(!temp->getHand()->getHand().empty()){
+            if (temp->getOrdersList().order_list.size() > 6) {
+                if (!temp->getHand()->getHand().empty()) {
                     vector<Card*> cards = temp->getHand()->getHand();
                     cards[0]->play(temp->getHand());
                 }
@@ -357,42 +366,44 @@ void GameEngine::issueOrdersPhase(){
                 finishedPlayers++;
             }
 
-            if(temp->getReinforcementPool() > 4){
+            if (temp->getReinforcementPool() > 4) {
                 temp->issueOrder(); //Deploy order, should take certain params
                 temp->setReinforcementPool(temp->getReinforcementPool() - 5);
-            } else if (temp->getReinforcementPool() > 0){
+            }
+            else if (temp->getReinforcementPool() > 0) {
                 temp->issueOrder(); //Deply order but now with the rest of the reinforcement pool
                 temp->setReinforcementPool(0);
-            }else{
+            }
+            else {
                 vector<Territory*> potentialAttacks = temp->toAttack();
                 if (potentialAttacks.empty())
                 {
-                    if(!temp->getHand()->getHand().empty()){
+                    if (!temp->getHand()->getHand().empty()) {
                         vector<Card*> cards = temp->getHand()->getHand();
                         cards[0]->play(temp->getHand());
                     }
                     turnEnded[i] = true;
-                    finishedPlayers++;  
+                    finishedPlayers++;
                 }
-                
+
                 vector<string> namesOfTarget;
-                for(Territory* i : potentialAttacks){
+                for (Territory* i : potentialAttacks) {
                     namesOfTarget.push_back(*i->getTerritoryName());
                 }
 
                 vector<Territory*> outposts = temp->toDefend();
 
-                if(!potentialAttacks.empty()){
+                if (!potentialAttacks.empty()) {
                     bool hasAttacked = false;
-                    for(Territory* i : outposts){
-                        if(hasAttacked){
+                    for (Territory* i : outposts) {
+                        if (hasAttacked) {
                             break;
                         }
 
-                        vector<string> adj =  worldMap->getNeighbours(*i->getTerritoryName());
-                        for(string p: adj){
+                        vector<string> adj = worldMap->getNeighbours(*i->getTerritoryName());
+                        for (string p : adj) {
                             vector<string>::iterator it = find(namesOfTarget.begin(), namesOfTarget.end(), p);
-                            if(it != namesOfTarget.end()){
+                            if (it != namesOfTarget.end()) {
                                 temp->issueOrder(); //Atttack order, should have target and destination territorry
                                 hasAttacked = true;
                                 break;
@@ -402,14 +413,14 @@ void GameEngine::issueOrdersPhase(){
                 }
             }
         }
-        
+
     }
 }
 
-void GameEngine::executeOrdersPhase(){
+void GameEngine::executeOrdersPhase() {
 
-    for(Player* i: playerList){
-        for(Order* p : i->getOrdersList().order_list){
+    for (Player* i : playerList) {
+        for (Order* p : i->getOrdersList().order_list) {
             p->execute();
         }
     }
@@ -427,10 +438,10 @@ void GameEngine::startNewGame() {
 
     bool isGameInProgress = true;
 
-    while (isGameInProgress) {   
+    while (isGameInProgress) {
         // TODO: Move to command processor
         string inputCommand = getUserInput();
-        Command *command = new Command(inputCommand);
+        Command* command = new Command(inputCommand);
 
         if (!this->commandProcessor->validate(command, this->currentGameState)) {
             cout << command->getEffect() << endl;
