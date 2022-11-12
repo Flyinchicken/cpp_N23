@@ -431,19 +431,31 @@ void FileCommandProcessorAdapter::readCommand()
         this->saveCommand(i);
 }
 
-/*
-File Line Reader
+///
+/// File Line Reader
+///
 
+/** Default constructor */
+FileLineReader::FileLineReader() {}
+
+/** Copy constructor */
+FileLineReader::FileLineReader(const FileLineReader &reader) {}
+
+/** Destructor */
+FileLineReader::~FileLineReader() {}
+
+/** Stream insertion operator */
+ostream &operator <<(ostream &out, const FileLineReader &reader) {}
+
+/** Assignment operator */
+FileLineReader &FileLineReader::operator=(const FileLineReader &reader) {}
+
+/**
+ * Iterates over all lines in a file and returns them as a vector.
+ * 
+ * @param filePath The path of the file to process
+ * @returns A collection of all commands in the file
 */
-
-FileLineReader::FileLineReader()
-{
-}
-
-FileLineReader::~FileLineReader()
-{
-}
-
 vector<string> FileLineReader::processCommands(string filePath)
 {
 

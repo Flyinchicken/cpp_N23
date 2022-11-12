@@ -46,10 +46,14 @@ class Command {
 };
 
 class FileLineReader {
-public:
-    FileLineReader();
-    vector<string> processCommands(string filePath);
-    ~FileLineReader();
+    public:
+        FileLineReader();
+        FileLineReader(const FileLineReader &);
+        ~FileLineReader();
+        vector<string> processCommands(string filePath);
+
+        friend ostream &operator <<(ostream &, const FileLineReader &);
+        FileLineReader &operator =(const FileLineReader &);
 };
 
 class CommandProcessor {
