@@ -51,6 +51,7 @@ public:
 
 	//helper method
 	void cardOrder(int);
+	int getContinentsBonus();
 
 	//getters
 	string getName() const;

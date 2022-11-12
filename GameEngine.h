@@ -10,6 +10,7 @@
 using std::ostream;
 using std::string;
 
+
 /**
  * Represents the principle game engine of Warzone that allows a user to start a new game with a console-driven
  * inteface.
@@ -22,8 +23,6 @@ private:
     GameStates currentGameState; // Not a pointer type as per prof. Paquet's permission
 
     CommandProcessor *commandProcessor;
-
-    Map *worldMap;
 
     vector<Player *> playerList;
 
@@ -73,3 +72,6 @@ public:
     GameStates getCurrentGameState();
     void setGameState(GameStates newState);
 };
+
+extern GameEngine* ge;
+extern Map* worldMap;

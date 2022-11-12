@@ -1,8 +1,9 @@
 #include "GameEngineDriver.h"
-
+#include "GameEngine.h"
 #include "Player.h"
 #include <iostream>
 #include "MapDriver.h"
+#include "Map.h"
 #include "OrdersDriver.h"
 #include "CardDriver.h"
 #include "PlayerDriver.h"
@@ -11,7 +12,9 @@
 
 using namespace std;
 
-string filePath = "";
+std::string filePath = "";
+GameEngine* ge = new GameEngine();
+Map* worldMap;
 
 int main(int argc, char** argv)
 {
@@ -35,7 +38,7 @@ int main(int argc, char** argv)
 
     //testLoggingObserver();
 
-    //testStartupPhase();
+    testStartupPhase();
 
     //testCommandProcessor();
 
