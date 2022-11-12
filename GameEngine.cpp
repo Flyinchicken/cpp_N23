@@ -240,7 +240,7 @@ void GameEngine::startupPhase()
                 inStartup = processCommand(commands[i]);
             }
 
-            cout << commands[i]->getEffect() << commands[i]->getCommand() << endl;
+            cout << commands[i]->getEffect() << endl;
         }
 
         if (!filePath.empty()) {
@@ -306,9 +306,7 @@ void GameEngine::loadMap(Command *command)
     if (worldMap == nullptr) {
         command->saveEffect("Map " + mapName + " does not exist. State has not been changed");
     } else {
-        command->saveEffect("Successfully loaded map file " + mapName + ". State changed to MAPLOADED ");
-        cout << "Here is the game map:" << endl;
-        cout << *worldMap << endl;
+        command->saveEffect("Successfully loaded map file " + mapName + ". State changed to MAPLOADED ");        
         setGameState(MAPLOADED);
     }    
 }
@@ -323,6 +321,8 @@ void GameEngine::validateMap(Command *command)
     if (worldMap->validate())
     {
         setGameState(MAPVALIDATED);
+        cout << "Here is the game map:" << endl;
+        cout << *worldMap << endl;
         command->saveEffect("Map was successfully validated. State changed to MAPVALIDATED ");
     }
     else
