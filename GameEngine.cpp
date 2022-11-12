@@ -251,6 +251,10 @@ void GameEngine::startupPhase()
             cout << commands[i]->getEffect() << commands[i]->getCommand() << endl;
         }
 
+        if (!filePath.empty()) {
+            inStartup = false;
+        }
+
         lastIndex = commands.size();
     }
 }
@@ -276,12 +280,20 @@ bool GameEngine::processCommand(Command *command)
     }
     else if (commandString == CommandStrings::addPlayer)
     {
-        addPlayer(command);
+        if (playerList.size() == 6) {
+            command->saveEffect("Maximum 6 players allowed in a game of Warzone");
+        } else {
+            addPlayer(command);
+        }        
     }
     else if (command->getCommand() == CommandStrings::gameStart)
     {
-        gameStart(command);
-        return false;
+        if (playerList.size() >= 2) {
+            gameStart(command);
+            return false;
+        } else {
+            command->saveEffect("Warzone games must be played with 2-6 players. Add more before starting.");
+        }        
     }
 
     return true;
@@ -299,9 +311,13 @@ void GameEngine::loadMap(Command *command)
 
     worldMap = mapLoader.LoadMap(mapName);
 
-    command->saveEffect("Successfully loaded map file " + mapName + ". State changed to MAPLOADED ");
+    if (worldMap == nullptr) {
+        command->saveEffect("Map " + mapName + " does not exist. State has not been changed");
+    } else {
+        command->saveEffect("Successfully loaded map file " + mapName + ". State changed to MAPLOADED ");
 
-    setGameState(MAPLOADED);
+        setGameState(MAPLOADED);
+    }    
 }
 
 /**
@@ -325,10 +341,13 @@ void GameEngine::validateMap(Command *command)
 void GameEngine::addPlayer(Command *command)
 {
     string playerName = commandProcessor->splitStringByDelim(command->getCommand(), ' ').back();
+
     Player *player = new Player();
     player->setName(playerName);
     playerList.push_back(player);
+
     setGameState(PLAYERSADDED);
+    
     command->saveEffect("Player " + playerName + " was added successfully ");
 }
 
