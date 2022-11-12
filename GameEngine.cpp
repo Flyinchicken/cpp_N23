@@ -263,6 +263,8 @@ void GameEngine::loadMap(Command* command) {
     worldMap = mapLoader.LoadMap(mapName);
 
     command->saveEffect("Successfully loaded map file " + mapName + ". State changed to MAPLOADED ");
+    cout << "Here is the game map:" << endl;
+    cout << *worldMap << endl;
     
     setGameState(MAPLOADED);
 }
@@ -282,17 +284,51 @@ void GameEngine::validateMap(Command* command) {
 }
 
 void GameEngine::addPlayer(Command *command) {
-    string playerName = commandProcessor->splitStringByDelim(command->getCommand(), ' ').back();
-    Player* player = new Player();
-    player->setName(playerName);
-    playerList.push_back(player);
-    setGameState(PLAYERSADDED);
-    command->saveEffect("Player " + playerName + " was added successfully ");
+    int playerNumber = playerList.size();
+    if (playerNumber <= 6){
+        string playerName = commandProcessor->splitStringByDelim(command->getCommand(), ' ').back();
+        Player* player = new Player();
+        player->setName(playerName);
+        playerList.push_back(player);
+        setGameState(PLAYERSADDED);
+        command->saveEffect("Player " + playerName + " was added successfully ");
+    } else {
+        command->saveEffect("Player number reaches the maximum. No more players can be added!");
+        return;
+    }
+    
 }
 
 void GameEngine::gameStart(Command *command) {
-    setGameState(ASSIGNREINFORCEMENTS);
-    command->saveEffect("Map added and validated successfully. All players added. Transitioned from start up phase into main game loop! ");
+    int playerNumber = playerList.size();
+    if(playerNumber < 2){
+        command->saveEffect("At least two players are needed to start the game! Failure: ");
+    } else {
+        // assignPlayersOrder();
+        // distributeTerritories();
+        for (Player* i : playerList) {
+            i->setReinforcementPool(50);
+            // Need help with draw hand, each player needs to draw two cards
+            // draw(i->getHand());
+        }
+
+        setGameState(ASSIGNREINFORCEMENTS);
+        command->saveEffect("Map added and validated successfully. All players added. Transitioned from start up phase into main game loop! ");
+    }
+}
+
+void GameEngine::assignPlayersOrder(vector<Player*>* playerList)
+{
+
+}
+
+void GameEngine::distributeTerritories(Map* worldMap, vector<Player*>* playerList)
+{
+    for(auto& kv : worldMap->nodes){
+        for(auto& player : *playerList){
+            
+        }
+    }
 }
 
 
@@ -331,12 +367,13 @@ void GameEngine::mainGameLoop() {
  * calculate and assign armies to each player
 */
 void GameEngine::reinforcementPhase() {
-
     for (Player* i : playerList) {
         int pool = i->getTerritories().size();
         // INSERT CODE TO SEE IF PLAYER OWNS A CONTINENT AND ADD THE BONUS
-
-        i->setReinforcementPool(pool);
+        int continent_bonus = i->getContinentsBonus();
+        int total_bonus = ((pool / 3) > 3)? (pool / 3) : 3;
+        total_bonus += continent_bonus;
+        i->setReinforcementPool(total_bonus);
     }
 }
 
@@ -376,7 +413,7 @@ void GameEngine::issueOrdersPhase() {
     //             temp->setReinforcementPool(temp->getReinforcementPool() - 5);
     //         }
     //         else if (temp->getReinforcementPool() > 0) {
-    //             temp->issueOrder(); //Deply order but now with the rest of the reinforcement pool
+    //             temp->issueOrder(); //Deploy order but now with the rest of the reinforcement pool
     //             temp->setReinforcementPool(0);
     //         }
     //         else {

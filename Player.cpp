@@ -120,6 +120,21 @@ void Player::setTerritories(vector<Territory*> newTerritories)
     this->territories = newTerritories;
 }
 
+void Player::addTerritory(Territory* territory) {
+    territories.push_back(territory);
+}
+
+void Player::removeTerritory(Territory* territory) {
+    for(int i = 0; i < territories.size(); i++){
+        if(territories.at(i) == territory){
+                territories.erase(territories.begin() + i);
+                return;
+        }
+    }
+
+    cout << "Player: " << this->getName() << " does not own " << territory->getTerritoryName() << endl;
+}
+
 void Player::setReinforcementPool(int pool){
     this->reinforcementPool = reinforcementPool;
 }
@@ -191,7 +206,7 @@ void Player::issueOrder()
                 cards[0]->play(this->getHand());
             }
             this->setTurn(true);
-            finishedPlayers++;
+            // finishedPlayers++;
         }
     }
 }
@@ -266,16 +281,11 @@ int Player::getContinentsBonus(){
 
 //return a list of arbitrary territories to defend
 vector<Territory*> Player::toDefend() {
-    Territory* t1 = new Territory(new string("territoryTD 1"), new string("continentTD 1"), 3, false, this);
-    Territory* t2 = new Territory(new string("territoryTD 2"), new string("continentTD 2"), 3, false, this);
-    vector<Territory*> territories;
-    territories.push_back(t1);
-    territories.push_back(t2);
-
+    vector<Territory*> d_territories;
     for (int i = 0; i < territories.size(); i++) {
-        cout << (*territories.at(i)->getTerritoryName()) << endl;
+        d_territories.push_back(territories.at(i));
     }
-    return territories;
+    return d_territories;
 }
 
 //return a list of arbitrary territories to attack
