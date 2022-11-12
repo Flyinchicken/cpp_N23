@@ -310,27 +310,69 @@ CommandProcessor::~CommandProcessor()
 {
 }
 
-/*
-File Processor Adapter
+///
+/// File Processor Adapter
+///
 
+/**
+ * Default constructor.
 */
-
 FileCommandProcessorAdapter::FileCommandProcessorAdapter()
 {
     CommandProcessor();
     this->fileReader = new FileLineReader();
 }
 
+/**
+ * Constructor that takes a FileLineReader.
+ * 
+ * @param file FileLineReader to set current fileReade to
+*/
 FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileLineReader *file)
 {
     CommandProcessor();
     this->fileReader = file;
 }
 
-FileCommandProcessorAdapter::~FileCommandProcessorAdapter()
-{
+/**
+ * Copy constructor. Sets fileReader to input's fileReader
+ * 
+ * @param adapter FileCommandProcessorAdapter to copy
+*/
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(const FileCommandProcessorAdapter &adapter) {
+    CommandProcessor();
+    this->fileReader = adapter.fileReader;
 }
 
+/**
+ * Destructor
+*/
+FileCommandProcessorAdapter::~FileCommandProcessorAdapter()
+{   
+    delete this->fileReader;
+}
+
+/**
+ * Assignment operator. 
+*/
+FileCommandProcessorAdapter &FileCommandProcessorAdapter::operator=(const FileCommandProcessorAdapter &adapter) {
+    this->fileReader = adapter.fileReader;
+}
+
+/**
+ * Stream insertion operator. Prints command list
+*/
+ostream &operator<<(ostream &out, const FileCommandProcessorAdapter &adapter) {
+    for (Command *command : adapter.commandsList) {
+        out << command;
+    }
+
+    return out;
+}
+
+/**
+ * Reads commands from the global file path
+*/
 void FileCommandProcessorAdapter::readCommand()
 {
     ifstream input(filePath);

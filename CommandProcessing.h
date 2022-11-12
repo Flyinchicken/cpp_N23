@@ -68,13 +68,17 @@ protected:
 };
 
 class FileCommandProcessorAdapter : public CommandProcessor {
-public:
-    FileCommandProcessorAdapter();
-    FileCommandProcessorAdapter(FileLineReader* file);
-    ~FileCommandProcessorAdapter();
-private:
-    FileLineReader* fileReader;
-    void readCommand();
+    public:
+        FileCommandProcessorAdapter();
+        FileCommandProcessorAdapter(FileLineReader* file);
+        FileCommandProcessorAdapter(const FileCommandProcessorAdapter &);
+        ~FileCommandProcessorAdapter();
+
+        friend ostream &operator <<(ostream &, const FileCommandProcessorAdapter &);
+        FileCommandProcessorAdapter &operator = (const FileCommandProcessorAdapter &);
+    private:
+        FileLineReader* fileReader;
+        void readCommand();
 };
 
 /**
