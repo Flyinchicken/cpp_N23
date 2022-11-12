@@ -115,6 +115,7 @@ class Bomb : public Order
 {
 public:
   Bomb();
+  Bomb(Player *player, Territory *targetTerritory);
   ~Bomb();
   Bomb(const Bomb &bomb);
   Bomb &operator=(const Bomb &bomb);
@@ -123,6 +124,7 @@ public:
   void execute();
 
 private:
+  Territory *targetTerritory;
   friend std::ostream &operator<<(std::ostream &, const Bomb &);
 };
 
@@ -130,6 +132,7 @@ class Blockade : public Order
 {
 public:
   Blockade();
+  Blockade(Player *player, Territory *targetTerritory);
   ~Blockade();
   Blockade(const Blockade &blockade);
   Blockade &operator=(const Blockade &blockade);
@@ -138,6 +141,7 @@ public:
   void execute();
 
 private:
+  Territory *targetTerritory;
   friend std::ostream &operator<<(std::ostream &, const Blockade &);
 };
 
