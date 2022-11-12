@@ -274,7 +274,7 @@ FileCommandProcessorAdapter::~FileCommandProcessorAdapter()
 void FileCommandProcessorAdapter::readCommand()
 {
 
-    this->saveCommand("Opening file " + filePath);
+    // this->saveCommand("Opening file " + filePath);
 
     ifstream input(filePath);
 
