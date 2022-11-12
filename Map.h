@@ -86,7 +86,9 @@ public:
     void addNeighbor(string territory, vector<string> neighbor);
 
     Territory* getNode(std::string);
+    vector<Territory*> getNodesPtr();
     std::vector<std::string> getNeighbours(std::string);
+    vector<Territory*> getNeighboursPtr(std::string);
 
     virtual
     // map methods:
