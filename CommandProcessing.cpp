@@ -58,33 +58,88 @@ ostream &operator<<(ostream &out, const CommandStrings &strings)
 //  COMMAND
 //
 
+/**
+ * Default constructor
+*/
 Command::Command()
 {
     this->command = "";
     this->effect = "";
 }
 
+/**
+ * Constructor that takes a and sets command string.
+ * 
+ * @param commandString The command string to init Command with
+*/
 Command::Command(string commandString)
 {
     this->command = commandString;
     this->effect = "";
 }
 
+/**
+ * Copy constructor. Copies over effect and command of one to copy.
+ * 
+ * @param copyCommand Command object to copy
+*/
+Command::Command(const Command &copyCommand) {
+    this->command = copyCommand.command;
+    this->effect = copyCommand.effect;
+}
+
+/**
+ * Assignment operator. Sets command and effect.
+*/
+Command &Command::operator=(const Command &equalCommand) {
+    this->command = equalCommand.command;
+    this->effect = equalCommand.effect;
+
+    return *this;
+}
+
+/**
+ * Stream insertion operator. Displays Command string and effect string (if there is one)
+*/
+ostream &operator<<(ostream &out, const Command &streamCommand) {
+    string effectString = streamCommand.effect.empty() ? "No current effect" : streamCommand.effect;
+
+    out << "Command: " << streamCommand.command
+        << "Effect: " << effectString
+        << endl;
+
+    return out;
+}
+
+/**
+ * Destructor
+*/
 Command::~Command()
 {
     // Nothing to delete...for now
 }
 
+/**
+ * @returns command string of Command
+*/
 string Command::getCommand()
 {
     return this->command;
 }
 
+/**
+ * Sets the effect string based on input
+ * 
+ * @param effectString String to set the effect with
+*/
 void Command::saveEffect(string effectString)
 {
     this->effect = effectString;
 }
 
+/**
+ * @returns effect string of Command
+*/
 string Command::getEffect()
 {
     return this->effect;
@@ -94,9 +149,50 @@ string Command::getEffect()
 //  COMMAND PROCESSOR
 //
 
+/**
+ * Default constructor.
+*/
 CommandProcessor::CommandProcessor()
 {
     this->commandsList = vector<Command *>();
+}
+
+/**
+ * Copy Constructor.
+*/
+CommandProcessor::CommandProcessor(const CommandProcessor &processor) {
+    this->commandsList = processor.commandsList;
+}
+
+/**
+ * Destructor
+*/
+CommandProcessor::~CommandProcessor() {
+    for (Command *command : commandsList) {
+        delete command;
+    }
+
+    commandsList.clear();
+}
+
+/**
+ * Assignment operator.
+*/
+CommandProcessor &CommandProcessor::operator=(const CommandProcessor &processor) {
+    this->commandsList = processor.commandsList;
+
+    return *this;
+}
+
+/**
+ * Stream insertion operator. Prints command list
+*/
+ostream &operator<<(ostream &out, const CommandProcessor &processor) {
+    for (Command *command : processor.commandsList) {
+        out << command;
+    }
+
+    return out;
 }
 
 bool has_suffix(const std::string &str, const std::string &suffix)
@@ -139,7 +235,7 @@ bool CommandProcessor::validate(Command *command, GameStates currentGameState)
     if (!CommandStrings::isStringCommandString(commandString))
     {
         command->saveEffect(commandString + " is not a valid command string");
-        
+
         return false;
     }
 
@@ -251,31 +347,71 @@ vector<Command *> CommandProcessor::getCommandsList()
     return this->commandsList;
 }
 
-CommandProcessor::~CommandProcessor()
-{
-}
+///
+/// File Processor Adapter
+///
 
-/*
-File Processor Adapter
-
+/**
+ * Default constructor.
 */
-
 FileCommandProcessorAdapter::FileCommandProcessorAdapter()
 {
     CommandProcessor();
     this->fileReader = new FileLineReader();
 }
 
+/**
+ * Constructor that takes a FileLineReader.
+ * 
+ * @param file FileLineReader to set current fileReade to
+*/
 FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileLineReader *file)
 {
     CommandProcessor();
     this->fileReader = file;
 }
 
-FileCommandProcessorAdapter::~FileCommandProcessorAdapter()
-{
+/**
+ * Copy constructor. Sets fileReader to input's fileReader
+ * 
+ * @param adapter FileCommandProcessorAdapter to copy
+*/
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(const FileCommandProcessorAdapter &adapter) {
+    CommandProcessor();
+    this->fileReader = adapter.fileReader;
 }
 
+/**
+ * Destructor
+*/
+FileCommandProcessorAdapter::~FileCommandProcessorAdapter()
+{   
+    delete this->fileReader;
+}
+
+/**
+ * Assignment operator. 
+*/
+FileCommandProcessorAdapter &FileCommandProcessorAdapter::operator=(const FileCommandProcessorAdapter &adapter) {
+    this->fileReader = adapter.fileReader;
+
+    return *this;
+}
+
+/**
+ * Stream insertion operator. Prints command list
+*/
+ostream &operator<<(ostream &out, const FileCommandProcessorAdapter &adapter) {
+    for (Command *command : adapter.commandsList) {
+        out << command;
+    }
+
+    return out;
+}
+
+/**
+ * Reads commands from the global file path
+*/
 void FileCommandProcessorAdapter::readCommand()
 {
     ifstream input(filePath);
@@ -295,19 +431,31 @@ void FileCommandProcessorAdapter::readCommand()
         this->saveCommand(i);
 }
 
-/*
-File Line Reader
+///
+/// File Line Reader
+///
 
+/** Default constructor */
+FileLineReader::FileLineReader() {}
+
+/** Copy constructor */
+FileLineReader::FileLineReader(const FileLineReader &reader) {}
+
+/** Destructor */
+FileLineReader::~FileLineReader() {}
+
+/** Stream insertion operator */
+ostream &operator <<(ostream &out, const FileLineReader &reader) {}
+
+/** Assignment operator */
+FileLineReader &FileLineReader::operator=(const FileLineReader &reader) {}
+
+/**
+ * Iterates over all lines in a file and returns them as a vector.
+ * 
+ * @param filePath The path of the file to process
+ * @returns A collection of all commands in the file
 */
-
-FileLineReader::FileLineReader()
-{
-}
-
-FileLineReader::~FileLineReader()
-{
-}
-
 vector<string> FileLineReader::processCommands(string filePath)
 {
 
