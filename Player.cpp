@@ -2,6 +2,7 @@
 
 using namespace std;
 #include <iostream>
+extern Map* worldMap;
 
 // Default constructor
 Player::Player()
@@ -117,7 +118,6 @@ void Player::setTerritories(vector<Territory *> newTerritories)
     this->territories = newTerritories;
 }
 
-<<<<<<< HEAD
 void Player::addTerritory(Territory* territory) {
     territories.push_back(territory);
 }
@@ -134,10 +134,6 @@ void Player::removeTerritory(Territory* territory) {
 }
 
 void Player::setReinforcementPool(int pool){
-=======
-void Player::setReinforcementPool(int pool)
-{
->>>>>>> dev
     this->reinforcementPool = reinforcementPool;
 }
 
@@ -151,23 +147,12 @@ void Player::issueOrder()
     Airlift *airlift = new Airlift();
     Negotiate *negotiate = new Negotiate();
 
-<<<<<<< HEAD
-            if (!this->getHand()->getHand().empty()) {
-                vector<Card*> cards = this->getHand()->getHand();
-                cards[0]->play(this->getHand());
-            }
-            this->setTurn(true);
-            // finishedPlayers++;
-        }
-    }
-=======
     this->orderslist->push_back(deploy);
     this->orderslist->push_back(advance);
     this->orderslist->push_back(bomb);
     this->orderslist->push_back(blockade);
     this->orderslist->push_back(airlift);
     this->orderslist->push_back(negotiate);
->>>>>>> dev
 }
 
 // helper method to get a specific order which adds to the player's orderslist
@@ -205,7 +190,6 @@ void Player::cardOrder(int orderNumber)
     }
 }
 
-<<<<<<< HEAD
 /**
  * Check the number of continent owning bonus armies for the player
 */
@@ -244,20 +228,6 @@ vector<Territory*> Player::toDefend() {
     vector<Territory*> d_territories;
     for (int i = 0; i < territories.size(); i++) {
         d_territories.push_back(territories.at(i));
-=======
-// return a list of arbitrary territories to defend
-vector<Territory *> Player::toDefend()
-{
-    Territory *t1 = new Territory(new string("territoryTD 1"), new string("continentTD 1"), 3, false, this);
-    Territory *t2 = new Territory(new string("territoryTD 2"), new string("continentTD 2"), 3, false, this);
-    vector<Territory *> territories;
-    territories.push_back(t1);
-    territories.push_back(t2);
-
-    for (int i = 0; i < territories.size(); i++)
-    {
-        cout << (*territories.at(i)->getTerritoryName()) << endl;
->>>>>>> dev
     }
     return d_territories;
 }
