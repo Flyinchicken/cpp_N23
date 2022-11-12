@@ -140,19 +140,69 @@ void Player::setReinforcementPool(int pool){
 // orders created adding to the player's orderslist
 void Player::issueOrder()
 {
-    Deploy *deploy = new Deploy();
-    Advance *advance = new Advance();
-    Bomb *bomb = new Bomb();
-    Blockade *blockade = new Blockade();
-    Airlift *airlift = new Airlift();
-    Negotiate *negotiate = new Negotiate();
+    if (this->getReinforcementPool() > 4) {
+        this->orderslist->push_back(new Deploy()); //Deploy order, should take certain params
+        this->setReinforcementPool(this->getReinforcementPool() - 5);
+    }
+    else if (this->getReinforcementPool() > 0) {
+        this->orderslist->push_back(new Deploy()); //Deply order but now with the rest of the reinforcement pool
+        this->setReinforcementPool(0);
+    }
+    else {
+        vector<Territory*> potentialAttacks = this->toAttack();
+        vector<Territory*> outposts = this->toDefend();
 
-    this->orderslist->push_back(deploy);
-    this->orderslist->push_back(advance);
-    this->orderslist->push_back(bomb);
-    this->orderslist->push_back(blockade);
-    this->orderslist->push_back(airlift);
-    this->orderslist->push_back(negotiate);
+        if (potentialAttacks.size() > numAttacks){ //If we can attack any territory that we have not yet attacked
+            
+            Territory * target = potentialAttacks.at(numAttacks);
+            vector<Territory*> adj; //Should be equal to the adjacent territories of target
+            for(Territory * p: adj){
+                vector<Territory*>::iterator it = find(outposts.begin(), outposts.end(), p); //Tries to find which territory should be the source
+                if(it != outposts.end()){
+                    Territory* source = outposts.at(it - outposts.begin()); //Source territory
+                    this->orderslist->push_back(new Advance());
+                    numAttacks++;
+                    break;
+                }
+            }
+        } else{ //If it can't attack it will try to defend
+
+            vector<Territory*> reinforcers = outposts;
+            reverse(reinforcers.begin(), reinforcers.end());
+            bool hasDefended = false;
+
+            for(int i = numDefense; i < outposts.size(); i++){
+                
+                if(hasDefended){
+                    return;
+                }
+
+                Territory* target = outposts.at(i);
+                vector<Territory*> adj; //Should be equal to the adjacents of target
+                
+                for(Territory* tempAdj: adj){
+                    vector<Territory*>::iterator it = find(reinforcers.begin(), reinforcers.end(), tempAdj); //Tries to find where it can take troops from to defend from the territory with the most troops
+                    if(it != reinforcers.end()){
+                        int index = outposts.size() - 1 - (it - reinforcers.begin());
+                        if(index > i){
+                            Territory* source = outposts.at(index);
+                            this->orderslist->push_back(new Advance()); //Should take source and target as argument
+                            hasDefended = true;
+                            numDefense = i + 1;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!this->getHand()->getHand().empty()) {
+                vector<Card*> cards = this->getHand()->getHand();
+                cards[0]->play(this->getHand());
+            }
+            this->setTurn(true);
+            finishedPlayers++;
+        }
+    }
 }
 
 // helper method to get a specific order which adds to the player's orderslist
