@@ -2,7 +2,7 @@
 
 using namespace std;
 #include <iostream>
-extern Map* worldMap;
+extern Map *worldMap;
 
 // Default constructor
 Player::Player()
@@ -118,75 +118,98 @@ void Player::setTerritories(vector<Territory *> newTerritories)
     this->territories = newTerritories;
 }
 
-void Player::addTerritory(Territory* territory) {
+void Player::addTerritory(Territory *territory)
+{
     territories.push_back(territory);
 }
 
-void Player::removeTerritory(Territory* territory) {
-    for(int i = 0; i < territories.size(); i++){
-        if(territories.at(i) == territory){
-                territories.erase(territories.begin() + i);
-                return;
+void Player::removeTerritory(Territory *territory)
+{
+    for (int i = 0; i < territories.size(); i++)
+    {
+        if (territories.at(i) == territory)
+        {
+            territories.erase(territories.begin() + i);
+            return;
         }
     }
 
     cout << "Player: " << this->getName() << " does not own " << territory->getTerritoryName() << endl;
 }
 
-void Player::setReinforcementPool(int pool){
+void Player::setReinforcementPool(int pool)
+{
     this->reinforcementPool = reinforcementPool;
+}
+
+void Player::setTurn(bool turn)
+{
+    this->turnCompleted = turn;
 }
 
 // orders created adding to the player's orderslist
 void Player::issueOrder()
 {
-    if (this->getReinforcementPool() > 4) {
-        this->orderslist->push_back(new Deploy()); //Deploy order, should take certain params
+    if (this->getReinforcementPool() > 4)
+    {
+        this->orderslist->push_back(new Deploy()); // Deploy order, should take certain params
         this->setReinforcementPool(this->getReinforcementPool() - 5);
     }
-    else if (this->getReinforcementPool() > 0) {
-        this->orderslist->push_back(new Deploy()); //Deply order but now with the rest of the reinforcement pool
+    else if (this->getReinforcementPool() > 0)
+    {
+        this->orderslist->push_back(new Deploy()); // Deply order but now with the rest of the reinforcement pool
         this->setReinforcementPool(0);
     }
-    else {
-        vector<Territory*> potentialAttacks = this->toAttack();
-        vector<Territory*> outposts = this->toDefend();
+    else
+    {
+        vector<Territory *> potentialAttacks = this->toAttack();
+        vector<Territory *> outposts = this->toDefend();
 
-        if (potentialAttacks.size() > numAttacks){ //If we can attack any territory that we have not yet attacked
-            
-            Territory * target = potentialAttacks.at(numAttacks);
-            vector<Territory*> adj; //Should be equal to the adjacent territories of target
-            for(Territory * p: adj){
-                vector<Territory*>::iterator it = find(outposts.begin(), outposts.end(), p); //Tries to find which territory should be the source
-                if(it != outposts.end()){
-                    Territory* source = outposts.at(it - outposts.begin()); //Source territory
+        if (potentialAttacks.size() > numAttacks)
+        { // If we can attack any territory that we have not yet attacked
+
+            Territory *target = potentialAttacks.at(numAttacks);
+            vector<Territory *> adj; // Should be equal to the adjacent territories of target
+            for (Territory *p : adj)
+            {
+                vector<Territory *>::iterator it = find(outposts.begin(), outposts.end(), p); // Tries to find which territory should be the source
+                if (it != outposts.end())
+                {
+                    Territory *source = outposts.at(it - outposts.begin()); // Source territory
                     this->orderslist->push_back(new Advance());
                     numAttacks++;
                     break;
                 }
             }
-        } else{ //If it can't attack it will try to defend
+        }
+        else
+        { // If it can't attack it will try to defend
 
-            vector<Territory*> reinforcers = outposts;
+            vector<Territory *> reinforcers = outposts;
             reverse(reinforcers.begin(), reinforcers.end());
             bool hasDefended = false;
 
-            for(int i = numDefense; i < outposts.size(); i++){
-                
-                if(hasDefended){
+            for (int i = numDefense; i < outposts.size(); i++)
+            {
+
+                if (hasDefended)
+                {
                     return;
                 }
 
-                Territory* target = outposts.at(i);
-                vector<Territory*> adj; //Should be equal to the adjacents of target
-                
-                for(Territory* tempAdj: adj){
-                    vector<Territory*>::iterator it = find(reinforcers.begin(), reinforcers.end(), tempAdj); //Tries to find where it can take troops from to defend from the territory with the most troops
-                    if(it != reinforcers.end()){
+                Territory *target = outposts.at(i);
+                vector<Territory *> adj; // Should be equal to the adjacents of target
+
+                for (Territory *tempAdj : adj)
+                {
+                    vector<Territory *>::iterator it = find(reinforcers.begin(), reinforcers.end(), tempAdj); // Tries to find where it can take troops from to defend from the territory with the most troops
+                    if (it != reinforcers.end())
+                    {
                         int index = outposts.size() - 1 - (it - reinforcers.begin());
-                        if(index > i){
-                            Territory* source = outposts.at(index);
-                            this->orderslist->push_back(new Advance()); //Should take source and target as argument
+                        if (index > i)
+                        {
+                            Territory *source = outposts.at(index);
+                            this->orderslist->push_back(new Advance()); // Should take source and target as argument
                             hasDefended = true;
                             numDefense = i + 1;
                             break;
@@ -195,8 +218,9 @@ void Player::issueOrder()
                 }
             }
 
-            if (!this->getHand()->getHand().empty()) {
-                vector<Card*> cards = this->getHand()->getHand();
+            if (!this->getHand()->getHand().empty())
+            {
+                vector<Card *> cards = this->getHand()->getHand();
                 cards[0]->play(this->getHand());
             }
             this->setTurn(true);
@@ -242,41 +266,49 @@ void Player::cardOrder(int orderNumber)
 
 /**
  * Check the number of continent owning bonus armies for the player
-*/
-int Player::getContinentsBonus(){
+ */
+int Player::getContinentsBonus()
+{
     int bonus = 0;
 
     // for each continent pointer in the map
-    for(auto& kv : worldMap->continents){
+    for (auto &kv : worldMap->continents)
+    {
         // get a vector of all territories
-        vector<Territory*> c_territories = kv.second->getNodesPtr();
+        vector<Territory *> c_territories = kv.second->getNodesPtr();
 
         // get the number of territories in the continent
         int count = c_territories.size();
 
         // for each territory in the continent, try to find it in the player's territory list
         // if found, move onto the next continent territory
-        for(auto& c_t :  c_territories){
-            for(auto& t : this->territories){
-                if(c_t == t){
+        for (auto &c_t : c_territories)
+        {
+            for (auto &t : this->territories)
+            {
+                if (c_t == t)
+                {
                     count--;
                     break;
                 }
             }
         }
 
-        // in the end if all continent territories are found, continent bonus is added 
-        if(count == 0){
+        // in the end if all continent territories are found, continent bonus is added
+        if (count == 0)
+        {
             bonus += kv.second->getBonusArmy();
         }
     }
     return bonus;
 }
 
-//return a list of arbitrary territories to defend
-vector<Territory*> Player::toDefend() {
-    vector<Territory*> d_territories;
-    for (int i = 0; i < territories.size(); i++) {
+// return a list of arbitrary territories to defend
+vector<Territory *> Player::toDefend()
+{
+    vector<Territory *> d_territories;
+    for (int i = 0; i < territories.size(); i++)
+    {
         d_territories.push_back(territories.at(i));
     }
     return d_territories;
