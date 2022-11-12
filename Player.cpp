@@ -140,7 +140,7 @@ void Player::issueOrder()
 {
     if (this->getReinforcementPool() > 4)
     {
-        this->orderslist->push_back(new Deploy()); // Deploy order, should take certain params IMPORTANT TO DO need to modify order class
+        this->orderslist->push_back(new Deploy()); // modified the deploy method, can be use like: Deploy(Player *player, int numberOfArmyUnits, Territory *targetTerritory)
         this->setReinforcementPool(this->getReinforcementPool() - 5);
     }
     else if (this->getReinforcementPool() > 0)

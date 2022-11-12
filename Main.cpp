@@ -15,7 +15,6 @@ string filePath = "";
 
 int main(int argc, char **argv)
 {
-    testOrdersLists();
     // vector<int> numbers {10, 20, 30, 50, 120, 40, 60, 20, 90, 100};
 
     // vector<int> numbers1 = numbers;

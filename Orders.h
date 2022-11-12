@@ -19,7 +19,7 @@ class Order
 {
 public:
   Order();
-  ~Order();
+  virtual ~Order(); // destructor should be virtual since the order class is abstract now
   Order(Player *);
   Order(const Order &order);            // copy constructor
   Order &operator=(const Order &order); // assignment operator
@@ -27,9 +27,9 @@ public:
   string getType() const;
   int setId();
   string setType(string type);
+  // add the player to the order
   Player *player;
-  Player *get_player();
-  void setPlayer(Player *player);
+  Player *get_player() const;
 
   // define virtual function of validate and execute,
   // allow calling this function of a subclass with a pointer to the base class
@@ -71,7 +71,7 @@ class Deploy : public Order
 {
 public:
   Deploy();
-  Deploy(int numberOfArmyUnits, Territory *targetTerritory);
+  Deploy(Player *player, int numberOfArmyUnits, Territory *targetTerritory);
   ~Deploy();
   Deploy(const Deploy &deploy);
   Deploy &operator=(const Deploy &deploy);
@@ -92,7 +92,7 @@ class Advance : public Order
 {
 public:
   Advance();
-  Advance(Territory *sourceTerritory, Territory *targetTerritory);
+  Advance(Player *player, Territory *sourceTerritory, Territory *targetTerritory, int numberOfArmies);
   ~Advance();
   Advance(const Advance &advance);
   Advance &operator=(const Advance &advance);
@@ -102,10 +102,12 @@ public:
 
   Territory *getSourceTerritory();
   Territory *getTargetTerritory();
+  int getNumberOfArmies();
 
 private:
   Territory *sourceTerritory;
   Territory *targetTerritory;
+  int numberOfArmies;
   friend std::ostream &operator<<(std::ostream &, const Advance &);
 };
 
