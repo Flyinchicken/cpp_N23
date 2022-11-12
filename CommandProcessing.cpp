@@ -149,9 +149,50 @@ string Command::getEffect()
 //  COMMAND PROCESSOR
 //
 
+/**
+ * Default constructor.
+*/
 CommandProcessor::CommandProcessor()
 {
     this->commandsList = vector<Command *>();
+}
+
+/**
+ * Copy Constructor.
+*/
+CommandProcessor::CommandProcessor(const CommandProcessor &processor) {
+    this->commandsList = processor.commandsList;
+}
+
+/**
+ * Destructor
+*/
+CommandProcessor::~CommandProcessor() {
+    for (Command *command : commandsList) {
+        delete command;
+    }
+
+    commandsList.clear();
+}
+
+/**
+ * Assignment operator.
+*/
+CommandProcessor &CommandProcessor::operator=(const CommandProcessor &processor) {
+    this->commandsList = processor.commandsList;
+
+    return *this;
+}
+
+/**
+ * Stream insertion operator. Prints command list
+*/
+ostream &operator<<(ostream &out, const CommandProcessor &processor) {
+    for (Command *command : processor.commandsList) {
+        out << command;
+    }
+
+    return out;
 }
 
 bool has_suffix(const std::string &str, const std::string &suffix)
@@ -306,10 +347,6 @@ vector<Command *> CommandProcessor::getCommandsList()
     return this->commandsList;
 }
 
-CommandProcessor::~CommandProcessor()
-{
-}
-
 ///
 /// File Processor Adapter
 ///
@@ -357,6 +394,8 @@ FileCommandProcessorAdapter::~FileCommandProcessorAdapter()
 */
 FileCommandProcessorAdapter &FileCommandProcessorAdapter::operator=(const FileCommandProcessorAdapter &adapter) {
     this->fileReader = adapter.fileReader;
+
+    return *this;
 }
 
 /**

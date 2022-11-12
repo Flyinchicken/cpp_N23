@@ -53,18 +53,23 @@ public:
 };
 
 class CommandProcessor {
-public:
-    CommandProcessor();
-    bool validate(Command* command, GameStates currentGameState);
-    void getCommand();
-    vector<Command*> getCommandsList();
-    virtual ~CommandProcessor();
+    public:
+        CommandProcessor();
+        CommandProcessor(const CommandProcessor &);
+        virtual ~CommandProcessor();
 
-    vector<string> splitStringByDelim(string toSplit, char delim);
-protected:
-    vector<Command*> commandsList;
-    virtual void readCommand();
-    void saveCommand(string command);
+        bool validate(Command* command, GameStates currentGameState);
+        void getCommand();
+        vector<Command*> getCommandsList();        
+
+        vector<string> splitStringByDelim(string toSplit, char delim);
+
+        friend ostream &operator <<(ostream &, const CommandProcessor &);
+        CommandProcessor &operator =(const CommandProcessor &);
+    protected:
+        vector<Command*> commandsList;
+        virtual void readCommand();
+        void saveCommand(string command);
 };
 
 class FileCommandProcessorAdapter : public CommandProcessor {
@@ -75,7 +80,7 @@ class FileCommandProcessorAdapter : public CommandProcessor {
         ~FileCommandProcessorAdapter();
 
         friend ostream &operator <<(ostream &, const FileCommandProcessorAdapter &);
-        FileCommandProcessorAdapter &operator = (const FileCommandProcessorAdapter &);
+        FileCommandProcessorAdapter &operator =(const FileCommandProcessorAdapter &);
     private:
         FileLineReader* fileReader;
         void readCommand();
