@@ -27,18 +27,22 @@ enum GameStates {
 };
 
 class Command {
-public:
-    Command();
-    Command(string commandString);
-    ~Command();
+    public:
+        Command();
+        Command(string commandString);
+        Command(const Command &);
+        ~Command();
 
-    void saveEffect(string effectString);
-    string getEffect();
+        void saveEffect(string effectString);
+        string getEffect();
 
-    string getCommand();
-private:
-    string command;
-    string effect;
+        string getCommand();
+
+        friend ostream &operator << (ostream &, const Command &);
+        Command &operator = (const Command &);
+    private:
+        string command;
+        string effect;
 };
 
 class FileLineReader {

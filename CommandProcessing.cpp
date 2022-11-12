@@ -58,33 +58,88 @@ ostream &operator<<(ostream &out, const CommandStrings &strings)
 //  COMMAND
 //
 
+/**
+ * Default constructor
+*/
 Command::Command()
 {
     this->command = "";
     this->effect = "";
 }
 
+/**
+ * Constructor that takes a and sets command string.
+ * 
+ * @param commandString The command string to init Command with
+*/
 Command::Command(string commandString)
 {
     this->command = commandString;
     this->effect = "";
 }
 
+/**
+ * Copy constructor. Copies over effect and command of one to copy.
+ * 
+ * @param copyCommand Command object to copy
+*/
+Command::Command(const Command &copyCommand) {
+    this->command = copyCommand.command;
+    this->effect = copyCommand.effect;
+}
+
+/**
+ * Assignment operator. Sets command and effect.
+*/
+Command &Command::operator=(const Command &equalCommand) {
+    this->command = equalCommand.command;
+    this->effect = equalCommand.effect;
+
+    return *this;
+}
+
+/**
+ * Stream insertion operator. Displays Command string and effect string (if there is one)
+*/
+ostream &operator<<(ostream &out, const Command &streamCommand) {
+    string effectString = streamCommand.effect.empty() ? "No current effect" : streamCommand.effect;
+
+    out << "Command: " << streamCommand.command
+        << "Effect: " << effectString
+        << endl;
+
+    return out;
+}
+
+/**
+ * Destructor
+*/
 Command::~Command()
 {
     // Nothing to delete...for now
 }
 
+/**
+ * @returns command string of Command
+*/
 string Command::getCommand()
 {
     return this->command;
 }
 
+/**
+ * Sets the effect string based on input
+ * 
+ * @param effectString String to set the effect with
+*/
 void Command::saveEffect(string effectString)
 {
     this->effect = effectString;
 }
 
+/**
+ * @returns effect string of Command
+*/
 string Command::getEffect()
 {
     return this->effect;
@@ -139,7 +194,7 @@ bool CommandProcessor::validate(Command *command, GameStates currentGameState)
     if (!CommandStrings::isStringCommandString(commandString))
     {
         command->saveEffect(commandString + " is not a valid command string");
-        
+
         return false;
     }
 
