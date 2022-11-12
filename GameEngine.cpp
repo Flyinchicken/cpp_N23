@@ -176,12 +176,14 @@ bool GameEngine::hasGameBeenEnded(string command)
  * Parses a command string to its numeric/enum representation and changes the game state based both the numeric and string
  * value of the user input.
  *
- * @param commandString The user input command string from the console
+ * @param command The input command
  * @returns Whether or not a state change has taken place. If a change has not occured, it is because the state change
  * was not a valid one.
  */
-bool GameEngine::changeStateFromCommand(string commandString)
+bool GameEngine::changeStateFromCommand(Command *command)
 {
+    string commandString = command->getCommand();
+
     if (commandString == CommandStrings::quit)
     {
         return false;
@@ -189,22 +191,27 @@ bool GameEngine::changeStateFromCommand(string commandString)
 
     if (commandString.find("loadmap") != std::string::npos)
     {
+        command->saveEffect("Successfully loaded map file. State changed to MAPLOADED ");
         this->currentGameState = MAPLOADED;
     }
     else if (commandString == CommandStrings::validateMap)
     {
+        command->saveEffect("Map was successfully validated. State changed to MAPVALIDATED ");
         this->currentGameState = MAPVALIDATED;
     }
     else if (commandString.find("addplayer") != std::string::npos)
     {
+        command->saveEffect("Player  was added successfully ");
         this->currentGameState = PLAYERSADDED;
     }
     else if (commandString == CommandStrings::gameStart)
     {
+        command->saveEffect("Map added and validated successfully. All players added. Transitioned from start up phase into main game loop! ");
         this->currentGameState = ASSIGNREINFORCEMENTS;
     }
     else if (commandString == CommandStrings::replay)
     {
+        command->saveEffect("Restarting game");
         this->currentGameState = START;
     }
     else
@@ -251,6 +258,10 @@ void GameEngine::startupPhase()
             cout << commands[i]->getEffect() << commands[i]->getCommand() << endl;
         }
 
+        if (!filePath.empty()) {
+            inStartup = false;
+        }
+
         lastIndex = commands.size();
     }
 }
@@ -276,12 +287,20 @@ bool GameEngine::processCommand(Command *command)
     }
     else if (commandString == CommandStrings::addPlayer)
     {
-        addPlayer(command);
+        if (playerList.size() == 6) {
+            command->saveEffect("Maximum 6 players allowed in a game of Warzone");
+        } else {
+            addPlayer(command);
+        }        
     }
     else if (command->getCommand() == CommandStrings::gameStart)
     {
-        gameStart(command);
-        return false;
+        if (playerList.size() >= 2) {
+            gameStart(command);
+            return false;
+        } else {
+            command->saveEffect("Warzone games must be played with 2-6 players. Add more before starting.");
+        }        
     }
 
     return true;
@@ -299,9 +318,14 @@ void GameEngine::loadMap(Command *command)
 
     worldMap = mapLoader.LoadMap(mapName);
 
-    command->saveEffect("Successfully loaded map file " + mapName + ". State changed to MAPLOADED ");
-
-    setGameState(MAPLOADED);
+    if (worldMap == nullptr) {
+        command->saveEffect("Map " + mapName + " does not exist. State has not been changed");
+    } else {
+        command->saveEffect("Successfully loaded map file " + mapName + ". State changed to MAPLOADED ");
+        cout << "Here is the game map:" << endl;
+        cout << *worldMap << endl;
+        setGameState(MAPLOADED);
+    }    
 }
 
 /**
@@ -322,20 +346,52 @@ void GameEngine::validateMap(Command *command)
     }
 }
 
-void GameEngine::addPlayer(Command *command)
-{
-    string playerName = commandProcessor->splitStringByDelim(command->getCommand(), ' ').back();
-    Player *player = new Player();
-    player->setName(playerName);
-    playerList.push_back(player);
-    setGameState(PLAYERSADDED);
-    command->saveEffect("Player " + playerName + " was added successfully ");
+void GameEngine::addPlayer(Command *command) {
+    int playerNumber = playerList.size();
+    if (playerNumber <= 6){
+        string playerName = commandProcessor->splitStringByDelim(command->getCommand(), ' ').back();
+        Player* player = new Player();
+        player->setName(playerName);
+        playerList.push_back(player);
+        setGameState(PLAYERSADDED);
+        command->saveEffect("Player " + playerName + " was added successfully ");
+    } else {
+        command->saveEffect("Player number reaches the maximum. No more players can be added!");
+        return;
+    }
+    
 }
 
-void GameEngine::gameStart(Command *command)
+void GameEngine::gameStart(Command *command) {
+    int playerNumber = playerList.size();
+    if(playerNumber < 2){
+        command->saveEffect("At least two players are needed to start the game! Failure: ");
+    } else {
+        // assignPlayersOrder();
+        // distributeTerritories();
+        for (Player* i : playerList) {
+            i->setReinforcementPool(50);
+            // Need help with draw hand, each player needs to draw two cards
+            // draw(i->getHand());
+        }
+
+        setGameState(ASSIGNREINFORCEMENTS);
+        command->saveEffect("Map added and validated successfully. All players added. Transitioned from start up phase into main game loop! ");
+    }
+}
+
+void GameEngine::assignPlayersOrder(vector<Player*>* playerList)
 {
-    setGameState(ASSIGNREINFORCEMENTS);
-    command->saveEffect("Map added and validated successfully. All players added. Transitioned from start up phase into main game loop! ");
+
+}
+
+void GameEngine::distributeTerritories(Map* worldMap, vector<Player*>* playerList)
+{
+    for(auto& kv : worldMap->nodes){
+        for(auto& player : *playerList){
+            
+        }
+    }
 }
 
 /**
@@ -376,16 +432,15 @@ void GameEngine::mainGameLoop()
 
 /**
  * calculate and assign armies to each player
- */
-void GameEngine::reinforcementPhase()
-{
-
-    for (Player *i : playerList)
-    {
+*/
+void GameEngine::reinforcementPhase() {
+    for (Player* i : playerList) {
         int pool = i->getTerritories().size();
         // INSERT CODE TO SEE IF PLAYER OWNS A CONTINENT AND ADD THE BONUS
-
-        i->setReinforcementPool(pool);
+        int continent_bonus = i->getContinentsBonus();
+        int total_bonus = ((pool / 3) > 3)? (pool / 3) : 3;
+        total_bonus += continent_bonus;
+        i->setReinforcementPool(total_bonus);
     }
 }
 
@@ -426,7 +481,7 @@ void GameEngine::issueOrdersPhase()
     //             temp->setReinforcementPool(temp->getReinforcementPool() - 5);
     //         }
     //         else if (temp->getReinforcementPool() > 0) {
-    //             temp->issueOrder(); //Deply order but now with the rest of the reinforcement pool
+    //             temp->issueOrder(); //Deploy order but now with the rest of the reinforcement pool
     //             temp->setReinforcementPool(0);
     //         }
     //         else {
@@ -513,11 +568,11 @@ void GameEngine::startNewGame()
             continue;
         }
 
-        if (!changeStateFromCommand(inputCommand))
-        {
-            cout << "Invalid state transition!" << endl;
-        }
-        else if (hasPlayerWon())
+        // if (!changeStateFromCommand(inputCommand))
+        // {
+        //     cout << "Invalid state transition!" << endl;
+        // }
+        if (hasPlayerWon())
         { // In "else if" so displays only once if user decides to input jargin after claiming victory
             displayVictoryMessage();
         }

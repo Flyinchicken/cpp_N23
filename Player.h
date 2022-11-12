@@ -48,6 +48,8 @@ public:
 	vector<Territory*> toDefend();
 	vector<Territory*> toAttack();
 	void issueOrder();
+	void addTerritory(Territory* territory);
+	void removeTerritory(Territory* territory);
 
 	//helper method
 	void cardOrder(int);

@@ -27,50 +27,67 @@ enum GameStates {
 };
 
 class Command {
-public:
-    Command();
-    Command(string commandString);
-    ~Command();
+    public:
+        Command();
+        Command(string commandString);
+        Command(const Command &);
+        ~Command();
 
-    void saveEffect(string effectString);
-    string getEffect();
+        void saveEffect(string effectString);
+        string getEffect();
 
-    string getCommand();
-private:
-    string command;
-    string effect;
+        string getCommand();
+
+        friend ostream &operator << (ostream &, const Command &);
+        Command &operator = (const Command &);
+    private:
+        string command;
+        string effect;
 };
 
 class FileLineReader {
-public:
-    FileLineReader();
-    vector<string> processCommands(string filePath);
-    ~FileLineReader();
+    public:
+        FileLineReader();
+        FileLineReader(const FileLineReader &);
+        ~FileLineReader();
+        vector<string> processCommands(string filePath);
+
+        friend ostream &operator <<(ostream &, const FileLineReader &);
+        FileLineReader &operator =(const FileLineReader &);
 };
 
 class CommandProcessor {
-public:
-    CommandProcessor();
-    bool validate(Command* command, GameStates currentGameState);
-    void getCommand();
-    vector<Command*> getCommandsList();
-    virtual ~CommandProcessor();
+    public:
+        CommandProcessor();
+        CommandProcessor(const CommandProcessor &);
+        virtual ~CommandProcessor();
 
-    vector<string> splitStringByDelim(string toSplit, char delim);
-protected:
-    vector<Command*> commandsList;
-    virtual void readCommand();
-    void saveCommand(string command);
+        bool validate(Command* command, GameStates currentGameState);
+        void getCommand();
+        vector<Command*> getCommandsList();        
+
+        vector<string> splitStringByDelim(string toSplit, char delim);
+
+        friend ostream &operator <<(ostream &, const CommandProcessor &);
+        CommandProcessor &operator =(const CommandProcessor &);
+    protected:
+        vector<Command*> commandsList;
+        virtual void readCommand();
+        void saveCommand(string command);
 };
 
 class FileCommandProcessorAdapter : public CommandProcessor {
-public:
-    FileCommandProcessorAdapter();
-    FileCommandProcessorAdapter(FileLineReader* file);
-    ~FileCommandProcessorAdapter();
-private:
-    FileLineReader* fileReader;
-    void readCommand();
+    public:
+        FileCommandProcessorAdapter();
+        FileCommandProcessorAdapter(FileLineReader* file);
+        FileCommandProcessorAdapter(const FileCommandProcessorAdapter &);
+        ~FileCommandProcessorAdapter();
+
+        friend ostream &operator <<(ostream &, const FileCommandProcessorAdapter &);
+        FileCommandProcessorAdapter &operator =(const FileCommandProcessorAdapter &);
+    private:
+        FileLineReader* fileReader;
+        void readCommand();
 };
 
 /**
