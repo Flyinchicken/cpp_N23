@@ -7,6 +7,9 @@ using std::cout;
 using std::cin;
 using std::endl;
 
+
+int finishedPlayers;
+
 /**
  * Default constructor sets current game state to Start
  * */
@@ -309,41 +312,77 @@ void GameEngine::setGameState(GameStates newGameState) {
  * gamestart command triggers state change to ASSIGNREINFORCEMENT and call mainGameLoop
  * Loop between reinforcement, issuing orders, and execute orders.
 */
-// void GameEngine::mainGameLoop(){
-//     //********For Assignement 2 only**********
-//     currentGameState = ASSIGNREINFORCEMENTS;
-//     //****************************************
-//     while(currentGameState == ASSIGNREINFORCEMENTS || currentGameState == ISSUEORDERS || currentGameState == EXECUTEORDERS){
-//         if(currentGameState == ASSIGNREINFORCEMENTS){
-//             reinforcementPhase();
-//         } else if (currentGameState == ISSUEORDERS){
-//             issueOrdersPhase();
-//         } else {
-//             executeOrdersPhase();
-//         }
+void GameEngine::mainGameLoop() {
+    //********For Assignement 2 only**********
+    currentGameState = ASSIGNREINFORCEMENTS;
+    //****************************************
+    while (currentGameState != WIN) {
+        if (currentGameState == ASSIGNREINFORCEMENTS) {
+            reinforcementPhase();
+        }
+        else if (currentGameState == ISSUEORDERS) {
+            issueOrdersPhase();
+        }
+        else {
+            executeOrdersPhase();
+        }
 
-//     }
-// }
+    }
+}
 
 /**
  * calculate and assign armies to each player
 */
-// void reinforcementPhase(){
-//     // need a list of players, each player's territory count
-//     // for(auto& i : players){
-//     //     i.getTerritoryCount() / 3
+void GameEngine::reinforcementPhase() {
+    for (Player* i : playerList) {
+        int pool = i->getTerritories().size();
+        // INSERT CODE TO SEE IF PLAYER OWNS A CONTINENT AND ADD THE BONUS IMPORTANT TO DO
 
-//     // }
+        i->setReinforcementPool(pool);
+    }
+}
 
-// }
+void GameEngine::issueOrdersPhase() {
 
-// void issueOrdersPhase(){
+    int currentPlayers = playerList.size();
 
-// }
+    finishedPlayers = 0;
 
-// void executeOrdersPhase(){
+    for(Player* player : playerList){
+        player->setTurn(false);
+    }
 
-// }
+    while (finishedPlayers != currentPlayers) {
+
+        for (Player * temp: playerList)
+        {
+            if (temp->getTurn()) {
+                continue; //Player has ended turn so we done
+            }
+
+            if (temp->getOrdersList().order_list.size() > 6) {
+                if (!temp->getHand()->getHand().empty()) {
+                    vector<Card*> cards = temp->getHand()->getHand();
+                    cards[0]->play(temp->getHand());
+                }
+                temp->setTurn(true);
+                finishedPlayers++;
+            } else{
+                temp->issueOrder();
+            }
+        }
+
+    }
+}
+
+void GameEngine::executeOrdersPhase() {
+
+    for (Player* i : playerList) {
+        for (Order* p : i->getOrdersList().order_list) {
+            p->execute();
+        }
+    }
+}
 
 
 /**
