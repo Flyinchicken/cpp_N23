@@ -29,8 +29,6 @@ private:
     void displayWelcomeMessage();
     void displayVictoryMessage();
 
-    string getUserInput();
-
     bool hasGameBeenEnded(string command);
     bool hasPlayerWon();
 

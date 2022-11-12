@@ -148,21 +148,6 @@ void GameEngine::displayCurrentGameState()
 }
 
 /**
- * Prompts the user for input from the console and returns it.
- *
- * @returns The user's console input command.
- */
-string GameEngine::getUserInput()
-{
-    cout << "Input your next command: ";
-
-    string inputCommand;
-    cin >> inputCommand;
-
-    return inputCommand;
-}
-
-/**
  * Checks if the user has input the "end" command while the game is in the "win" state.
  *
  * @returns If the user has attempted to end the game after winning.
@@ -551,33 +536,7 @@ void GameEngine::startNewGame()
 
     while (isGameInProgress)
     {
-        // TODO: Move to command processor
-        string inputCommand = getUserInput();
-        Command *command = new Command(inputCommand);
-
-        if (!this->commandProcessor->validate(command, this->currentGameState))
-        {
-            cout << command->getEffect() << endl;
-            displayCurrentGameState();
-            continue;
-        }
-
-        if (hasGameBeenEnded(command->getCommand()))
-        {
-            isGameInProgress = false;
-            continue;
-        }
-
-        // if (!changeStateFromCommand(inputCommand))
-        // {
-        //     cout << "Invalid state transition!" << endl;
-        // }
-        if (hasPlayerWon())
-        { // In "else if" so displays only once if user decides to input jargin after claiming victory
-            displayVictoryMessage();
-        }
-
-        displayCurrentGameState();
+        
     }
 
     displayFarewellMessage();
