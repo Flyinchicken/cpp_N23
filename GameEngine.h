@@ -39,6 +39,8 @@ private:
     void validateMap(Command *command);
     void addPlayer(Command *command);
     void gameStart(Command *command);
+    void assignPlayersOrder(vector<Player*>* playerList);
+    void distributeTerritories(Map* worldMap, vector<Player*>* playerList);
 
     // bool changeStateFromCommand(string commandString);
 

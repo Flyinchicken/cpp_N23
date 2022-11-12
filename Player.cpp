@@ -117,8 +117,27 @@ void Player::setTerritories(vector<Territory *> newTerritories)
     this->territories = newTerritories;
 }
 
+<<<<<<< HEAD
+void Player::addTerritory(Territory* territory) {
+    territories.push_back(territory);
+}
+
+void Player::removeTerritory(Territory* territory) {
+    for(int i = 0; i < territories.size(); i++){
+        if(territories.at(i) == territory){
+                territories.erase(territories.begin() + i);
+                return;
+        }
+    }
+
+    cout << "Player: " << this->getName() << " does not own " << territory->getTerritoryName() << endl;
+}
+
+void Player::setReinforcementPool(int pool){
+=======
 void Player::setReinforcementPool(int pool)
 {
+>>>>>>> dev
     this->reinforcementPool = reinforcementPool;
 }
 
@@ -132,12 +151,23 @@ void Player::issueOrder()
     Airlift *airlift = new Airlift();
     Negotiate *negotiate = new Negotiate();
 
+<<<<<<< HEAD
+            if (!this->getHand()->getHand().empty()) {
+                vector<Card*> cards = this->getHand()->getHand();
+                cards[0]->play(this->getHand());
+            }
+            this->setTurn(true);
+            // finishedPlayers++;
+        }
+    }
+=======
     this->orderslist->push_back(deploy);
     this->orderslist->push_back(advance);
     this->orderslist->push_back(bomb);
     this->orderslist->push_back(blockade);
     this->orderslist->push_back(airlift);
     this->orderslist->push_back(negotiate);
+>>>>>>> dev
 }
 
 // helper method to get a specific order which adds to the player's orderslist
@@ -175,6 +205,46 @@ void Player::cardOrder(int orderNumber)
     }
 }
 
+<<<<<<< HEAD
+/**
+ * Check the number of continent owning bonus armies for the player
+*/
+int Player::getContinentsBonus(){
+    int bonus = 0;
+
+    // for each continent pointer in the map
+    for(auto& kv : worldMap->continents){
+        // get a vector of all territories
+        vector<Territory*> c_territories = kv.second->getNodesPtr();
+
+        // get the number of territories in the continent
+        int count = c_territories.size();
+
+        // for each territory in the continent, try to find it in the player's territory list
+        // if found, move onto the next continent territory
+        for(auto& c_t :  c_territories){
+            for(auto& t : this->territories){
+                if(c_t == t){
+                    count--;
+                    break;
+                }
+            }
+        }
+
+        // in the end if all continent territories are found, continent bonus is added 
+        if(count == 0){
+            bonus += kv.second->getBonusArmy();
+        }
+    }
+    return bonus;
+}
+
+//return a list of arbitrary territories to defend
+vector<Territory*> Player::toDefend() {
+    vector<Territory*> d_territories;
+    for (int i = 0; i < territories.size(); i++) {
+        d_territories.push_back(territories.at(i));
+=======
 // return a list of arbitrary territories to defend
 vector<Territory *> Player::toDefend()
 {
@@ -187,8 +257,9 @@ vector<Territory *> Player::toDefend()
     for (int i = 0; i < territories.size(); i++)
     {
         cout << (*territories.at(i)->getTerritoryName()) << endl;
+>>>>>>> dev
     }
-    return territories;
+    return d_territories;
 }
 
 // return a list of arbitrary territories to attack
