@@ -105,7 +105,15 @@ bool has_suffix(const std::string &str, const std::string &suffix)
            str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
 }
 
-// Check if the valid command can be used in the current game state
+/** 
+ * Check command is valid in current game state.
+ * Doesn't check if map in "loadmap <map>" is valid, as logic for validating a map file should handle that.
+ * Saves effect rather than cout'ing as logic in most game loops involves printing the effect of a command.
+ * 
+ * @param command The command to validate
+ * @param currentGameState Current state of the game
+ * @return If command is valid or not in the current state
+ * */
 bool CommandProcessor::validate(Command *command, GameStates currentGameState)
 {
     stringstream commandStream(command->getCommand());
@@ -121,7 +129,6 @@ bool CommandProcessor::validate(Command *command, GameStates currentGameState)
     if (segmentList.size() > 2)
     {
         command->saveEffect(command->getCommand() + " has too many parameters");
-        cout << command->getCommand() + " has too many parameters " << endl;
 
         return false;
     }
@@ -132,7 +139,7 @@ bool CommandProcessor::validate(Command *command, GameStates currentGameState)
     if (!CommandStrings::isStringCommandString(commandString))
     {
         command->saveEffect(commandString + " is not a valid command string");
-        cout << "Invalid command." << endl;
+        
         return false;
     }
 
@@ -140,14 +147,12 @@ bool CommandProcessor::validate(Command *command, GameStates currentGameState)
     if ((commandString == CommandStrings::loadMap || commandString == CommandStrings::addPlayer) && segmentList.size() != 2)
     {
         command->saveEffect(commandString + " must have only one valid parameter, separated by a white space");
-        cout << commandString + " must have only one valid parameter, separated by a white space" << endl;
 
         return false;
     }
     if (commandString != CommandStrings::loadMap && commandString != CommandStrings::addPlayer && segmentList.size() != 1)
     {
         command->saveEffect(commandString + " cannot have any parameters");
-        cout << commandString + " cannot have any parameters" << endl;
 
         return false;
     }
@@ -273,9 +278,6 @@ FileCommandProcessorAdapter::~FileCommandProcessorAdapter()
 
 void FileCommandProcessorAdapter::readCommand()
 {
-
-    this->saveCommand("Opening file " + filePath);
-
     ifstream input(filePath);
 
     cout << filePath << endl;

@@ -44,25 +44,51 @@ void testCommandProcessor(int argc, char **argv)
     }
 
     GameEngine *game = new GameEngine();
-    processor->getCommand(); // processor is now perfectly using polymorphism
-    vector<Command *> commands = processor->getCommandsList();
+    game->displayCurrentGameState();
+    
+    bool gameInProgress = true;
 
-    for (Command *i : commands)
+    int lastIndex = -1;
+
+    while (gameInProgress)
     {
-        if (i->getCommand().find("Opening") == std::string::npos)
-        {
-            cout << "========================================" << endl;
-            cout << "Command: " << i->getCommand() << endl;
-            cout << *game << endl; // print the state of the game
-            if (processor->validate(i, game->getCurrentGameState()))
-            {
-                cout << "Command is VALID in the current state" << endl;
-                game->changeStateFromCommand(i->getCommand()); // if the command is valid, change state of game
+        processor->getCommand();
+
+        vector<Command *> commands = processor->getCommandsList();
+
+        for (int i = lastIndex == -1 ? 0 : lastIndex; i < commands.size(); i++)
+        {   
+            if (processor->validate(commands[i], game->getCurrentGameState()))
+            {   
+                game->changeStateFromCommand(commands[i]);
             }
-            else
-            {
-                cout << "Command is INVALID in the current state" << endl;
+
+            cout << commands[i]->getEffect() << endl;
+
+            if (commands[i]->getCommand() == CommandStrings::quit) {
+                gameInProgress = false;
+                game->displayFarewellMessage();
+                continue;
+            }
+
+            game->displayCurrentGameState();
+
+            if (game->getCurrentGameState() == ASSIGNREINFORCEMENTS) {
+                cout << "Simulating a Warzone game..." 
+                    << endl 
+                    << "Congratulations! All signs point to your victory, oh glorious one." 
+                    << endl;
+
+                game->setGameState(WIN);
+
+                game->displayCurrentGameState();
             }
         }
-    }
+
+        if (!filePath.empty()) {
+            gameInProgress= false;
+        }
+
+        lastIndex = commands.size();
+    }    
 }
