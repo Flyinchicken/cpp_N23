@@ -14,6 +14,7 @@ class Territory;
 class OrdersList;
 class Hand;
 
+
 class Player
 {
 private:
@@ -45,6 +46,7 @@ public:
 
 	//helper method
 	void cardOrder(int);
+	int getContinentsBonus();
 
 	//getters
 	string getName() const;

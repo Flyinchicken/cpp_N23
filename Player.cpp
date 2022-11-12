@@ -1,11 +1,8 @@
-
 #include "Player.h"
-#include "Orders.h"
-#include "Map.h"
 
 using namespace std;
 #include <iostream>
-
+extern Map* worldMap;
 //Default constructor
 Player::Player()
 {
@@ -174,6 +171,39 @@ void Player::cardOrder(int orderNumber)
         cout << (*newOrder) << endl;
         this->orderslist->push_back(newOrder);
     }
+}
+
+/**
+ * Check the number of continent owning bonus armies for the player
+*/
+int Player::getContinentsBonus(){
+    int bonus = 0;
+
+    // for each continent pointer in the map
+    for(auto& kv : worldMap->continents){
+        // get a vector of all territories
+        vector<Territory*> c_territories = kv.second->getNodesPtr();
+
+        // get the number of territories in the continent
+        int count = c_territories.size();
+
+        // for each territory in the continent, try to find it in the player's territory list
+        // if found, move onto the next continent territory
+        for(auto& c_t :  c_territories){
+            for(auto& t : this->territories){
+                if(c_t == t){
+                    count--;
+                    break;
+                }
+            }
+        }
+
+        // in the end if all continent territories are found, continent bonus is added 
+        if(count == 0){
+            bonus += kv.second->getBonusArmy();
+        }
+    }
+    return bonus;
 }
 
 //return a list of arbitrary territories to defend
