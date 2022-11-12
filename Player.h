@@ -14,6 +14,7 @@ class Territory;
 class OrdersList;
 class Hand;
 
+extern int finishedPlayers;
 
 class Player
 {
@@ -27,9 +28,13 @@ private:
 	vector<Territory*> territories;
 	Hand* hand;
 	int reinforcementPool = 0;
+	bool turnCompleted = false;
 
 public:
 
+	int numAttacks = 0;
+	int numDefense = 0;
+	
 	Player();
 	~Player();
 	//copy constructor
@@ -54,6 +59,7 @@ public:
 	Hand* getHand();
 	vector<Territory*> getTerritories() const;
 	int getReinforcementPool();
+	bool getTurn();
 
 	//setters
 	void setName(string name);
@@ -61,5 +67,6 @@ public:
 	void setHand(Hand* hand);
 	void setTerritories(vector<Territory*> territories);
 	void setReinforcementPool(int pool);
+	void setTurn(bool turn);
 };
 #endif

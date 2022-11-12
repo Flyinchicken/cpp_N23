@@ -309,41 +309,127 @@ void GameEngine::setGameState(GameStates newGameState) {
  * gamestart command triggers state change to ASSIGNREINFORCEMENT and call mainGameLoop
  * Loop between reinforcement, issuing orders, and execute orders.
 */
-// void GameEngine::mainGameLoop(){
-//     //********For Assignement 2 only**********
-//     currentGameState = ASSIGNREINFORCEMENTS;
-//     //****************************************
-//     while(currentGameState == ASSIGNREINFORCEMENTS || currentGameState == ISSUEORDERS || currentGameState == EXECUTEORDERS){
-//         if(currentGameState == ASSIGNREINFORCEMENTS){
-//             reinforcementPhase();
-//         } else if (currentGameState == ISSUEORDERS){
-//             issueOrdersPhase();
-//         } else {
-//             executeOrdersPhase();
-//         }
+void GameEngine::mainGameLoop() {
+    //********For Assignement 2 only**********
+    currentGameState = ASSIGNREINFORCEMENTS;
+    //****************************************
+    while (currentGameState != WIN) {
+        if (currentGameState == ASSIGNREINFORCEMENTS) {
+            reinforcementPhase();
+        }
+        else if (currentGameState == ISSUEORDERS) {
+            issueOrdersPhase();
+        }
+        else {
+            executeOrdersPhase();
+        }
 
-//     }
-// }
+    }
+}
 
 /**
  * calculate and assign armies to each player
 */
-// void reinforcementPhase(){
-//     // need a list of players, each player's territory count
-//     // for(auto& i : players){
-//     //     i.getTerritoryCount() / 3
+void GameEngine::reinforcementPhase() {
 
-//     // }
+    for (Player* i : playerList) {
+        int pool = i->getTerritories().size();
+        // INSERT CODE TO SEE IF PLAYER OWNS A CONTINENT AND ADD THE BONUS
 
-// }
+        i->setReinforcementPool(pool);
+    }
+}
 
-// void issueOrdersPhase(){
+void GameEngine::issueOrdersPhase() {
 
-// }
+    // vector<bool> turnEnded;
 
-// void executeOrdersPhase(){
+    // int currentPlayers = playerList.size();
+    // for (int i = 0; i < currentPlayers; i++)
+    // {
+    //     turnEnded.push_back(false);
+    // }
 
-// }
+    // int finishedPlayers = 0;
+
+    // while (finishedPlayers != playerList.size()) {
+
+    //     for (int i = 0; i < playerList.size(); i++)
+    //     {
+    //         if (turnEnded[i]) {
+    //             continue; //Player has ended turn so we done
+    //         }
+
+    //         Player* temp = playerList.at(i);
+
+    //         if (temp->getOrdersList().order_list.size() > 6) {
+    //             if (!temp->getHand()->getHand().empty()) {
+    //                 vector<Card*> cards = temp->getHand()->getHand();
+    //                 cards[0]->play(temp->getHand());
+    //             }
+    //             turnEnded[i] = true;
+    //             finishedPlayers++;
+    //         }
+
+    //         if (temp->getReinforcementPool() > 4) {
+    //             temp->issueOrder(); //Deploy order, should take certain params
+    //             temp->setReinforcementPool(temp->getReinforcementPool() - 5);
+    //         }
+    //         else if (temp->getReinforcementPool() > 0) {
+    //             temp->issueOrder(); //Deply order but now with the rest of the reinforcement pool
+    //             temp->setReinforcementPool(0);
+    //         }
+    //         else {
+    //             vector<Territory*> potentialAttacks = temp->toAttack();
+    //             if (potentialAttacks.empty())
+    //             {
+    //                 if (!temp->getHand()->getHand().empty()) {
+    //                     vector<Card*> cards = temp->getHand()->getHand();
+    //                     cards[0]->play(temp->getHand());
+    //                 }
+    //                 turnEnded[i] = true;
+    //                 finishedPlayers++;
+    //             }
+
+    //             vector<string> namesOfTarget;
+    //             for (Territory* i : potentialAttacks) {
+    //                 namesOfTarget.push_back(*i->getTerritoryName());
+    //             }
+
+    //             vector<Territory*> outposts = temp->toDefend();
+
+    //             if (!potentialAttacks.empty()) {
+    //                 bool hasAttacked = false;
+    //                 for (Territory* i : outposts) {
+    //                     if (hasAttacked) {
+    //                         break;
+    //                     }
+
+    //                     vector<string> adj = worldMap->getNeighbours(*i->getTerritoryName());
+    //                     for (string p : adj) {
+    //                         vector<string>::iterator it = find(namesOfTarget.begin(), namesOfTarget.end(), p);
+    //                         if (it != namesOfTarget.end()) {
+    //                             temp->issueOrder(); //Atttack order, should have target and destination territorry
+    //                             hasAttacked = true;
+    //                             break;
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    // }
+}
+
+void GameEngine::executeOrdersPhase() {
+
+    // for (Player* i : playerList) {
+    //     for (Order* p : i->getOrdersList().order_list) {
+    //         p->execute();
+    //     }
+    // }
+}
 
 
 /**
