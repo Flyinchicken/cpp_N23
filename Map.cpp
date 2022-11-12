@@ -98,7 +98,16 @@ Player* Territory::getOwner() const {
 }
 
 void Territory::setOwner(Player* owner) {
-    this->owner = owner;
+    if(this->owner != owner){
+        // old owner remove territory
+        this->owner->removeTerritory(this);
+        // change owner
+        this->owner = owner;
+        owner->addTerritory(this);
+    } else {
+        cout << this->getTerritoryName() << " belongs to " << owner->getName() << " no need to set again." << endl;
+    }
+    
 }
 
 void Territory::addArmy(int armyNumber) {
