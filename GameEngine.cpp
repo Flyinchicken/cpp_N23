@@ -176,12 +176,14 @@ bool GameEngine::hasGameBeenEnded(string command)
  * Parses a command string to its numeric/enum representation and changes the game state based both the numeric and string
  * value of the user input.
  *
- * @param commandString The user input command string from the console
+ * @param command The input command
  * @returns Whether or not a state change has taken place. If a change has not occured, it is because the state change
  * was not a valid one.
  */
-bool GameEngine::changeStateFromCommand(string commandString)
+bool GameEngine::changeStateFromCommand(Command *command)
 {
+    string commandString = command->getCommand();
+
     if (commandString == CommandStrings::quit)
     {
         return false;
@@ -189,22 +191,27 @@ bool GameEngine::changeStateFromCommand(string commandString)
 
     if (commandString.find("loadmap") != std::string::npos)
     {
+        command->saveEffect("Successfully loaded map file. State changed to MAPLOADED ");
         this->currentGameState = MAPLOADED;
     }
     else if (commandString == CommandStrings::validateMap)
     {
+        command->saveEffect("Map was successfully validated. State changed to MAPVALIDATED ");
         this->currentGameState = MAPVALIDATED;
     }
     else if (commandString.find("addplayer") != std::string::npos)
     {
+        command->saveEffect("Player  was added successfully ");
         this->currentGameState = PLAYERSADDED;
     }
     else if (commandString == CommandStrings::gameStart)
     {
+        command->saveEffect("Map added and validated successfully. All players added. Transitioned from start up phase into main game loop! ");
         this->currentGameState = ASSIGNREINFORCEMENTS;
     }
     else if (commandString == CommandStrings::replay)
     {
+        command->saveEffect("Restarting game");
         this->currentGameState = START;
     }
     else
@@ -347,7 +354,7 @@ void GameEngine::addPlayer(Command *command)
     playerList.push_back(player);
 
     setGameState(PLAYERSADDED);
-    
+
     command->saveEffect("Player " + playerName + " was added successfully ");
 }
 
@@ -532,11 +539,11 @@ void GameEngine::startNewGame()
             continue;
         }
 
-        if (!changeStateFromCommand(inputCommand))
-        {
-            cout << "Invalid state transition!" << endl;
-        }
-        else if (hasPlayerWon())
+        // if (!changeStateFromCommand(inputCommand))
+        // {
+        //     cout << "Invalid state transition!" << endl;
+        // }
+        if (hasPlayerWon())
         { // In "else if" so displays only once if user decides to input jargin after claiming victory
             displayVictoryMessage();
         }
