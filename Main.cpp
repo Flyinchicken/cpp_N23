@@ -16,13 +16,13 @@ std::string filePath = "";
 GameEngine *ge = new GameEngine();
 Map *worldMap;
 
-//int main(int argc, char **argv)
-//{
+int main(int argc, char **argv)
+{
     //testCommandProcessor(argc, argv);
 
     //testLoggingObserver();
 
-    testStartupPhase();
+    // testStartupPhase();
 
     //testCommandProcessor();
 
@@ -50,4 +50,4 @@ Map *worldMap;
     // Player Test
     cout << "*** Starting the Player test ***" << endl;
     testPlayers();*/
-//}
+}

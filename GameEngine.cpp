@@ -532,3 +532,14 @@ string GameEngine::stringToLog()
 {
     return "New game state is: " + getGameStateAsString();
 }
+
+//Getter and Setter for playerList
+vector<Player*> GameEngine::getPlayerList()
+{
+    return playerList;
+}
+
+void GameEngine::setPlayerList(vector<Player*> playerList)
+{
+    this->playerList = playerList;
+}
