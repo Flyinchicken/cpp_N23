@@ -1,0 +1,14 @@
+loadmap 3D.map
+loadmap ./MapFiles/ABC_Map.map
+loadmap ./MapFiles/3D.map
+validatemap
+loadmap ./MapFiles/ABC_Map.map
+addplayer tester1
+gamestart
+addplayer tester2
+addplayer tester3
+addplayer tester4
+addplayer tester5
+addplayer tester6
+addplayer tester7
+gamestart

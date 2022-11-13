@@ -1,0 +1,11 @@
+loadmap test.map
+loadmap test
+validatemap
+addplayer drew_peacock
+gamestart
+replay
+loadmap map
+validatemap
+addplayer maya_rektion
+gamestart
+quit
