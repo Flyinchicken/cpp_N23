@@ -16,6 +16,8 @@ std::string filePath = "";
 GameEngine *ge = new GameEngine();
 Map *worldMap;
 
+Deck* x = new Deck();
+
 int main(int argc, char **argv)
 {
     // testCommandProcessor(argc, argv);

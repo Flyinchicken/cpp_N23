@@ -25,6 +25,7 @@ private:
     CommandProcessor* commandProcessor;
 
     vector<Player*> playerList;
+    vector<Player*> deadPlayers;
 
     void displayWelcomeMessage();
     void displayVictoryMessage();
@@ -91,7 +92,11 @@ public:
     // Getter and Setter for playerList only used in test driver
     void setPlayerList(vector<Player*> playerList);
     vector<Player*> getPlayerList();
+
+    void setDeadPlayer(vector<Player*> deadPlayers);
+    vector<Player*> getDeadPlayers();
 };
 
 extern GameEngine* ge;
 extern Map* worldMap;
+extern Deck* x;
