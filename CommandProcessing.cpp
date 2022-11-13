@@ -445,10 +445,15 @@ FileLineReader::FileLineReader(const FileLineReader &reader) {}
 FileLineReader::~FileLineReader() {}
 
 /** Stream insertion operator */
-ostream &operator <<(ostream &out, const FileLineReader &reader) {}
+ostream &operator <<(ostream &out, const FileLineReader &reader) {
+    out << "FileLineReader: " << reader << endl;
+    return out;
+}
 
 /** Assignment operator */
-FileLineReader &FileLineReader::operator=(const FileLineReader &reader) {}
+FileLineReader &FileLineReader::operator=(const FileLineReader &reader) {
+    return *this;
+}
 
 /**
  * Iterates over all lines in a file and returns them as a vector.

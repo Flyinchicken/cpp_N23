@@ -22,9 +22,9 @@ class GameEngine
 private:
     GameStates currentGameState; // Not a pointer type as per prof. Paquet's permission
 
-    CommandProcessor *commandProcessor;
+    CommandProcessor* commandProcessor;
 
-    vector<Player *> playerList;
+    vector<Player*> playerList;
 
     void displayWelcomeMessage();
     void displayVictoryMessage();
@@ -34,26 +34,26 @@ private:
     bool hasGameBeenEnded(string command);
     bool hasPlayerWon();
 
-    bool processCommand(Command *command);
-    void loadMap(Command *command);
-    void validateMap(Command *command);
-    void addPlayer(Command *command);
-    void gameStart(Command *command);
+    bool processCommand(Command* command);
+    void loadMap(Command* command);
+    void validateMap(Command* command);
+    void addPlayer(Command* command);
+    void gameStart(Command* command);
     void assignPlayersOrder(vector<Player*>* playerList);
     void distributeTerritories(Map* worldMap, vector<Player*>* playerList);
 
     // bool changeStateFromCommand(string commandString);
 
     string getGameStateAsString() const;
-    friend ostream &operator<<(ostream &, const GameEngine &);
+    friend ostream& operator<<(ostream&, const GameEngine&);
 
 public:
     GameEngine();
     ~GameEngine();
-    GameEngine(const GameEngine &);
+    GameEngine(const GameEngine&);
 
-    GameEngine &operator=(const GameEngine &engine);
-    bool changeStateFromCommand(Command *command);
+    GameEngine& operator=(const GameEngine& engine);
+    bool changeStateFromCommand(Command* command);
 
     // friend ostream& operator << (ostream&, const GameEngine&);
 
@@ -68,7 +68,7 @@ public:
     GameStates getCurrentGameState();
     void setGameState(GameStates newState);
     void displayCurrentGameState();
-    
+
     void displayFarewellMessage();
 };
 

@@ -137,6 +137,10 @@ void Player::setReinforcementPool(int pool){
     this->reinforcementPool = reinforcementPool;
 }
 
+void Player::setTurn(bool turn){
+    this->turnCompleted = turn;
+}
+
 // orders created adding to the player's orderslist
 void Player::issueOrder()
 {
