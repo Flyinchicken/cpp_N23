@@ -32,6 +32,7 @@ Observer::Observer(){}
 
 LogObserver::LogObserver(){
     outputfile.open("test.txt",ios_base::app);
+    cout << "open file" << endl;
 }
 
 LogObserver::~LogObserver(){
