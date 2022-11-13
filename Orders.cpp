@@ -347,14 +347,21 @@ std::ostream &operator<<(std::ostream &strm, const Advance &advance)
 }
 
 // implement of Bomb class
-Bomb::Bomb()
+Bomb::Bomb() : Order()
 {
   // setId();
   setType("Bomb");
 }
 
+Bomb::Bomb(Player *player, Territory *targetTerritory) : Order(player)
+{
+  setType("Bomb");
+  this->targetTerritory = targetTerritory;
+}
+
 Bomb::~Bomb()
 {
+  this->targetTerritory = nullptr;
 }
 
 Bomb::Bomb(const Bomb &bomb)
@@ -362,30 +369,50 @@ Bomb::Bomb(const Bomb &bomb)
 
   // setId();
   setType("Bomb");
-  // TODO: need to figure out other data member of bomb
+  this->targetTerritory = new Territory(*(bomb.targetTerritory));
+  this->player = new Player(*(bomb.player));
 }
 
 Bomb &Bomb::operator=(const Bomb &bomb)
 {
-  // this->order_type = deploy.order_type;
+  this->targetTerritory = new Territory(*(bomb.targetTerritory));
+  this->player = new Player(*(bomb.player));
   return *this;
 }
 
 bool Bomb::validate()
 {
-  cout << "This is the validate method of Bomb class." << endl;
-  return true;
+  bool isAdjacent = false;
+  for (auto iter : player->toAttack()) // Need to check this method when toAttack is done.
+  {
+    if (targetTerritory == iter)
+    {
+      isAdjacent = true;
+      break;
+    }
+  };
+  if (get_player() != targetTerritory->getOwner() && isAdjacent)
+  {
+    cout << "Valid Bomb Order." << endl;
+    return true;
+  }
+  cout << "Error, invalid Bomb order." << endl;
+  return false;
 }
 
 void Bomb::execute()
 {
   if (validate())
   {
-    cout << "This bomb order is valid to execute." << endl;
+    int currentArmyInTargetTerr = targetTerritory->getArmyNumber();
+    targetTerritory->removeArmy(currentArmyInTargetTerr / 2);
+    cout << "Bomb order execute:  " << endl;
+    cout << "Previous army in target territory: " << currentArmyInTargetTerr << endl;
+    cout << "Current army in target territory: " << targetTerritory->getArmyNumber() << std::endl;
   }
   else
   {
-    cout << "Error, invalid bomb order." << endl;
+    cout << "Invalid bomb order. Cannot execute this bomb order." << endl;
   }
 }
 
@@ -396,14 +423,21 @@ std::ostream &operator<<(std::ostream &strm, const Bomb &bomb)
 }
 
 // implement of Blockade class
-Blockade::Blockade()
+Blockade::Blockade() : Order()
 {
   // setId();
   setType("Blockade");
 }
 
+Blockade::Blockade(Player *player, Territory *targetTerritory) : Order(player)
+{
+  setType("Blockade");
+  this->targetTerritory = targetTerritory;
+}
+
 Blockade::~Blockade()
 {
+  this->targetTerritory = nullptr;
 }
 
 Blockade::Blockade(const Blockade &blockade)
@@ -411,30 +445,43 @@ Blockade::Blockade(const Blockade &blockade)
 
   // setId();
   setType("Blockade");
-  // TODO: need to figure out other data member of Blockade
+  this->targetTerritory = new Territory(*(blockade.targetTerritory));
+  this->player = new Player(*(blockade.player));
 }
 
 Blockade &Blockade::operator=(const Blockade &blockade)
 {
   // this->order_type = deploy.order_type;
+  this->targetTerritory = new Territory(*(blockade.targetTerritory));
+  this->player = new Player(*(blockade.player));
   return *this;
 }
 
 bool Blockade::validate()
 {
-  cout << "This is the validate method of Blockade class." << endl;
-  return true;
+  if (get_player() == targetTerritory->getOwner())
+  {
+    cout << "Valid Blockade Order." << endl;
+    return true;
+  }
+  cout << "Error, invalid Blockade order." << endl;
+  return false;
 }
 
 void Blockade::execute()
 {
   if (validate())
   {
-    cout << "This Blockade order is valid to execute." << endl;
+    cout << "Blockade order execute:  " << endl;
+    cout << "Previous number of armies of " << targetTerritory << " : " << targetTerritory->getArmyNumber() << endl;
+    targetTerritory->setArmyNumber((targetTerritory->getArmyNumber()) * 2);
+    targetTerritory->setOwner(new Player("Neutral player"));
+    cout << "Current number of armies of " << targetTerritory << " : " << targetTerritory->getArmyNumber() << endl;
+    cout << "Current owner of " << targetTerritory << " : " << *(targetTerritory->getOwner()) << endl;
   }
   else
   {
-    cout << "Error, invalid Blockade order." << endl;
+    cout << "Invalid Blockade order. Cannot execute this Blockade order." << endl;
   }
 }
 
