@@ -225,29 +225,18 @@ void GameEngine::startupPhase()
 {
     bool inStartup = true;
 
-    int lastIndex = -1;
-
     while (inStartup)
     {
-        commandProcessor->getCommand();
+        Command *nextCommand = commandProcessor->getCommand();
 
         vector<Command *> commands = commandProcessor->getCommandsList();
 
-        for (int i = lastIndex == -1 ? 0 : lastIndex; i < commands.size(); i++)
+        if (commandProcessor->validate(nextCommand, currentGameState))
         {
-            if (commandProcessor->validate(commands[i], currentGameState))
-            {
-                inStartup = processCommand(commands[i]);
-            }
-
-            cout << commands[i]->getEffect() << endl;
+            inStartup = processCommand(nextCommand);
         }
 
-        if (!filePath.empty()) {
-            inStartup = false;
-        }
-
-        lastIndex = commands.size();
+        cout << nextCommand->getEffect() << endl;
     }
 }
 
