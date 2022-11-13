@@ -83,6 +83,10 @@ Hand *Player::getHand()
     return hand;
 }
 
+bool Player::getTurn(){
+    return turnCompleted;
+}
+
 // territories getter returning the player's owned countries
 vector<Territory *> Player::getTerritories() const
 {
@@ -116,10 +120,6 @@ void Player::setHand(Hand *newHand)
 void Player::setTerritories(vector<Territory *> newTerritories)
 {
     this->territories = newTerritories;
-}
-
-void Player::setTurn(bool isComplete){
-    this->turnCompleted = isComplete;
 }
 
 void Player::addTerritory(Territory* territory) {
