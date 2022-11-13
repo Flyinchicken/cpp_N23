@@ -47,7 +47,7 @@ void testOrdersLists()
   ordersList1.remove(2);
   Bomb *o5 = new Bomb();
   Blockade *o6 = new Blockade(p1, territory1);
-  Airlift *o7 = new Airlift();
+  Airlift *o7 = new Airlift(p1, territory1, territory2, 2);
   Negotiate *o8 = new Negotiate();
   ordersList1.push_back(o5);
   ordersList1.push_back(o6);
@@ -57,6 +57,7 @@ void testOrdersLists()
   o3->execute();
   cout << o3->getId() << endl;
   o6->execute();
+  o7->execute();
   // cout << "The Player: " << *(o4->get_player()) << endl;
   cout << ordersList1 << endl;
   ordersList1.print();

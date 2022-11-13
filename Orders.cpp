@@ -408,7 +408,7 @@ void Bomb::execute()
     targetTerritory->removeArmy(currentArmyInTargetTerr / 2);
     cout << "Bomb order execute:  " << endl;
     cout << "Previous army in target territory: " << currentArmyInTargetTerr << endl;
-    cout << "Current army in target territory: " << targetTerritory->getArmyNumber() << std::endl;
+    cout << "Current army in target territory: " << targetTerritory->getArmyNumber() << endl;
   }
   else
   {
@@ -492,14 +492,24 @@ std::ostream &operator<<(std::ostream &strm, const Blockade &blockade)
 }
 
 // implement of Airlift class
-Airlift::Airlift()
+Airlift::Airlift() : Order()
 {
   // setId();
   setType("Airlift");
 }
 
+Airlift::Airlift(Player *player, Territory *sourceTerritory, Territory *targetTerritory, int numberOfArmies) : Order(player)
+{
+  setType("Airlift");
+  this->sourceTerritory = sourceTerritory;
+  this->targetTerritory = targetTerritory;
+  this->numberOfArmies = numberOfArmies;
+}
+
 Airlift::~Airlift()
 {
+  this->sourceTerritory = nullptr;
+  this->targetTerritory = nullptr;
 }
 
 Airlift::Airlift(const Airlift &airlift)
@@ -507,30 +517,49 @@ Airlift::Airlift(const Airlift &airlift)
 
   // setId();
   setType("Airlift");
-  // TODO: need to figure out other data member of Airlift
+  this->player = new Player(*(airlift.player));
+  this->sourceTerritory = new Territory(*(airlift.targetTerritory));
+  this->targetTerritory = new Territory(*(airlift.targetTerritory));
+  this->numberOfArmies = airlift.numberOfArmies;
 }
 
 Airlift &Airlift::operator=(const Airlift &airlift)
 {
   // this->order_type = deploy.order_type;
+  this->player = new Player(*(airlift.player));
+  this->sourceTerritory = new Territory(*(airlift.targetTerritory));
+  this->targetTerritory = new Territory(*(airlift.targetTerritory));
+  this->numberOfArmies = airlift.numberOfArmies;
   return *this;
 }
 
 bool Airlift::validate()
 {
-  cout << "This is the validate method of Airlift class." << endl;
-  return true;
+  if (get_player() == sourceTerritory->getOwner() && get_player() == targetTerritory->getOwner())
+  {
+    cout << "Valid Airlift Order." << endl;
+    return true;
+  }
+  cout << "Error, invalid Airlift order." << endl;
+  return false;
 }
 
 void Airlift::execute()
 {
   if (validate())
   {
-    cout << "This Airlift order is valid to execute." << endl;
+    cout << "Airlift order execute:" << endl;
+    cout << "Previous armies of source territory: " + sourceTerritory->getArmyNumber() << endl;
+    cout << "Previous armies of target territory: " + targetTerritory->getArmyNumber() << endl;
+    int actualMoveArmies = min(numberOfArmies, sourceTerritory->getArmyNumber());
+    sourceTerritory->removeArmy(actualMoveArmies);
+    targetTerritory->addArmy(actualMoveArmies);
+    cout << "Current armies of source territory: " + sourceTerritory->getArmyNumber() << endl;
+    cout << "Current armies of target territory: " + targetTerritory->getArmyNumber() << endl;
   }
   else
   {
-    cout << "Error, invalid Airlift order." << endl;
+    cout << "Invalid Airlift order. Cannot execute this Airlift order." << endl;
   }
 }
 

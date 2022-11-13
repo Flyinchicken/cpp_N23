@@ -149,6 +149,7 @@ class Airlift : public Order
 {
 public:
   Airlift();
+  Airlift(Player *player, Territory *sourceTerritory, Territory *targetTerritory, int numberOfArmies);
   ~Airlift();
   Airlift(const Airlift &airlift);
   Airlift &operator=(const Airlift &airlift);
@@ -157,6 +158,9 @@ public:
   void execute();
 
 private:
+  Territory *sourceTerritory;
+  Territory *targetTerritory;
+  int numberOfArmies;
   friend std::ostream &operator<<(std::ostream &, const Airlift &);
 };
 
