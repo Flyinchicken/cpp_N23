@@ -463,9 +463,7 @@ bool GameEngine::isAllied(Player* attacker, Player* attackee)
 void GameEngine::mainGameLoop()
 {
     cout << "****Main game loop Starting****" <<endl <<endl;
-    //********For Assignement 2 only**********
-    setGameState(ASSIGNREINFORCEMENTS);
-    //****************************************
+    
     while (currentGameState != WIN)
     {
         cout << "We are on turn " << turnNumber << endl << "Type anything to proceed" <<endl;
@@ -489,12 +487,12 @@ void GameEngine::mainGameLoop()
 
         if(this->playerList.size() == 1){
             cout << "Player " << playerList.at(0)->getName() << " has won the game " << endl;
-            currentGameState = WIN;
+            setGameState(WIN);
             continue;
         }
 
         if(turnNumber == 10){
-            currentGameState = WIN;
+            setGameState(WIN);
             continue;
         }
 
@@ -587,7 +585,7 @@ void GameEngine::issueOrdersPhase() {
         }
     }
 
-    currentGameState = EXECUTEORDERS;
+    setGameState(EXECUTEORDERS);
 }
 
 void GameEngine::executeOrdersPhase()
@@ -599,7 +597,7 @@ void GameEngine::executeOrdersPhase()
         }
     }
 
-    currentGameState = ASSIGNREINFORCEMENTS;
+    setGameState(ASSIGNREINFORCEMENTS);
 }
 
 /**
