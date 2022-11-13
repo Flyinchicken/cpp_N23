@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include "Player.h"
+#include "LoggingObserver.h"
 
 using std::string;
 using std::ostream;
@@ -26,7 +27,7 @@ enum GameStates {
     WIN
 };
 
-class Command {
+class Command : public Subject, public ILoggable {
 public:
     Command();
     Command(string commandString);
@@ -40,6 +41,8 @@ public:
 
     friend ostream& operator << (ostream&, const Command&);
     Command& operator = (const Command&);
+
+    string stringToLog();
 private:
     string command;
     string effect;
@@ -56,7 +59,7 @@ public:
     FileLineReader& operator =(const FileLineReader&);
 };
 
-class CommandProcessor {
+class CommandProcessor : public Subject, public ILoggable {
 public:
     CommandProcessor();
     CommandProcessor(const CommandProcessor&);
@@ -70,10 +73,13 @@ public:
 
     friend ostream& operator <<(ostream&, const CommandProcessor&);
     CommandProcessor& operator =(const CommandProcessor&);
+
+    string stringToLog();
 protected:
     vector<Command*> commandsList;
     virtual void readCommand();
     void saveCommand(string command);
+    string savedCommand;
 };
 
 class FileCommandProcessorAdapter : public CommandProcessor {

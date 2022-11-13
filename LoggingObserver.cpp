@@ -20,7 +20,7 @@ void Subject::detach(Observer* observer){
     }
 }
 
-void Subject::notify(){
+void Subject::notify(Subject *subject){
     for(auto& observer : *observers){
         observer->update(dynamic_cast<ILoggable*>(this));
     }

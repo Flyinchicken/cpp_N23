@@ -17,7 +17,7 @@ using std::string;
  *
  * Controls the state of the game along with what commands and actions are allowed at each phase.
  */
-class GameEngine
+class GameEngine : public Subject, public ILoggable
 {
 private:
     GameStates currentGameState; // Not a pointer type as per prof. Paquet's permission
@@ -70,6 +70,8 @@ public:
     void displayCurrentGameState();
 
     void displayFarewellMessage();
+
+    string stringToLog();
 };
 
 extern GameEngine* ge;

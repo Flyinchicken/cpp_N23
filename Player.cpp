@@ -118,9 +118,6 @@ void Player::setTerritories(vector<Territory*> newTerritories)
     this->territories = newTerritories;
 }
 
-void Player::setTurn(bool isComplete) {
-    this->turnCompleted = isComplete;
-}
 
 void Player::addTerritory(Territory* territory) {
     territories.push_back(territory);
@@ -150,17 +147,22 @@ void Player::setTurn(bool turn)
     this->turnCompleted = turn;
 }
 
+bool Player::getTurn()
+{
+    return this->turnCompleted;
+}
+
 // orders created adding to the player's orderslist
 void Player::issueOrder()
 {
     if (this->getReinforcementPool() > 4)
     {
-        this->orderslist->push_back(new Deploy()); // Deploy order, should take certain params
+        this->orderslist->addOrder(new Deploy()); // Deploy order, should take certain params
         this->setReinforcementPool(this->getReinforcementPool() - 5);
     }
     else if (this->getReinforcementPool() > 0)
     {
-        this->orderslist->push_back(new Deploy()); // Deply order but now with the rest of the reinforcement pool
+        this->orderslist->addOrder(new Deploy()); // Deply order but now with the rest of the reinforcement pool
         this->setReinforcementPool(0);
     }
     else
@@ -179,7 +181,7 @@ void Player::issueOrder()
                 if (it != outposts.end())
                 {
                     Territory* source = outposts.at(it - outposts.begin()); // Source territory
-                    this->orderslist->push_back(new Advance(this, source, target, source->getArmyNumber() - 1));  // VERIFY ORDER
+                    this->orderslist->addOrder(new Advance(this, source, target, source->getArmyNumber() - 1));  // VERIFY ORDER
                     numAttacks++;
                     break;
                 }
@@ -211,7 +213,7 @@ void Player::issueOrder()
                         if (index > i)
                         {
                             Territory* source = outposts.at(index);
-                            this->orderslist->push_back(new Advance(this, source, target, source->getArmyNumber() / 2)); // VERIFY ORDER
+                            this->orderslist->addOrder(new Advance(this, source, target, source->getArmyNumber() / 2)); // VERIFY ORDER
                             hasDefended = true;
                             numDefense = i + 1;
                             break;
@@ -262,7 +264,7 @@ void Player::cardOrder(int orderNumber)
     if (newOrder != nullptr)
     {
         cout << (*newOrder) << endl;
-        this->orderslist->push_back(newOrder);
+        this->orderslist->addOrder(newOrder);
     }
 }
 

@@ -4,6 +4,7 @@
 #include <vector>
 #include "Map.h"
 #include "Player.h"
+#include "LoggingObserver.h"
 
 using std::string;
 using std::vector;
@@ -15,7 +16,7 @@ class Player;
 // assignment operator,
 // and stream insertion operator.
 // using destructor to avoid memory leaks
-class Order
+class Order : public Subject, public ILoggable
 {
 public:
   Order();
@@ -30,11 +31,15 @@ public:
   // add the player to the order
   Player *player;
   Player *get_player() const;
+  string getOrderEffect();
+  void setOrderEffect(string);
 
   // define virtual function of validate and execute,
   // allow calling this function of a subclass with a pointer to the base class
   virtual bool validate();
   virtual void execute() = 0;
+
+  string stringToLog();
 
 private:
   // friend stream insertion operator to the class to access private member
@@ -42,10 +47,11 @@ private:
   static int order_id; // static variable use to automatic generate id for all objects
   int id;              // store the id of the order (Each order have one unique id)
   string order_type;
+  string order_effect;
 };
 
 // The OrdersList class contains a list of Order objects.
-class OrdersList
+class OrdersList : public Subject, public ILoggable
 {
 public:
   OrdersList();
@@ -57,11 +63,15 @@ public:
   void push_back(Order *order);
   void print();
   vector<Order *> order_list;
+  string stringToLog();
+  void addOrder(Order *order);
+  Order* getAddedOrder();
 
 private:
   // friend stream insertion operator to the class to access private member
   friend std::ostream &
   operator<<(std::ostream &, const OrdersList &);
+  Order *addedOrder;
   // All data members of user-defined class type must be of pointer type.
 };
 

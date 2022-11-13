@@ -1,6 +1,6 @@
 #include "GameEngine.h"
 #include "MapLoader.h"
-
+#include "LoggingObserver.h"
 #include <iostream>
 
 using std::cin;
@@ -388,7 +388,7 @@ void GameEngine::assignPlayersOrder(vector<Player*>* playerList)
     for(auto& player : *playerList){
         cout << player->getName() << endl;
     }
-    std::random_shuffle(playerList->begin(),playerList->end());
+    //std::random_shuffle(playerList->begin(),playerList->end());
     cout << "Randomize player order: " << endl;
     for(auto& player : *playerList){
         cout << player->getName() << endl;
@@ -412,6 +412,7 @@ void GameEngine::distributeTerritories(Map* worldMap, vector<Player*>* playerLis
 void GameEngine::setGameState(GameStates newGameState)
 {
     currentGameState = newGameState;
+    notify(this);
 }
 
 /**
@@ -541,4 +542,9 @@ void GameEngine::startNewGame()
     }
 
     displayFarewellMessage();
+}
+
+string GameEngine::stringToLog()
+{
+    return "";
 }

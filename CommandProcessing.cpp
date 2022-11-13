@@ -135,12 +135,19 @@ string Command::getCommand()
 void Command::saveEffect(string effectString)
 {
     this->effect = effectString;
+    notify(this);
 }
 
 /**
  * @returns effect string of Command
 */
 string Command::getEffect()
+{
+    return this->effect;
+}
+
+//Return the Command's effect
+string Command::stringToLog()
 {
     return this->effect;
 }
@@ -335,6 +342,8 @@ void CommandProcessor::readCommand()
 void CommandProcessor::saveCommand(string command)
 {
     this->commandsList.push_back(new Command(command));
+    this->savedCommand = command;
+    notify(this);
 }
 
 void CommandProcessor::getCommand()
@@ -345,6 +354,12 @@ void CommandProcessor::getCommand()
 vector<Command*> CommandProcessor::getCommandsList()
 {
     return this->commandsList;
+}
+
+//Return the Command saved
+string CommandProcessor::stringToLog()
+{
+    return this->savedCommand;
 }
 
 ///
