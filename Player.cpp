@@ -175,6 +175,8 @@ void Player::issueOrder()
     {
         vector<Territory*> potentialAttacks = this->toAttack();
         vector<Territory*> outposts = this->toDefend();
+        vector<Territory*> reinforcers = outposts;
+        reverse(reinforcers.begin(), reinforcers.end());
 
         if (potentialAttacks.size() > numAttacks)
         { // If we can attack any territory that we have not yet attacked
@@ -182,13 +184,16 @@ void Player::issueOrder()
             cout << "Player has targets to attack. Player has attacked " << numAttacks << " territories this turn" << endl;
 
             Territory* target = potentialAttacks.at(numAttacks);
-            vector<Territory*> adj = worldMap->getNeighboursPtr(*target->getTerritoryName()); //VERIFY WORLD
-            for (Territory* p : adj)
+
+            for (Territory* p : reinforcers)
             {
-                vector<Territory*>::iterator it = find(outposts.begin(), outposts.end(), p); // Tries to find which territory should be the source
-                if (it != outposts.end())
+                vector<Territory*> adj = worldMap->getNeighboursPtr(*p->getTerritoryName()); //VERIFY WORLD
+
+                vector<Territory*>::iterator it = find(adj.begin(), adj.end(), target); // Tries to find which territory should be the source
+                
+                if (it != adj.end())
                 {
-                    Territory* source = outposts.at(it - outposts.begin()); // Source territory
+                    Territory* source = p; // Source territory
                     this->orderslist->addOrder(new Advance(this, source, target, source->getArmyNumber() - 1));  // VERIFY ORDER
                     numAttacks++;
 
@@ -201,8 +206,6 @@ void Player::issueOrder()
         { // If it can't attack it will try to defend
 
             cout << "No new targets to attack. So we try to defend " << endl;
-            vector<Territory*> reinforcers = outposts;
-            reverse(reinforcers.begin(), reinforcers.end());
             bool hasDefended = false;
 
             for (int i = numDefense; i < outposts.size(); i++)
