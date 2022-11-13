@@ -344,7 +344,8 @@ void GameEngine::addPlayer(Command *command) {
     playerList.push_back(player);
 
     setGameState(PLAYERSADDED);
-    command->saveEffect("Player " + playerName + " was added successfully. State changed to PLAYERSADDED");    
+    command->saveEffect("Player " + playerName + " was added successfully. State changed to PLAYERSADDED"); 
+    displayPlayerList();   
 }
 
 /**
@@ -393,6 +394,16 @@ void GameEngine::distributeTerritories(Map* worldMap, vector<Player*>* playerLis
         for(auto& player : *playerList){
             
         }
+    }
+}
+
+/**
+ * Prints out the current list of players
+*/
+void GameEngine::displayPlayerList() {
+    cout << "Current player list: " << endl;
+    for (int i = 0; i < playerList.size(); i++) {
+        cout << i + 1 << ": " << playerList[i]->getName() << endl;
     }
 }
 
