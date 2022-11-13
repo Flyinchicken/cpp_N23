@@ -326,6 +326,8 @@ void GameEngine::validateMap(Command *command)
 
 /**
  * Adds a new player to the player list
+ * 
+ * @param command The command to save the effect of adding a player into
 */
 void GameEngine::addPlayer(Command *command) {    
     if (playerList.size() == 6) {
@@ -345,6 +347,11 @@ void GameEngine::addPlayer(Command *command) {
     command->saveEffect("Player " + playerName + " was added successfully. State changed to PLAYERSADDED");    
 }
 
+/**
+ * Sets up game parameters for main game loop
+ * 
+ * @param command The command to save the effect of starting the game into
+*/
 void GameEngine::gameStart(Command *command) {
     for (int i = 0; i < 50; i++) {
         x->addCardToDeck(new Card());
@@ -362,6 +369,11 @@ void GameEngine::gameStart(Command *command) {
     command->saveEffect("Map added and validated successfully. All players added. Transitioned from start up phase into main game loop! State changed to ASSIGNREINFORCEMENTS");
 }
 
+/**
+ * Shuffles the players in the player list around randomly to assign the order in which they play in.
+ * 
+ * @param playerList List of players to shuffle
+*/
 void GameEngine::assignPlayersOrder(vector<Player*>* playerList)
 {   
     cout << "Original player list: " << endl;
@@ -441,7 +453,7 @@ void GameEngine::mainGameLoop()
 {
     cout << "****Main game loop Starting****" <<endl <<endl;
     //********For Assignement 2 only**********
-    currentGameState = ASSIGNREINFORCEMENTS;
+    setGameState(ASSIGNREINFORCEMENTS);
     //****************************************
     while (currentGameState != WIN)
     {
