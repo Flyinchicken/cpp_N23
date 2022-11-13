@@ -59,7 +59,7 @@ class FileLineReader {
         friend ostream& operator <<(ostream&, const FileLineReader&);
         FileLineReader& operator =(const FileLineReader&);
     private:
-        ifstream *fileInputStream;
+        ifstream fileInputStream;
 };
 
 class CommandProcessor : public Subject, public ILoggable {
@@ -81,7 +81,7 @@ class CommandProcessor : public Subject, public ILoggable {
     protected:
         vector<Command*> commandsList;
         string savedCommand;
-        
+
         virtual string readCommand();
         void saveCommand(string command);
 };

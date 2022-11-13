@@ -328,8 +328,9 @@ vector<string> CommandProcessor::splitStringByDelim(string toSplit, char delim)
 */
 string CommandProcessor::readCommand()
 {
-    string commandString;
+    cout << "Input your next command: " << endl;
 
+    string commandString;
     getline(cin, commandString);
 
     return commandString;
@@ -444,6 +445,8 @@ string FileCommandProcessorAdapter::readCommand()
 {
     string commandString = this->fileReader->readLineFromFile();
 
+    cout << commandString << endl;
+
     return commandString;
 }
 
@@ -453,17 +456,17 @@ string FileCommandProcessorAdapter::readCommand()
 
 /** Default constructor */
 FileLineReader::FileLineReader() {
-    this->fileInputStream = new ifstream(filePath);
+    this->fileInputStream = ifstream(filePath);
 }
 
 /** Copy constructor */
 FileLineReader::FileLineReader(const FileLineReader& reader) {
-    this->fileInputStream = reader.fileInputStream;
+    // Nothing to copy
 }
 
 /** Destructor */
 FileLineReader::~FileLineReader() {
-    delete this->fileInputStream;
+    this->fileInputStream.close();
 }
 
 /** Stream insertion operator */
@@ -480,7 +483,7 @@ FileLineReader &FileLineReader::operator=(const FileLineReader &reader) { return
 string FileLineReader::readLineFromFile() {
     string fileLine;
 
-    getline(*this->fileInputStream, fileLine);
+    getline(fileInputStream, fileLine);
 
     return fileLine;
 }

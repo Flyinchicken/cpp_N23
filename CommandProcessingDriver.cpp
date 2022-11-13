@@ -25,8 +25,6 @@ void testCommandProcessor(int argc, char **argv)
     }
     else if (processorType == "-file")
     {
-
-        processor = new FileCommandProcessorAdapter();
         if (argc < 3)
         {
             cout << "To execute this program you must enter additional arguments in the form -console or -file <filename>" << endl;
@@ -35,12 +33,20 @@ void testCommandProcessor(int argc, char **argv)
         else
         {
             filePath = argv[2];
+
+            if (ifstream(filePath).fail()) {
+                cout << "File " << filePath << " does not exist!" << endl;
+                return;
+            }
+
             cout << "filepath is: " << filePath << endl;
         }
+        processor = new FileCommandProcessorAdapter();
     }
     else
     {
         cout << "To execute this program you must enter additional arguments in the form -console or -file <filename>" << endl;
+        return;
     }
 
     GameEngine *game = new GameEngine();
@@ -50,7 +56,6 @@ void testCommandProcessor(int argc, char **argv)
 
     while (gameInProgress)
     {
-        cout << "Input your next command: " << endl;
         Command *nextCommand = processor->getCommand();
 
         if (processor->validate(nextCommand, game->getCurrentGameState())) {
@@ -59,7 +64,7 @@ void testCommandProcessor(int argc, char **argv)
 
         cout << nextCommand->getEffect() << endl;
 
-        if (nextCommand->getCommand() == CommandStrings::quit) {
+        if (game->getCurrentGameState() == WIN && nextCommand->getCommand() == CommandStrings::quit) {
             gameInProgress = false;
             game->displayFarewellMessage();
             continue;
