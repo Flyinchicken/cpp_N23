@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include "Player.h"
+#include "LoggingObserver.h"
 
 using std::string;
 using std::ostream;
@@ -26,68 +27,73 @@ enum GameStates {
     WIN
 };
 
-class Command {
-    public:
-        Command();
-        Command(string commandString);
-        Command(const Command &);
-        ~Command();
+class Command : public Subject, public ILoggable {
+public:
+    Command();
+    Command(string commandString);
+    Command(const Command&);
+    ~Command();
 
-        void saveEffect(string effectString);
-        string getEffect();
+    void saveEffect(string effectString);
+    string getEffect();
 
-        string getCommand();
+    string getCommand();
 
-        friend ostream &operator << (ostream &, const Command &);
-        Command &operator = (const Command &);
-    private:
-        string command;
-        string effect;
+    friend ostream& operator << (ostream&, const Command&);
+    Command& operator = (const Command&);
+
+    string stringToLog();
+private:
+    string command;
+    string effect;
 };
 
 class FileLineReader {
-    public:
-        FileLineReader();
-        FileLineReader(const FileLineReader &);
-        ~FileLineReader();
-        vector<string> processCommands(string filePath);
+public:
+    FileLineReader();
+    FileLineReader(const FileLineReader&);
+    ~FileLineReader();
+    vector<string> processCommands(string filePath);
 
-        friend ostream &operator <<(ostream &, const FileLineReader &);
-        FileLineReader &operator =(const FileLineReader &);
+    friend ostream& operator <<(ostream&, const FileLineReader&);
+    FileLineReader& operator =(const FileLineReader&);
 };
 
-class CommandProcessor {
-    public:
-        CommandProcessor();
-        CommandProcessor(const CommandProcessor &);
-        virtual ~CommandProcessor();
+class CommandProcessor : public Subject, public ILoggable {
+public:
+    CommandProcessor();
+    CommandProcessor(const CommandProcessor&);
+    virtual ~CommandProcessor();
 
-        bool validate(Command* command, GameStates currentGameState);
-        void getCommand();
-        vector<Command*> getCommandsList();        
+    bool validate(Command* command, GameStates currentGameState);
+    void getCommand();
+    vector<Command*> getCommandsList();
 
-        vector<string> splitStringByDelim(string toSplit, char delim);
+    vector<string> splitStringByDelim(string toSplit, char delim);
 
-        friend ostream &operator <<(ostream &, const CommandProcessor &);
-        CommandProcessor &operator =(const CommandProcessor &);
-    protected:
-        vector<Command*> commandsList;
-        virtual void readCommand();
-        void saveCommand(string command);
+    friend ostream& operator <<(ostream&, const CommandProcessor&);
+    CommandProcessor& operator =(const CommandProcessor&);
+
+    string stringToLog();
+protected:
+    vector<Command*> commandsList;
+    virtual void readCommand();
+    void saveCommand(string command);
+    string savedCommand;
 };
 
 class FileCommandProcessorAdapter : public CommandProcessor {
-    public:
-        FileCommandProcessorAdapter();
-        FileCommandProcessorAdapter(FileLineReader* file);
-        FileCommandProcessorAdapter(const FileCommandProcessorAdapter &);
-        ~FileCommandProcessorAdapter();
+public:
+    FileCommandProcessorAdapter();
+    FileCommandProcessorAdapter(FileLineReader* file);
+    FileCommandProcessorAdapter(const FileCommandProcessorAdapter&);
+    ~FileCommandProcessorAdapter();
 
-        friend ostream &operator <<(ostream &, const FileCommandProcessorAdapter &);
-        FileCommandProcessorAdapter &operator =(const FileCommandProcessorAdapter &);
-    private:
-        FileLineReader* fileReader;
-        void readCommand();
+    friend ostream& operator <<(ostream&, const FileCommandProcessorAdapter&);
+    FileCommandProcessorAdapter& operator =(const FileCommandProcessorAdapter&);
+private:
+    FileLineReader* fileReader;
+    void readCommand();
 };
 
 /**

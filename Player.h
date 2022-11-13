@@ -8,6 +8,7 @@
 #include <list>
 #include <vector>
 #include <ostream>
+#include <algorithm>
 using namespace std;
 
 class Territory;
@@ -29,6 +30,8 @@ private:
 	Hand* hand;
 	int reinforcementPool = 0;
 	bool turnCompleted = false;
+    bool canBeAttacked = true;
+    bool canAttack = true;
 
 public:
 

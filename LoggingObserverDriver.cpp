@@ -1,4 +1,7 @@
 #include "LoggingObserverDriver.h"
+#include "Orders.h"
+#include "CommandProcessing.h"
+#include "GameEngine.h"
 
 Chicken::Chicken()
 {
@@ -11,7 +14,7 @@ Chicken::~Chicken() {}
 void Chicken::scream()
 {
     cout << "Chicken screaming" << endl;
-    notify();
+    notify(this);
 }
 
 string Chicken::stringToLog()
@@ -22,7 +25,7 @@ string Chicken::stringToLog()
 void testLoggingObserver()
 {
     LogObserver *gameLog = new LogObserver();
-    Chicken *myChicken = new Chicken();
+    Chicken* myChicken = new Chicken();
     myChicken->attach(gameLog);
     myChicken->scream();
     myChicken->scream();
@@ -32,8 +35,12 @@ void testLoggingObserver()
     myChicken->scream();
     myChicken->scream();
     gameLog->endOutput();
+
+    //CommandProcessor *cp = new CommandProcessor();
+    //cp->attach(gameLog);
+    //cp->getCommand();
 }
 
-// int main(){
-//     testLoggingObserver();
-// }
+int main(){
+     testLoggingObserver();
+ }
