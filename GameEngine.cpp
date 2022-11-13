@@ -268,11 +268,7 @@ bool GameEngine::processCommand(Command *command)
     }
     else if (commandString == CommandStrings::addPlayer)
     {
-        if (playerList.size() == 6) {
-            command->saveEffect("Maximum 6 players allowed in a game of Warzone");
-        } else {
-            addPlayer(command);
-        }        
+        addPlayer(command);     
     }
     else if (command->getCommand() == CommandStrings::gameStart)
     {
@@ -280,7 +276,7 @@ bool GameEngine::processCommand(Command *command)
             gameStart(command);
             return false;
         } else {
-            command->saveEffect("Warzone games must be played with 2-6 players. Add more before starting.");
+            command->saveEffect("Warzone games must be played with 2-6 players. Add more before starting. No change to state.");
         }        
     }
 
@@ -327,40 +323,38 @@ void GameEngine::validateMap(Command *command)
     }
 }
 
-void GameEngine::addPlayer(Command *command) {
-    int playerNumber = playerList.size();
-    if (playerNumber <= 6){
-        string playerName = commandProcessor->splitStringByDelim(command->getCommand(), ' ').back();
-        Player* player = new Player();
-        Hand* tempHand = new Hand(player);
-        player->setHand(tempHand);
-        player->setName(playerName);
-        playerList.push_back(player);
-        setGameState(PLAYERSADDED);
-        command->saveEffect("Player " + playerName + " was added successfully ");
-    } else {
-        command->saveEffect("Player number reaches the maximum. No more players can be added!");
+/**
+ * Adds a new player to the player list
+*/
+void GameEngine::addPlayer(Command *command) {    
+    if (playerList.size() == 6) {
+        command->saveEffect("Attempted to add additional player after having reached maximum of 6. No change to state.");
         return;
     }
     
+    string playerName = commandProcessor->splitStringByDelim(command->getCommand(), ' ').back();
+
+    Player* player = new Player();
+    Hand* tempHand = new Hand(player);
+    player->setHand(tempHand);
+    player->setName(playerName);
+    playerList.push_back(player);
+
+    setGameState(PLAYERSADDED);
+    command->saveEffect("Player " + playerName + " was added successfully. State changed to PLAYERSADDED");    
 }
 
 void GameEngine::gameStart(Command *command) {
-    int playerNumber = playerList.size();
-    if(playerNumber < 2){
-        command->saveEffect("At least two players are needed to start the game! Failure: ");
-    } else {
-        assignPlayersOrder(&playerList);
-        // distributeTerritories();
-        for (Player* i : playerList) {
-            i->setReinforcementPool(50);
-            // Need help with draw hand, each player needs to draw two cards
-            // draw(i->getHand());
-        }
-
-        setGameState(ASSIGNREINFORCEMENTS);
-        command->saveEffect("Map added and validated successfully. All players added. Transitioned from start up phase into main game loop! ");
+    assignPlayersOrder(&playerList);
+    // distributeTerritories();
+    for (Player* i : playerList) {
+        i->setReinforcementPool(50);
+        // Need help with draw hand, each player needs to draw two cards
+        // draw(i->getHand());
     }
+
+    setGameState(ASSIGNREINFORCEMENTS);
+    command->saveEffect("Map added and validated successfully. All players added. Transitioned from start up phase into main game loop! State changed to ASSIGNREINFORCEMENTS");
 }
 
 void GameEngine::assignPlayersOrder(vector<Player*>* playerList)
