@@ -148,21 +148,6 @@ void GameEngine::displayCurrentGameState()
 }
 
 /**
- * Prompts the user for input from the console and returns it.
- *
- * @returns The user's console input command.
- */
-string GameEngine::getUserInput()
-{
-    cout << "Input your next command: ";
-
-    string inputCommand;
-    cin >> inputCommand;
-
-    return inputCommand;
-}
-
-/**
  * Checks if the user has input the "end" command while the game is in the "win" state.
  *
  * @returns If the user has attempted to end the game after winning.
@@ -240,29 +225,18 @@ void GameEngine::startupPhase()
 {
     bool inStartup = true;
 
-    int lastIndex = -1;
-
     while (inStartup)
     {
-        commandProcessor->getCommand();
+        Command *nextCommand = commandProcessor->getCommand();
 
         vector<Command *> commands = commandProcessor->getCommandsList();
 
-        for (int i = lastIndex == -1 ? 0 : lastIndex; i < commands.size(); i++)
+        if (commandProcessor->validate(nextCommand, currentGameState))
         {
-            if (commandProcessor->validate(commands[i], currentGameState))
-            {
-                inStartup = processCommand(commands[i]);
-            }
-
-            cout << commands[i]->getEffect() << commands[i]->getCommand() << endl;
+            inStartup = processCommand(nextCommand);
         }
 
-        if (!filePath.empty()) {
-            inStartup = false;
-        }
-
-        lastIndex = commands.size();
+        cout << nextCommand->getEffect() << endl;
     }
 }
 
@@ -321,9 +295,7 @@ void GameEngine::loadMap(Command *command)
     if (worldMap == nullptr) {
         command->saveEffect("Map " + mapName + " does not exist. State has not been changed");
     } else {
-        command->saveEffect("Successfully loaded map file " + mapName + ". State changed to MAPLOADED ");
-        cout << "Here is the game map:" << endl;
-        cout << *worldMap << endl;
+        command->saveEffect("Successfully loaded map file " + mapName + ". State changed to MAPLOADED ");        
         setGameState(MAPLOADED);
     }    
 }
@@ -338,6 +310,8 @@ void GameEngine::validateMap(Command *command)
     if (worldMap->validate())
     {
         setGameState(MAPVALIDATED);
+        cout << "Here is the game map:" << endl;
+        cout << *worldMap << endl;
         command->saveEffect("Map was successfully validated. State changed to MAPVALIDATED ");
     }
     else
@@ -550,33 +524,7 @@ void GameEngine::startNewGame()
 
     while (isGameInProgress)
     {
-        // TODO: Move to command processor
-        string inputCommand = getUserInput();
-        Command *command = new Command(inputCommand);
-
-        if (!this->commandProcessor->validate(command, this->currentGameState))
-        {
-            cout << command->getEffect() << endl;
-            displayCurrentGameState();
-            continue;
-        }
-
-        if (hasGameBeenEnded(command->getCommand()))
-        {
-            isGameInProgress = false;
-            continue;
-        }
-
-        // if (!changeStateFromCommand(inputCommand))
-        // {
-        //     cout << "Invalid state transition!" << endl;
-        // }
-        if (hasPlayerWon())
-        { // In "else if" so displays only once if user decides to input jargin after claiming victory
-            displayVictoryMessage();
-        }
-
-        displayCurrentGameState();
+        
     }
 
     displayFarewellMessage();

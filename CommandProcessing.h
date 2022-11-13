@@ -28,72 +28,76 @@ enum GameStates {
 };
 
 class Command : public Subject, public ILoggable {
-public:
-    Command();
-    Command(string commandString);
-    Command(const Command&);
-    ~Command();
+    public:
+        Command();
+        Command(string commandString);
+        Command(const Command&);
+        ~Command();
 
-    void saveEffect(string effectString);
-    string getEffect();
+        void saveEffect(string effectString);
+        string getEffect();
 
-    string getCommand();
+        string getCommand();
 
-    friend ostream& operator << (ostream&, const Command&);
-    Command& operator = (const Command&);
+        friend ostream& operator << (ostream&, const Command&);
+        Command& operator = (const Command&);
 
-    string stringToLog();
-private:
-    string command;
-    string effect;
+        string stringToLog();
+    private:
+        string command;
+        string effect;
 };
 
 class FileLineReader {
-public:
-    FileLineReader();
-    FileLineReader(const FileLineReader&);
-    ~FileLineReader();
-    vector<string> processCommands(string filePath);
+    public:
+        FileLineReader();
+        FileLineReader(const FileLineReader&);
+        ~FileLineReader();
+        
+        string readLineFromFile();
 
-    friend ostream& operator <<(ostream&, const FileLineReader&);
-    FileLineReader& operator =(const FileLineReader&);
+        friend ostream& operator <<(ostream&, const FileLineReader&);
+        FileLineReader& operator =(const FileLineReader&);
+    private:
+        ifstream fileInputStream;
 };
 
 class CommandProcessor : public Subject, public ILoggable {
-public:
-    CommandProcessor();
-    CommandProcessor(const CommandProcessor&);
-    virtual ~CommandProcessor();
+    public:
+        CommandProcessor();
+        CommandProcessor(const CommandProcessor&);
+        virtual ~CommandProcessor();
 
-    bool validate(Command* command, GameStates currentGameState);
-    void getCommand();
-    vector<Command*> getCommandsList();
+        bool validate(Command* command, GameStates currentGameState);
+        Command* getCommand();
+        vector<Command*> getCommandsList();
 
-    vector<string> splitStringByDelim(string toSplit, char delim);
+        vector<string> splitStringByDelim(string toSplit, char delim);
 
-    friend ostream& operator <<(ostream&, const CommandProcessor&);
-    CommandProcessor& operator =(const CommandProcessor&);
+        friend ostream& operator <<(ostream&, const CommandProcessor&);
+        CommandProcessor& operator =(const CommandProcessor&);
 
-    string stringToLog();
-protected:
-    vector<Command*> commandsList;
-    virtual void readCommand();
-    void saveCommand(string command);
-    string savedCommand;
+        string stringToLog();
+    protected:
+        vector<Command*> commandsList;
+        string savedCommand;
+
+        virtual string readCommand();
+        void saveCommand(string command);
 };
 
 class FileCommandProcessorAdapter : public CommandProcessor {
-public:
-    FileCommandProcessorAdapter();
-    FileCommandProcessorAdapter(FileLineReader* file);
-    FileCommandProcessorAdapter(const FileCommandProcessorAdapter&);
-    ~FileCommandProcessorAdapter();
+    public:
+        FileCommandProcessorAdapter();
+        FileCommandProcessorAdapter(FileLineReader* file);
+        FileCommandProcessorAdapter(const FileCommandProcessorAdapter&);
+        ~FileCommandProcessorAdapter();
 
-    friend ostream& operator <<(ostream&, const FileCommandProcessorAdapter&);
-    FileCommandProcessorAdapter& operator =(const FileCommandProcessorAdapter&);
-private:
-    FileLineReader* fileReader;
-    void readCommand();
+        friend ostream& operator <<(ostream&, const FileCommandProcessorAdapter&);
+        FileCommandProcessorAdapter& operator =(const FileCommandProcessorAdapter&);
+    private:
+        FileLineReader* fileReader;
+        string readCommand();
 };
 
 /**

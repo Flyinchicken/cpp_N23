@@ -321,36 +321,50 @@ vector<string> CommandProcessor::splitStringByDelim(string toSplit, char delim)
     return segmentList;
 }
 
-void CommandProcessor::readCommand()
+/**
+ * Gets a single command from the console.
+ * 
+ * @return The command input as a string
+*/
+string CommandProcessor::readCommand()
 {
-    while (true)
-    {
-        cout << "Give a command: (Type 'end' when you wish to stop) " << endl;
-        string commandStr;
-        getline(cin, commandStr);
-        if (commandStr != "")
-        {
-            if (commandStr == "end")
-            {
-                return;
-            }
-            this->saveCommand(commandStr);
-        }
-    }
+    cout << "Input your next command: " << endl;
+
+    string commandString;
+    getline(cin, commandString);
+
+    return commandString;
 }
 
+/**
+ * Saves a command string into the command list
+*/
 void CommandProcessor::saveCommand(string command)
 {
     this->commandsList.push_back(new Command(command));
+
     this->savedCommand = command;
+
     notify(this);
 }
 
-void CommandProcessor::getCommand()
+/**
+ * Reads and saves a Command taken from either the console or a file.
+ * 
+ * @returns Command object taken from input method
+*/
+Command* CommandProcessor::getCommand()
 {
-    this->readCommand();
+    string commandString = this->readCommand();
+
+    this->saveCommand(commandString);
+
+    return this->commandsList.back();
 }
 
+/**
+ * @returns The entire command list
+*/
 vector<Command*> CommandProcessor::getCommandsList()
 {
     return this->commandsList;
@@ -427,23 +441,13 @@ ostream& operator<<(ostream& out, const FileCommandProcessorAdapter& adapter) {
 /**
  * Reads commands from the global file path
 */
-void FileCommandProcessorAdapter::readCommand()
+string FileCommandProcessorAdapter::readCommand()
 {
-    ifstream input(filePath);
+    string commandString = this->fileReader->readLineFromFile();
 
-    cout << filePath << endl;
+    cout << commandString << endl;
 
-    if (input.fail() && filePath != "")
-    {
-        cout << "Incorrect file path. Please provide a valid file when you execute the program." << endl;
-        return;
-    }
-
-    vector<string> commands;
-    commands = this->fileReader->processCommands(filePath);
-
-    for (string i : commands)
-        this->saveCommand(i);
+    return commandString;
 }
 
 ///
@@ -451,39 +455,35 @@ void FileCommandProcessorAdapter::readCommand()
 ///
 
 /** Default constructor */
-FileLineReader::FileLineReader() {}
+FileLineReader::FileLineReader() {
+    this->fileInputStream = ifstream(filePath);
+}
 
 /** Copy constructor */
-FileLineReader::FileLineReader(const FileLineReader& reader) {}
+FileLineReader::FileLineReader(const FileLineReader& reader) {
+    // Nothing to copy
+}
 
 /** Destructor */
-FileLineReader::~FileLineReader() {}
+FileLineReader::~FileLineReader() {
+    this->fileInputStream.close();
+}
 
 /** Stream insertion operator */
-ostream& operator <<(ostream& out, const FileLineReader& reader) { return out; }
+ostream &operator <<(ostream &out, const FileLineReader &reader) { return out; }
 
 /** Assignment operator */
-FileLineReader& FileLineReader::operator=(const FileLineReader& reader) { return *this; }
+FileLineReader &FileLineReader::operator=(const FileLineReader &reader) { return *this; }
 
 /**
- * Iterates over all lines in a file and returns them as a vector.
- *
- * @param filePath The path of the file to process
- * @returns A collection of all commands in the file
+ * Reads a single line from a command file
+ * 
+ * @returns Line from the command file as a string
 */
-vector<string> FileLineReader::processCommands(string filePath)
-{
+string FileLineReader::readLineFromFile() {
+    string fileLine;
 
-    vector<string> commands;
-    string tempCommand;
+    getline(fileInputStream, fileLine);
 
-    ifstream commandFile(filePath);
-
-    while (getline(commandFile, tempCommand))
-    {
-        commands.push_back(tempCommand);
-    }
-
-    commandFile.close();
-    return commands;
+    return fileLine;
 }

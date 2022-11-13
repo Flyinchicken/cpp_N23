@@ -29,8 +29,6 @@ private:
     void displayWelcomeMessage();
     void displayVictoryMessage();
 
-    string getUserInput();
-
     bool hasGameBeenEnded(string command);
     bool hasPlayerWon();
 
@@ -46,8 +44,6 @@ private:
     // Empty it at the end of the turn
 
     set<pair<Player*, Player*>> alliances;
-
-    // bool changeStateFromCommand(string commandString);
 
     string getGameStateAsString() const;
     friend ostream& operator<<(ostream&, const GameEngine&);

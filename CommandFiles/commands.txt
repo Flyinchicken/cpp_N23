@@ -1,0 +1,11 @@
+loadmap test.map
+loadmap test
+validatemap
+addplayer player1
+gamestart
+replay
+loadmap map
+validatemap
+addplayer player1_1
+gamestart
+quit

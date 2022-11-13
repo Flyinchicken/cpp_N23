@@ -25,8 +25,6 @@ void testCommandProcessor(int argc, char **argv)
     }
     else if (processorType == "-file")
     {
-
-        processor = new FileCommandProcessorAdapter();
         if (argc < 3)
         {
             cout << "To execute this program you must enter additional arguments in the form -console or -file <filename>" << endl;
@@ -35,12 +33,20 @@ void testCommandProcessor(int argc, char **argv)
         else
         {
             filePath = argv[2];
+
+            if (ifstream(filePath).fail()) {
+                cout << "File " << filePath << " does not exist!" << endl;
+                return;
+            }
+
             cout << "filepath is: " << filePath << endl;
         }
+        processor = new FileCommandProcessorAdapter();
     }
     else
     {
         cout << "To execute this program you must enter additional arguments in the form -console or -file <filename>" << endl;
+        return;
     }
 
     GameEngine *game = new GameEngine();
@@ -48,47 +54,33 @@ void testCommandProcessor(int argc, char **argv)
     
     bool gameInProgress = true;
 
-    int lastIndex = -1;
-
     while (gameInProgress)
     {
-        processor->getCommand();
+        Command *nextCommand = processor->getCommand();
 
-        vector<Command *> commands = processor->getCommandsList();
+        if (processor->validate(nextCommand, game->getCurrentGameState())) {
+            game->changeStateFromCommand(nextCommand);
+        }
 
-        for (int i = lastIndex == -1 ? 0 : lastIndex; i < commands.size(); i++)
-        {   
-            if (processor->validate(commands[i], game->getCurrentGameState()))
-            {   
-                game->changeStateFromCommand(commands[i]);
-            }
+        cout << nextCommand->getEffect() << endl;
 
-            cout << commands[i]->getEffect() << endl;
+        if (game->getCurrentGameState() == WIN && nextCommand->getCommand() == CommandStrings::quit) {
+            gameInProgress = false;
+            game->displayFarewellMessage();
+            continue;
+        }
 
-            if (commands[i]->getCommand() == CommandStrings::quit) {
-                gameInProgress = false;
-                game->displayFarewellMessage();
-                continue;
-            }
+        game->displayCurrentGameState();
+
+        if (game->getCurrentGameState() == ASSIGNREINFORCEMENTS) {
+            cout << "Simulating a Warzone game..." 
+                << endl 
+                << "Congratulations! All signs point to your victory, oh glorious one." 
+                << endl;
+
+            game->setGameState(WIN);
 
             game->displayCurrentGameState();
-
-            if (game->getCurrentGameState() == ASSIGNREINFORCEMENTS) {
-                cout << "Simulating a Warzone game..." 
-                    << endl 
-                    << "Congratulations! All signs point to your victory, oh glorious one." 
-                    << endl;
-
-                game->setGameState(WIN);
-
-                game->displayCurrentGameState();
-            }
         }
-
-        if (!filePath.empty()) {
-            gameInProgress= false;
-        }
-
-        lastIndex = commands.size();
     }    
 }

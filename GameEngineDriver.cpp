@@ -19,8 +19,9 @@ void testGameStates() {
 // }
 
 void testStartupPhase() {
+    GameEngine *testGe = new GameEngine();
     
-    ge->startupPhase();
+    testGe->startupPhase();
 
-    delete ge;
+    delete testGe;
 }
