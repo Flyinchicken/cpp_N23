@@ -276,11 +276,7 @@ bool GameEngine::processCommand(Command *command)
     }
     else if (commandString == CommandStrings::addPlayer)
     {
-        if (playerList.size() == 6) {
-            command->saveEffect("Maximum 6 players allowed in a game of Warzone");
-        } else {
-            addPlayer(command);
-        }        
+        addPlayer(command);     
     }
     else if (command->getCommand() == CommandStrings::gameStart)
     {
@@ -288,7 +284,7 @@ bool GameEngine::processCommand(Command *command)
             gameStart(command);
             return false;
         } else {
-            command->saveEffect("Warzone games must be played with 2-6 players. Add more before starting.");
+            command->saveEffect("Warzone games must be played with 2-6 players. Add more before starting. No change to state.");
         }        
     }
 
@@ -335,47 +331,57 @@ void GameEngine::validateMap(Command *command)
     }
 }
 
-void GameEngine::addPlayer(Command *command) {
-    int playerNumber = playerList.size();
-    if (playerNumber <= 6){
-        string playerName = commandProcessor->splitStringByDelim(command->getCommand(), ' ').back();
-        Player* player = new Player();
-        Hand* tempHand = new Hand(player);
-        player->setHand(tempHand);
-        player->setName(playerName);
-        playerList.push_back(player);
-        setGameState(PLAYERSADDED);
-        command->saveEffect("Player " + playerName + " was added successfully ");
-    } else {
-        command->saveEffect("Player number reaches the maximum. No more players can be added!");
+/**
+ * Adds a new player to the player list
+ * 
+ * @param command The command to save the effect of adding a player into
+*/
+void GameEngine::addPlayer(Command *command) {    
+    if (playerList.size() == 6) {
+        command->saveEffect("Attempted to add additional player after having reached maximum of 6. No change to state.");
         return;
     }
     
+    string playerName = commandProcessor->splitStringByDelim(command->getCommand(), ' ').back();
+
+    Player* player = new Player();
+    Hand* tempHand = new Hand(player);
+    player->setHand(tempHand);
+    player->setName(playerName);
+    playerList.push_back(player);
+
+    setGameState(PLAYERSADDED);
+    command->saveEffect("Player " + playerName + " was added successfully. State changed to PLAYERSADDED"); 
+    displayPlayerList();   
 }
 
+/**
+ * Sets up game parameters for main game loop
+ * 
+ * @param command The command to save the effect of starting the game into
+*/
 void GameEngine::gameStart(Command *command) {
-    int playerNumber = playerList.size();
-    if(playerNumber < 2){
-        command->saveEffect("At least two players are needed to start the game! Failure: ");
-    } else {
-        
-        for (int i = 0; i < 50; i++) {
-            x->addCardToDeck(new Card());
-        }
-
-        assignPlayersOrder(&playerList);
-        // distributeTerritories();
-        for (Player* i : playerList) {
-            i->setReinforcementPool(50);
-            x->draw(i->getHand());
-            x->draw(i->getHand());
-        }
-
-        setGameState(ASSIGNREINFORCEMENTS);
-        command->saveEffect("Map added and validated successfully. All players added. Transitioned from start up phase into main game loop! ");
+    for (int i = 0; i < 50; i++) {
+        x->addCardToDeck(new Card());
     }
+
+    assignPlayersOrder(&playerList);
+    // distributeTerritories();
+    for (Player* i : playerList) {
+        i->setReinforcementPool(50);
+        x->draw(i->getHand());
+        x->draw(i->getHand());
+    }
+
+    setGameState(ASSIGNREINFORCEMENTS);
+    command->saveEffect("Map added and validated successfully. All players added. Transitioned from start up phase into main game loop! State changed to ASSIGNREINFORCEMENTS");
 }
 
+/**
+ * Shuffles the players in the player list around randomly to assign the order in which they play in.
+ * 
+ * @param playerList List of players to shuffle
+*/
 void GameEngine::assignPlayersOrder(vector<Player*>* playerList)
 {   
     cout << "Original player list: " << endl;
@@ -395,6 +401,16 @@ void GameEngine::distributeTerritories(Map* worldMap, vector<Player*>* playerLis
         for(auto& player : *playerList){
             
         }
+    }
+}
+
+/**
+ * Prints out the current list of players
+*/
+void GameEngine::displayPlayerList() {
+    cout << "Current player list: " << endl;
+    for (int i = 0; i < playerList.size(); i++) {
+        cout << i + 1 << ": " << playerList[i]->getName() << endl;
     }
 }
 
@@ -454,9 +470,7 @@ bool GameEngine::isAllied(Player* attacker, Player* attackee)
 void GameEngine::mainGameLoop()
 {
     cout << "****Main game loop Starting****" <<endl <<endl;
-    //********For Assignement 2 only**********
-    currentGameState = ASSIGNREINFORCEMENTS;
-    //****************************************
+    
     while (currentGameState != WIN)
     {
         cout << "We are on turn " << turnNumber << endl << "Type anything to proceed" <<endl;
@@ -480,12 +494,12 @@ void GameEngine::mainGameLoop()
 
         if(this->playerList.size() == 1){
             cout << "Player " << playerList.at(0)->getName() << " has won the game " << endl;
-            currentGameState = WIN;
+            setGameState(WIN);
             continue;
         }
 
         if(turnNumber == 10){
-            currentGameState = WIN;
+            setGameState(WIN);
             continue;
         }
 
@@ -529,8 +543,7 @@ void GameEngine::reinforcementPhase() {
 
         i->setReinforcementPool(total_bonus);
     }
-    currentGameState = ISSUEORDERS;
-    notify(this);
+    setGameState(ISSUEORDERS);
 }
 
 void GameEngine::issueOrdersPhase() {
@@ -580,8 +593,7 @@ void GameEngine::issueOrdersPhase() {
         }
     }
 
-    currentGameState = EXECUTEORDERS;
-    notify(this);
+    setGameState(EXECUTEORDERS);
 }
 
 void GameEngine::executeOrdersPhase()
@@ -593,8 +605,7 @@ void GameEngine::executeOrdersPhase()
         }
     }
 
-    currentGameState = ASSIGNREINFORCEMENTS;
-    notify(this);
+    setGameState(ASSIGNREINFORCEMENTS);
 }
 
 /**

@@ -12,11 +12,14 @@ void testGameStates() {
 }
 
 void testMainGameLoop(){
-
+    ge->setGameState(ASSIGNREINFORCEMENTS);
     ge->mainGameLoop();
     
 }
 
+/**
+ * Demonstrates startup phase works
+*/
 void testStartupPhase() {
     GameEngine *testGe = new GameEngine();
     

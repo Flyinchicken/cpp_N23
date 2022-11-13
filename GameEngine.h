@@ -26,6 +26,7 @@ private:
 
     vector<Player*> playerList;
     vector<Player*> deadPlayers;
+    void displayPlayerList();
 
     void displayWelcomeMessage();
     void displayVictoryMessage();

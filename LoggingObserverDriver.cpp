@@ -25,7 +25,11 @@ string Chicken::stringToLog()
 void testLoggingObserver()
 {
     LogObserver *gameLog = new LogObserver();
+
     /*Chicken* myChicken = new Chicken();
+=======
+    Chicken *myChicken = new Chicken();
+>>>>>>> 7c4ec112eec1a74c747dd7dc11c93a7920ae8fdd
     myChicken->attach(gameLog);
     myChicken->scream();
     myChicken->scream();
@@ -75,6 +79,6 @@ void testLoggingObserver()
     gameLog->endOutput();
 }
 
-int main(){
-     testLoggingObserver();
- }
+// int main(){
+//      testLoggingObserver();
+//  }

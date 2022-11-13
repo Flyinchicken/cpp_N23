@@ -213,25 +213,21 @@ void Player::issueOrder()
                 }
 
                 Territory* target = outposts.at(i);
-                vector<Territory*> adj = worldMap->getNeighboursPtr(*target->getTerritoryName()); //VERIFY WORLD
-
-                for (Territory* tempAdj : adj)
+            
+                for (Territory* tempRe : reinforcers)
                 {
-                    vector<Territory*>::iterator it = find(reinforcers.begin(), reinforcers.end(), tempAdj); // Tries to find where it can take troops from to defend from the territory with the most troops
-                    if (it != reinforcers.end())
+                    vector<Territory*> adj = worldMap->getNeighboursPtr(*tempRe->getTerritoryName()); //VERIFY WORLD
+                    vector<Territory*>::iterator it = find(adj.begin(), adj.end(), target); // Tries to find where it can take troops from to defend from the territory with the most troops
+                    if (it != adj.end())
                     {
-                        int index = outposts.size() - 1 - (it - reinforcers.begin());
-                        if (index > i)
-                        {
-                            Territory* source = outposts.at(index);
-                            this->orderslist->addOrder(new Advance(this, source, target, source->getArmyNumber() / 2)); // VERIFY ORDER
-                            hasDefended = true;
-                            numDefense = i + 1;
+                        Territory* source = tempRe;
+                        this->orderslist->addOrder(new Advance(this, source, target, source->getArmyNumber() / 2)); // VERIFY ORDER
+                        hasDefended = true;
+                        numDefense = i + 1;
 
-                            cout << "Defense Order from territory " << source->getTerritoryName() << " to territory " << target->getTerritoryName() << endl;
+                        cout << "Defense Order from territory " << source->getTerritoryName() << " to territory " << target->getTerritoryName() << endl;
 
-                            break;
-                        }
+                        break;
                     }
                 }
             }

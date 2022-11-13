@@ -149,7 +149,7 @@ string Command::getEffect()
 //Return the Command's effect
 string Command::stringToLog()
 {
-    return this->effect +"\n";
+    return this->effect + "\n";
 }
 
 //
