@@ -1,26 +1,33 @@
-#include "Orders.h"
 
+#include "Orders.h"
+#include "GameEngine.h"
+#include <string>
+#include <sstream>
 #include <iostream>
 
 using std::cout;
 using std::endl;
 
+// Static game engine
+
+GameEngine *Order::game = new GameEngine();
+
 int Order::order_id = -1;
 Order::Order() : player()
 {
-  setId();
-  setType("Undefined Type");
+    setId();
+    setType("Undefined Type");
 }
 
 Order::Order(Player *player)
 {
-  this->player = player;
+    this->player = player;
 }
 
 Order::~Order()
 {
-  order_id--;
-  this->player = nullptr;
+    order_id--;
+    this->player = nullptr;
 }
 
 Order::Order(const Order &order)
@@ -49,6 +56,13 @@ string Order::getType() const
   return this->order_type;
 }
 
+void Order::setOrderEffect(string effect)
+{
+  this->order_effect = effect;
+}
+
+
+
 int Order::setId()
 {
   order_id++;
@@ -65,28 +79,38 @@ Player *Order::get_player() const
   return this->player;
 }
 
+string Order::getOrderEffect()
+{
+    return this->order_effect;
+}
+
 bool Order::validate()
 {
   cout << "This is the validate method of order class." << endl;
   return false;
 }
-
-void Order::execute()
-{
-  if (validate())
-  {
-    cout << "This order is valid and prepare to execute." << endl;
-  }
-  else
-  {
-    cout << "Error: this is an invalid order." << endl;
-  }
-}
+// No need to implement the execute method since it is a pure virtual function
+//void Order::execute()
+//{
+//  if (validate())
+//  {
+//    cout << "This order is valid and prepare to execute." << endl;
+//  }
+//  else
+//  {
+//    cout << "Error: this is an invalid order." << endl;
+//  }
+//}
 
 std::ostream &operator<<(std::ostream &strm, const Order &order)
 {
   return strm << "Order ID: " << order.id << " --- "
               << "Order Type: " << order.order_type << endl;
+}
+
+string Order::stringToLog()
+{
+  return this->getOrderEffect();
 }
 
 // implement of OrdersList class
@@ -179,6 +203,16 @@ std::ostream &operator<<(std::ostream &strm, const OrdersList &order_List)
   return strm;
 }
 
+Order* OrdersList::getAddedOrder() {
+    return this->addedOrder;
+}
+
+//Return the added Order's name
+string OrdersList::stringToLog()
+{
+    return this->addedOrder->getType();
+}
+
 // implement of Deploy class
 Deploy::Deploy() : Order()
 {
@@ -250,11 +284,20 @@ void Deploy::execute()
     player->setReinforcementPool(currentArmyInReinforcementPool);
     targetTerritory->addArmy(numberOfArmyUnits);
     cout << " Deploying " << numberOfArmyUnits << " armies to " << targetTerritory->getTerritoryName() << "." << endl;
+
+    ostringstream oss;
+
+    oss << " Deploying " << numberOfArmyUnits << " armies to " << targetTerritory->getTerritoryName() << "." << endl;
+    string effect = oss.str();
+    cout << effect << endl;
+    setOrderEffect(this->getType() + " is valid. " + effect);
   }
   else
   {
     cout << "Invalid deploy order. Cannot execute this deploy order. " << endl;
+    setOrderEffect(this->getType() + " is invalid. Cannot execute this deploy order. ");
   }
+  notify(this);
 }
 
 std::ostream &operator<<(std::ostream &strm, const Deploy &deploy)
@@ -322,22 +365,113 @@ int Advance::getNumberOfArmies()
   return this->numberOfArmies;
 }
 
+void Advance::setAdvanceType(string type) {
+    this->advanceType = type;
+}
+
+string Advance::getAdvanceType() {
+    return this->advanceType;
+}
+
 bool Advance::validate()
 {
-  cout << "This is the validate method of Advance class." << endl;
-  return true;
+    if (get_player() == sourceTerritory->getOwner()){
+        cout << "Source territory is not owned by the player." << endl;
+        return false;
+    }
+    // Need method to determine two territories are adjacent
+    else if (game->isAllied(sourceTerritory->getOwner(), targetTerritory->getOwner() )){
+        cout << "Target player is your alliance, you cannot attack this turn" << endl;
+        return false;
+    }
+    else if (sourceTerritory->getOwner() == get_player() && targetTerritory->getOwner() == get_player()){
+        cout << "Advance Type is Move" << endl;
+        setAdvanceType("Move");
+        return true;
+    }
+    else{
+        cout << "Valid Advance Order." << endl;
+        return true;
+    }
 }
 
 void Advance::execute()
 {
   if (validate())
   {
-    cout << "This advance order is valid to execute." << endl;
+      if (getAdvanceType() == "Move") {
+            cout << "Moving " << numberOfArmies << " armies from " << sourceTerritory->getTerritoryName() << " to " << targetTerritory->getTerritoryName() << "." << endl;
+            sourceTerritory->removeArmy(numberOfArmies);
+            targetTerritory->addArmy(numberOfArmies);
+            ostringstream oss;
+            oss << "Moving " << numberOfArmies << " armies from " << sourceTerritory->getTerritoryName() << " to " << targetTerritory->getTerritoryName() << "." << endl;
+            string effect = oss.str();
+            cout << effect << endl;
+            setOrderEffect(this->getType() + " is valid. " + effect);
+        }
+        else {
+            cout << "Attacking " << numberOfArmies << " armies from " << sourceTerritory->getTerritoryName() << " to " << targetTerritory->getTerritoryName() << "." << endl;
+
+            // implement the battle simulation logic
+            int attck_alive = numberOfArmies;
+            int defnd_alive = targetTerritory->getArmyNumber();
+
+            int attck_dice = 0;
+            int defnd_dice = 0;
+
+            while (attck_alive > 0 && defnd_alive > 0) {
+                attck_dice = rand() % 100 + 1;
+
+                defnd_dice = rand() % 100 + 1;
+
+                if (attck_dice <= 60) {
+                    attck_alive--;
+                }
+
+                if (defnd_dice <= 70) {
+                    defnd_alive--;
+                }
+            }
+
+            // attack successful
+            if (defnd_alive == 0 && attck_alive > 0) {
+                cout << "Attack successful. " << endl;
+                targetTerritory->setArmyNumber(attck_alive);
+                targetTerritory->setOwner(get_player());
+
+                // card involve here
+                Card *card = new Card();
+                get_player()->getHand()->addCardToHand(card);
+                ostringstream oss;
+                oss << "Attack successful. " << endl
+                    << "Player " << get_player()<< " has conquered " << targetTerritory->getTerritoryName() << " from " << sourceTerritory->getTerritoryName() << "." << endl
+                    << "Player " << get_player() << " has received a card." << endl;
+
+                string effect = oss.str();
+                cout << effect << endl;
+                setOrderEffect(this->getType() + " is valid. " + effect);
+            }
+
+            // attack failed
+            else {
+                cout << "Attack failed. " << endl;
+                sourceTerritory->setArmyNumber(defnd_alive);
+                ostringstream oss;
+                oss << "Attack failed. " << endl;
+                string effect = oss.str();
+                cout << effect << endl;
+                setOrderEffect(this->getType() + " is valid. " + effect);
+            }
+
+      }
   }
   else
   {
     cout << "Error, invalid advance order." << endl;
+    setOrderEffect("Error, invalid advance order.");
   }
+  notify(this);
+
 }
 
 std::ostream &operator<<(std::ostream &strm, const Advance &advance)
@@ -409,11 +543,20 @@ void Bomb::execute()
     cout << "Bomb order execute:  " << endl;
     cout << "Previous army in target territory: " << currentArmyInTargetTerr << endl;
     cout << "Current army in target territory: " << targetTerritory->getArmyNumber() << endl;
+
+    ostringstream oss;
+    oss << "Bomb order execute:  " << endl
+        << "Previous army in target territory: " << currentArmyInTargetTerr << endl
+        << "Current army in target territory: " << targetTerritory->getArmyNumber() << endl;
+    string effect = oss.str();
+    setOrderEffect(this->getType() + " is valid. " + effect);
   }
   else
   {
     cout << "Invalid bomb order. Cannot execute this bomb order." << endl;
+    setOrderEffect("Invalid bomb order. Cannot execute this bomb order.");
   }
+  notify(this);
 }
 
 std::ostream &operator<<(std::ostream &strm, const Bomb &bomb)
@@ -478,11 +621,22 @@ void Blockade::execute()
     targetTerritory->setOwner(new Player("Neutral player"));
     cout << "Current number of armies of " << targetTerritory << " : " << targetTerritory->getArmyNumber() << endl;
     cout << "Current owner of " << targetTerritory << " : " << *(targetTerritory->getOwner()) << endl;
+
+    ostringstream oss;
+    oss << "Blockade order execute:  " << endl
+        << "Previous number of armies of " << targetTerritory << " : " << targetTerritory->getArmyNumber() << endl
+        << "Current number of armies of " << targetTerritory << " : " << targetTerritory->getArmyNumber() << endl
+        << "Current owner of " << targetTerritory << " : " << *(targetTerritory->getOwner()) << endl;
+    string effect = oss.str();
+    setOrderEffect(this->getType() + " is valid. " + effect);
+
   }
   else
   {
     cout << "Invalid Blockade order. Cannot execute this Blockade order." << endl;
+    setOrderEffect("Invalid Blockade order. Cannot execute this Blockade order.");
   }
+    notify(this);
 }
 
 std::ostream &operator<<(std::ostream &strm, const Blockade &blockade)
@@ -556,11 +710,22 @@ void Airlift::execute()
     targetTerritory->addArmy(actualMoveArmies);
     cout << "Current armies of source territory: " + sourceTerritory->getArmyNumber() << endl;
     cout << "Current armies of target territory: " + targetTerritory->getArmyNumber() << endl;
+
+    ostringstream oss;
+    oss << "Airlift order execute:" << endl
+        << "Previous armies of source territory: " + sourceTerritory->getArmyNumber() << endl
+        << "Previous armies of target territory: " + targetTerritory->getArmyNumber() << endl
+        << "Current armies of source territory: " + sourceTerritory->getArmyNumber() << endl
+        << "Current armies of target territory: " + targetTerritory->getArmyNumber() << endl;
+    string effect = oss.str();
+    setOrderEffect(this->getType() + " is valid. " + effect);
   }
   else
   {
     cout << "Invalid Airlift order. Cannot execute this Airlift order." << endl;
+    setOrderEffect("Invalid Airlift order. Cannot execute this Airlift order.");
   }
+    notify(this);
 }
 
 std::ostream &operator<<(std::ostream &strm, const Airlift &airlift)
@@ -576,16 +741,22 @@ Negotiate::Negotiate()
   setType("Negotiate");
 }
 
+Negotiate::Negotiate(Player *player, Player *targetPlayer) : Order(player)
+{
+  setType("Negotiate");
+  this->targetPlayer = targetPlayer;
+}
+
 Negotiate::~Negotiate()
 {
 }
 
 Negotiate::Negotiate(const Negotiate &negotiate)
 {
-
-  // setId();
-  setType("Negotiate");
-  // TODO: need to figure out other data member of Negotiate
+    // setId();
+    setType("Negotiate");
+    this->player = new Player(*(negotiate.player));
+    this->targetPlayer = new Player(*(negotiate.targetPlayer));
 }
 
 Negotiate &Negotiate::operator=(const Negotiate &negotiate)
@@ -596,20 +767,36 @@ Negotiate &Negotiate::operator=(const Negotiate &negotiate)
 
 bool Negotiate::validate()
 {
-  cout << "This is the validate method of Negotiate class." << endl;
-  return true;
+    if (get_player() != targetPlayer)
+    {
+        cout << "Valid Negotiate Order." << endl;
+    }
+    else {
+        cout << "Error, invalid Negotiate order." << endl;
+    }
+    return player != targetPlayer;
 }
 
 void Negotiate::execute()
 {
   if (validate())
   {
-    cout << "This Negotiate order is valid to execute." << endl;
+    cout << "Negotiate order execute:" << endl;
+    cout << "Player " << get_player()->getName() << " and Player " << targetPlayer->getName() << " are now allies." << endl;
+    game->addAlliance(get_player(), targetPlayer);
+
+    ostringstream oss;
+    oss << "Negotiate order execute:" << endl
+        << "Player " << get_player()->getName() << " and Player " << targetPlayer->getName() << " are now allies." << endl;
+    string effect = oss.str();
+    setOrderEffect(this->getType() + " is valid. " + effect);
   }
   else
   {
-    cout << "Error, invalid Negotiate order." << endl;
+    cout << "Invalid Negotiate order. Cannot execute this Negotiate order." << endl;
+    setOrderEffect("Invalid Negotiate order. Cannot execute this Negotiate order.");
   }
+    notify(this);
 }
 
 std::ostream &operator<<(std::ostream &strm, const Negotiate &negotiate)

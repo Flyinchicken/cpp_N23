@@ -30,6 +30,8 @@ private:
 	Hand* hand;
 	int reinforcementPool = 0;
 	bool turnCompleted = false;
+    bool canBeAttacked = true;
+    bool canAttack = true;
 
 public:
 

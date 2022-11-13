@@ -415,6 +415,44 @@ void GameEngine::setGameState(GameStates newGameState)
     notify(this);
 }
 
+
+set<pair<Player*, Player*>> GameEngine::getAlliances()
+{
+    return alliances;
+}
+
+void GameEngine::setAlliances(set<pair<Player*, Player*>> alliances)
+{
+    this->alliances = alliances;
+}
+
+void GameEngine::addAlliance(Player* attacker, Player* attackee)
+{
+    alliances.insert(make_pair(attacker, attackee));
+}
+
+void GameEngine::emptyAlliances()
+{
+    for(auto it : alliances)
+    {
+        it.first = nullptr;
+        it.second = nullptr;
+    }
+    alliances.clear();
+}
+
+bool GameEngine::isAllied(Player* attacker, Player* attackee)
+{
+    for(auto it : alliances)
+    {
+        if(it.first == attacker && it.second == attackee)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 /**
  * gamestart command triggers state change to ASSIGNREINFORCEMENT and call mainGameLoop
  * Loop between reinforcement, issuing orders, and execute orders.

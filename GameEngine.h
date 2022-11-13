@@ -42,10 +42,17 @@ private:
     void assignPlayersOrder(vector<Player*>* playerList);
     void distributeTerritories(Map* worldMap, vector<Player*>* playerList);
 
+    // Alliances pair of players created by card negotiate in current turn
+    // Empty it at the end of the turn
+
+    set<pair<Player*, Player*>> alliances;
+
     // bool changeStateFromCommand(string commandString);
 
     string getGameStateAsString() const;
     friend ostream& operator<<(ostream&, const GameEngine&);
+
+
 
 public:
     GameEngine();
@@ -72,6 +79,18 @@ public:
     void displayFarewellMessage();
 
     string stringToLog();
+
+    // Getter for alliances
+    set<pair<Player*, Player*>> getAlliances();
+    // Empty alliances
+    void emptyAlliances();
+
+    // Setter for alliances
+    void setAlliances(set<pair<Player*, Player*>> alliances);
+    // Add a pair of players to alliances
+    void addAlliance(Player* player1, Player* player2);
+    // Determine two players are allies or not
+    bool isAllied(Player* player1, Player* player2);
 };
 
 extern GameEngine* ge;

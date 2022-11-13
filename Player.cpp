@@ -83,10 +83,6 @@ Hand* Player::getHand()
     return hand;
 }
 
-bool Player::getTurn(){
-    return turnCompleted;
-}
-
 // territories getter returning the player's owned countries
 vector<Territory*> Player::getTerritories() const
 {

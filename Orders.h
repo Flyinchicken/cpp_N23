@@ -11,6 +11,7 @@ using std::vector;
 
 class Territory;
 class Player;
+class GameEngine;
 // Each kind of order is implemented as a subclass of the Order class.
 // classes must implement a correct copy constructor,
 // assignment operator,
@@ -40,6 +41,8 @@ public:
   virtual void execute() = 0;
 
   string stringToLog();
+  // This is use save alliance and advance
+  static GameEngine* game;
 
 private:
   // friend stream insertion operator to the class to access private member
@@ -113,11 +116,14 @@ public:
   Territory *getSourceTerritory();
   Territory *getTargetTerritory();
   int getNumberOfArmies();
+  string getAdvanceType();
+  void setAdvanceType(string type);
 
 private:
   Territory *sourceTerritory;
   Territory *targetTerritory;
   int numberOfArmies;
+  string advanceType = "Attack";
   friend std::ostream &operator<<(std::ostream &, const Advance &);
 };
 
@@ -178,6 +184,7 @@ class Negotiate : public Order
 {
 public:
   Negotiate();
+  Negotiate(Player *player, Player *targetPlayer);
   ~Negotiate();
   Negotiate(const Negotiate &negotiate);
   Negotiate &operator=(const Negotiate &negotiate);
@@ -186,5 +193,6 @@ public:
   void execute();
 
 private:
+  Player* targetPlayer;
   friend std::ostream &operator<<(std::ostream &, const Negotiate &);
 };
