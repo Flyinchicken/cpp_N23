@@ -22,7 +22,7 @@ Map *worldMap;
 
     //testLoggingObserver();
 
-    //testStartupPhase();
+    testStartupPhase();
 
     //testCommandProcessor();
 
