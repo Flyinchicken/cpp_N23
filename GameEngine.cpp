@@ -477,6 +477,11 @@ void GameEngine::mainGameLoop()
             continue;
         }
 
+        if(turnNumber == 10){
+            currentGameState = WIN;
+            continue;
+        }
+
         if (currentGameState == ASSIGNREINFORCEMENTS)
         {
             reinforcementPhase();
@@ -492,6 +497,8 @@ void GameEngine::mainGameLoop()
 
         turnNumber++;
     }
+
+    cout << "Main game ended" << endl;
 }
 
 /**
