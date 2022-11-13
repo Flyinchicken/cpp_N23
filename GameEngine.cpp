@@ -529,6 +529,8 @@ void GameEngine::reinforcementPhase() {
 
         i->setReinforcementPool(total_bonus);
     }
+    currentGameState = ISSUEORDERS;
+    notify(this);
 }
 
 void GameEngine::issueOrdersPhase() {
@@ -579,6 +581,7 @@ void GameEngine::issueOrdersPhase() {
     }
 
     currentGameState = EXECUTEORDERS;
+    notify(this);
 }
 
 void GameEngine::executeOrdersPhase()
@@ -591,6 +594,7 @@ void GameEngine::executeOrdersPhase()
     }
 
     currentGameState = ASSIGNREINFORCEMENTS;
+    notify(this);
 }
 
 /**
@@ -607,7 +611,7 @@ void GameEngine::startNewGame() {
 //Return game state
 string GameEngine::stringToLog()
 {
-    return "New game state is: " + getGameStateAsString();
+    return "New game state is: " + getGameStateAsString() + "\n";
 }
 
 //Getter and Setter for playerList

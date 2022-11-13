@@ -61,8 +61,17 @@ void testLoggingObserver()
         cout << nextCommand->getEffect() << endl;
     }
 
+    game->reinforcementPhase();
 
+    for (auto& player : game->getPlayerList()) {
+        player->getOrdersList().attach(gameLog);
+        for (auto& order : player->getOrdersList().order_list) {
+            order->attach(gameLog);
+        }
+    }
+    game->issueOrdersPhase();
     
+
     gameLog->endOutput();
 }
 
