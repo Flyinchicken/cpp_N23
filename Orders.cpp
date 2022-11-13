@@ -146,6 +146,13 @@ OrdersList &OrdersList ::operator=(const OrdersList &orders_List)
   return *this;
 }
 
+void OrdersList::addOrder(Order *order) 
+{
+    this->order_list.push_back(order);
+    this->addedOrder = order;
+    notify(this);
+}
+
 void OrdersList::remove(int anOrder_id)
 {
   for (int i = 0; i < order_list.size(); i++)

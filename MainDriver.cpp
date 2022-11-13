@@ -20,11 +20,11 @@ Deck* x = new Deck();
 
 int main(int argc, char **argv)
 {
-    //testCommandProcessor(argc, argv);
+    // testCommandProcessor(argc, argv);
 
     //testLoggingObserver();
 
-    //testStartupPhase();
+    // testStartupPhase();
 
     //testCommandProcessor();
 
