@@ -2,6 +2,8 @@
 #include "MapLoader.h"
 #include "LoggingObserver.h"
 #include <iostream>
+#include <string>
+#include <sstream>
 
 using std::cin;
 using std::cout;
@@ -178,26 +180,31 @@ bool GameEngine::changeStateFromCommand(Command *command)
     {
         command->saveEffect("Successfully loaded map file. State changed to MAPLOADED ");
         this->currentGameState = MAPLOADED;
+        notify(this);
     }
     else if (commandString == CommandStrings::validateMap)
     {
         command->saveEffect("Map was successfully validated. State changed to MAPVALIDATED ");
         this->currentGameState = MAPVALIDATED;
+        notify(this);
     }
     else if (commandString.find("addplayer") != std::string::npos)
     {
         command->saveEffect("Player  was added successfully ");
         this->currentGameState = PLAYERSADDED;
+        notify(this);
     }
     else if (commandString == CommandStrings::gameStart)
     {
         command->saveEffect("Map added and validated successfully. All players added. Transitioned from start up phase into main game loop! ");
         this->currentGameState = ASSIGNREINFORCEMENTS;
+        notify(this);
     }
     else if (commandString == CommandStrings::replay)
     {
         command->saveEffect("Restarting game");
         this->currentGameState = START;
+        notify(this);
     }
     else
     {
@@ -530,9 +537,13 @@ void GameEngine::startNewGame()
     displayFarewellMessage();
 }
 
+//Return game state
 string GameEngine::stringToLog()
 {
-    return "";
+    ostringstream oss;
+    oss << *this;
+    string state = oss.str();
+    return state;
 }
 
 //Getter and Setter for playerList

@@ -293,10 +293,8 @@ void Deploy::execute()
     cout << " Deploying " << numberOfArmyUnits << " armies to " << targetTerritory->getTerritoryName() << "." << endl;
 
     ostringstream oss;
-
     oss << " Deploying " << numberOfArmyUnits << " armies to " << targetTerritory->getTerritoryName() << "." << endl;
     string effect = oss.str();
-    cout << effect << endl;
     setOrderEffect(this->getType() + " is valid. " + effect);
   }
   else

@@ -25,7 +25,7 @@ string Chicken::stringToLog()
 void testLoggingObserver()
 {
     LogObserver *gameLog = new LogObserver();
-    Chicken* myChicken = new Chicken();
+    /*Chicken* myChicken = new Chicken();
     myChicken->attach(gameLog);
     myChicken->scream();
     myChicken->scream();
@@ -33,12 +33,37 @@ void testLoggingObserver()
     myChicken->scream();
     myChicken->scream();
     myChicken->scream();
-    myChicken->scream();
-    gameLog->endOutput();
+    myChicken->scream();*/
 
-    //CommandProcessor *cp = new CommandProcessor();
-    //cp->attach(gameLog);
-    //cp->getCommand();
+
+    CommandProcessor *processor = new CommandProcessor();
+    processor->attach(gameLog);
+
+    
+    GameEngine* game = new GameEngine();
+    game->attach(gameLog);
+
+    game->displayCurrentGameState();
+
+    bool inStartup = true;
+
+    while (inStartup)
+    {
+        Command* nextCommand = processor->getCommand();
+        nextCommand->attach(gameLog);
+        vector<Command*> commands = processor->getCommandsList();
+
+        if (processor->validate(nextCommand, game->getCurrentGameState()))
+        {
+            inStartup = game->processCommand(nextCommand);
+        }
+
+        cout << nextCommand->getEffect() << endl;
+    }
+
+
+    
+    gameLog->endOutput();
 }
 
 int main(){
