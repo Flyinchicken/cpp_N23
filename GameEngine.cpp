@@ -8,6 +8,7 @@ using std::cout;
 using std::endl;
 
 int finishedPlayers;
+int turnNumber = 0;
 
 /**
  * Default constructor sets current game state to Start
@@ -343,12 +344,17 @@ void GameEngine::gameStart(Command *command) {
     if(playerNumber < 2){
         command->saveEffect("At least two players are needed to start the game! Failure: ");
     } else {
+        
+        for (int i = 0; i < 50; i++) {
+            x->addCardToDeck(new Card());
+        }
+
         assignPlayersOrder(&playerList);
         // distributeTerritories();
         for (Player* i : playerList) {
             i->setReinforcementPool(50);
-            // Need help with draw hand, each player needs to draw two cards
-            // draw(i->getHand());
+            x->draw(i->getHand());
+            x->draw(i->getHand());
         }
 
         setGameState(ASSIGNREINFORCEMENTS);
@@ -433,11 +439,37 @@ bool GameEngine::isAllied(Player* attacker, Player* attackee)
  */
 void GameEngine::mainGameLoop()
 {
+    cout << "****Main game loop Starting****" <<endl <<endl;
     //********For Assignement 2 only**********
     currentGameState = ASSIGNREINFORCEMENTS;
     //****************************************
     while (currentGameState != WIN)
     {
+        cout << "We are on turn " << turnNumber << endl << "Type anything to proceed" <<endl;
+
+        vector<Player*> currentPlayers = this->playerList;
+
+        for(Player* current : currentPlayers){
+            if(current->getTerritories().size()){
+                vector<Player*>::iterator playerIt = find(currentPlayers.begin(), currentPlayers.end(), current);
+                if(playerIt != currentPlayers.end()){
+                    cout << "Player " << current->getName() << " has been eliminated" << endl;
+                    currentPlayers.erase(playerIt);
+                    this->deadPlayers.push_back(current);
+                    this->playerList = currentPlayers;
+                }
+            }
+        }
+
+        string temp;
+        cin >> temp;
+
+        if(this->playerList.size() == 1){
+            cout << "Player " << playerList.at(0)->getName() << " has won the game " << endl;
+            currentGameState = WIN;
+            continue;
+        }
+
         if (currentGameState == ASSIGNREINFORCEMENTS)
         {
             reinforcementPhase();
@@ -450,6 +482,8 @@ void GameEngine::mainGameLoop()
         {
             executeOrdersPhase();
         }
+
+        turnNumber++;
     }
 }
 
@@ -457,12 +491,21 @@ void GameEngine::mainGameLoop()
  * calculate and assign armies to each player
 */
 void GameEngine::reinforcementPhase() {
+
+    cout << "Reinforcement Phase for turn " << turnNumber << endl;
     for (Player* i : playerList) {
+
         int pool = i->getTerritories().size();
         
         int continent_bonus = i->getContinentsBonus();
         int total_bonus = ((pool / 3) > 3)? (pool / 3) : 3;
         total_bonus += continent_bonus;
+
+        cout << "Reinforcing player " << i->getName() << " with " << total_bonus << " troops" << endl << "Type anything to continue ";
+        
+        string temp;
+        cin >> temp; 
+
         i->setReinforcementPool(total_bonus);
     }
 }
@@ -470,6 +513,8 @@ void GameEngine::reinforcementPhase() {
 void GameEngine::issueOrdersPhase() {
 
     int currentPlayers = playerList.size();
+
+    string temporary;
 
     finishedPlayers = 0;
 
@@ -479,13 +524,20 @@ void GameEngine::issueOrdersPhase() {
         player->numDefense = 0;
     }
 
+    cout << "Issue Order Phase for turn " << turnNumber << endl << "There are currently " << playerList.size() << " players in the game" << endl << "Type anything to continue:";
+    cin >> temporary;
+
     while (finishedPlayers != currentPlayers) {
+
+        cout << "Round Robin. There are " << finishedPlayers << " who have ended their turn" << endl;
 
         for (Player * temp: playerList)
         {
             if (temp->getTurn()) {
                 continue; //Player has ended turn so we done
             }
+
+            cout << "Order for player " << temp->getName() << endl;
 
             if (temp->getOrdersList().order_list.size() > 5) {
                 if (!temp->getHand()->getHand().empty()) {
@@ -494,20 +546,30 @@ void GameEngine::issueOrdersPhase() {
                 }
                 temp->setTurn(true);
                 finishedPlayers++;
+                cout << "Player " << temp->getName() << " has ended their turn" << endl;
+
             } else{
                 temp->issueOrder();
             }
+
+            cout << "Type anything to continue: ";
+            cin >> temporary;
         }
     }
+
+    currentGameState = EXECUTEORDERS;
 }
 
 void GameEngine::executeOrdersPhase()
 {
+    cout << "Execute Order Phase";
     for (Player* i : playerList) {
         for (Order* p : i->getOrdersList().order_list) {
             p->execute();
         }
     }
+
+    currentGameState = ISSUEORDERS;
 }
 
 /**
@@ -544,4 +606,14 @@ vector<Player*> GameEngine::getPlayerList()
 void GameEngine::setPlayerList(vector<Player*> playerList)
 {
     this->playerList = playerList;
+}
+
+vector<Player*> GameEngine::getDeadPlayers()
+{
+    return deadPlayers;
+}
+
+void GameEngine::setDeadPlayer(vector<Player*> deadPlayers)
+{
+    this->deadPlayers = deadPlayers;
 }

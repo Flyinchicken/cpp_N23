@@ -5,7 +5,6 @@
 #include "CardDriver.h"
 using namespace std;
 
-Deck* x = new Deck();
 void testCards() {
 
     cout << "Creating cards and placing them in the Deck: " << endl << endl;
