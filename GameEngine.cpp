@@ -583,7 +583,7 @@ void GameEngine::executeOrdersPhase()
         }
     }
 
-    currentGameState = ISSUEORDERS;
+    currentGameState = ASSIGNREINFORCEMENTS;
 }
 
 /**
