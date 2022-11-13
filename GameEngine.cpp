@@ -46,6 +46,7 @@ GameEngine::~GameEngine()
 GameEngine::GameEngine(const GameEngine &engine)
 {
     this->currentGameState = engine.currentGameState;
+    this->commandProcessor = engine.commandProcessor;
 }
 
 /**
@@ -54,16 +55,20 @@ GameEngine::GameEngine(const GameEngine &engine)
 GameEngine &GameEngine::operator=(const GameEngine &engine)
 {
     this->currentGameState = engine.currentGameState;
+    this->commandProcessor = engine.commandProcessor;
 
     return *this;
 }
 
+/**
+ * @returns The current state of the game
+*/
 GameStates GameEngine::getCurrentGameState()
 {
     return this->currentGameState;
 }
 
-/*
+/**
  * Stream insertion operator for GameEngine. Displays the current state of the game.
  * */
 ostream &operator<<(ostream &out, const GameEngine &engine)
@@ -204,6 +209,8 @@ bool GameEngine::changeStateFromCommand(Command *command)
         cout << "Error: command string is invalid after being checked for validity!" << endl;
         return false;
     }
+
+    notify(this);
 
     return true;
 }
@@ -511,26 +518,17 @@ void GameEngine::executeOrdersPhase()
 }
 
 /**
- * Starts a new game loop that accepts user input from the console and allows them to navigate through the various
- * states of the game.
- */
-void GameEngine::startNewGame()
-{
+ * Starts a new instance of Warzone
+*/
+void GameEngine::startNewGame() {
     displayWelcomeMessage();
 
-    displayCurrentGameState();
+    startupPhase();
 
-    bool isGameInProgress = true;
-
-    while (isGameInProgress)
-    {
-        
-    }
-
-    displayFarewellMessage();
+    mainGameLoop();
 }
 
 string GameEngine::stringToLog()
 {
-    return "";
+    return "New game state is: " + getGameStateAsString();
 }
