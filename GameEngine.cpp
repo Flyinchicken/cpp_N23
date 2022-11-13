@@ -351,6 +351,8 @@ void GameEngine::addPlayer(Command *command) {
     if (playerNumber <= 6){
         string playerName = commandProcessor->splitStringByDelim(command->getCommand(), ' ').back();
         Player* player = new Player();
+        Hand* tempHand = new Hand(player);
+        player->setHand(tempHand);
         player->setName(playerName);
         playerList.push_back(player);
         setGameState(PLAYERSADDED);
@@ -367,7 +369,7 @@ void GameEngine::gameStart(Command *command) {
     if(playerNumber < 2){
         command->saveEffect("At least two players are needed to start the game! Failure: ");
     } else {
-        // assignPlayersOrder();
+        assignPlayersOrder(&playerList);
         // distributeTerritories();
         for (Player* i : playerList) {
             i->setReinforcementPool(50);
@@ -381,8 +383,16 @@ void GameEngine::gameStart(Command *command) {
 }
 
 void GameEngine::assignPlayersOrder(vector<Player*>* playerList)
-{
-
+{   
+    cout << "Original player list: " << endl;
+    for(auto& player : *playerList){
+        cout << player->getName() << endl;
+    }
+    std::random_shuffle(playerList->begin(),playerList->end());
+    cout << "Randomize player order: " << endl;
+    for(auto& player : *playerList){
+        cout << player->getName() << endl;
+    }
 }
 
 void GameEngine::distributeTerritories(Map* worldMap, vector<Player*>* playerList)
@@ -436,7 +446,7 @@ void GameEngine::mainGameLoop()
 void GameEngine::reinforcementPhase() {
     for (Player* i : playerList) {
         int pool = i->getTerritories().size();
-        // INSERT CODE TO SEE IF PLAYER OWNS A CONTINENT AND ADD THE BONUS
+        
         int continent_bonus = i->getContinentsBonus();
         int total_bonus = ((pool / 3) > 3)? (pool / 3) : 3;
         total_bonus += continent_bonus;
@@ -444,97 +454,47 @@ void GameEngine::reinforcementPhase() {
     }
 }
 
-void GameEngine::issueOrdersPhase()
-{
+void GameEngine::issueOrdersPhase() {
 
-    // vector<bool> turnEnded;
+    int currentPlayers = playerList.size();
 
-    // int currentPlayers = playerList.size();
-    // for (int i = 0; i < currentPlayers; i++)
-    // {
-    //     turnEnded.push_back(false);
-    // }
+    finishedPlayers = 0;
 
-    // int finishedPlayers = 0;
+    for(Player* player : playerList){
+        player->setTurn(false);
+        player->numAttacks = 0;
+        player->numDefense = 0;
+    }
 
-    // while (finishedPlayers != playerList.size()) {
+    while (finishedPlayers != currentPlayers) {
 
-    //     for (int i = 0; i < playerList.size(); i++)
-    //     {
-    //         if (turnEnded[i]) {
-    //             continue; //Player has ended turn so we done
-    //         }
+        for (Player * temp: playerList)
+        {
+            if (temp->getTurn()) {
+                continue; //Player has ended turn so we done
+            }
 
-    //         Player* temp = playerList.at(i);
-
-    //         if (temp->getOrdersList().order_list.size() > 6) {
-    //             if (!temp->getHand()->getHand().empty()) {
-    //                 vector<Card*> cards = temp->getHand()->getHand();
-    //                 cards[0]->play(temp->getHand());
-    //             }
-    //             turnEnded[i] = true;
-    //             finishedPlayers++;
-    //         }
-
-    //         if (temp->getReinforcementPool() > 4) {
-    //             temp->issueOrder(); //Deploy order, should take certain params
-    //             temp->setReinforcementPool(temp->getReinforcementPool() - 5);
-    //         }
-    //         else if (temp->getReinforcementPool() > 0) {
-    //             temp->issueOrder(); //Deploy order but now with the rest of the reinforcement pool
-    //             temp->setReinforcementPool(0);
-    //         }
-    //         else {
-    //             vector<Territory*> potentialAttacks = temp->toAttack();
-    //             if (potentialAttacks.empty())
-    //             {
-    //                 if (!temp->getHand()->getHand().empty()) {
-    //                     vector<Card*> cards = temp->getHand()->getHand();
-    //                     cards[0]->play(temp->getHand());
-    //                 }
-    //                 turnEnded[i] = true;
-    //                 finishedPlayers++;
-    //             }
-
-    //             vector<string> namesOfTarget;
-    //             for (Territory* i : potentialAttacks) {
-    //                 namesOfTarget.push_back(*i->getTerritoryName());
-    //             }
-
-    //             vector<Territory*> outposts = temp->toDefend();
-
-    //             if (!potentialAttacks.empty()) {
-    //                 bool hasAttacked = false;
-    //                 for (Territory* i : outposts) {
-    //                     if (hasAttacked) {
-    //                         break;
-    //                     }
-
-    //                     vector<string> adj = worldMap->getNeighbours(*i->getTerritoryName());
-    //                     for (string p : adj) {
-    //                         vector<string>::iterator it = find(namesOfTarget.begin(), namesOfTarget.end(), p);
-    //                         if (it != namesOfTarget.end()) {
-    //                             temp->issueOrder(); //Atttack order, should have target and destination territorry
-    //                             hasAttacked = true;
-    //                             break;
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    // }
+            if (temp->getOrdersList().order_list.size() > 5) {
+                if (!temp->getHand()->getHand().empty()) {
+                    vector<Card*> cards = temp->getHand()->getHand();
+                    cards[0]->play(temp->getHand());
+                }
+                temp->setTurn(true);
+                finishedPlayers++;
+            } else{
+                temp->issueOrder();
+            }
+        }
+    }
 }
 
 void GameEngine::executeOrdersPhase()
 {
-
-    // for (Player* i : playerList) {
-    //     for (Order* p : i->getOrdersList().order_list) {
-    //         p->execute();
-    //     }
-    // }
+    for (Player* i : playerList) {
+        for (Order* p : i->getOrdersList().order_list) {
+            p->execute();
+        }
+    }
 }
 
 /**

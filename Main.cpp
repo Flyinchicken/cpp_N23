@@ -18,14 +18,13 @@ Map *worldMap;
 
 int main(int argc, char **argv)
 {
+    //testCommandProcessor(argc, argv);
 
-    // testCommandProcessor(argc, argv);
+    //testLoggingObserver();
 
-    // testLoggingObserver();
+    //testStartupPhase();
 
-    // testStartupPhase();
-
-    // testCommandProcessor();
+    //testCommandProcessor();
 
     /*std::cout << "Welcome everyone!" << std::endl;
 
