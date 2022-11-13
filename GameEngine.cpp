@@ -586,3 +586,14 @@ string GameEngine::stringToLog()
 {
     return "";
 }
+
+//Getter and Setter for playerList
+vector<Player*> GameEngine::getPlayerList()
+{
+    return playerList;
+}
+
+void GameEngine::setPlayerList(vector<Player*> playerList)
+{
+    this->playerList = playerList;
+}

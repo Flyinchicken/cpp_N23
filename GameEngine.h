@@ -91,6 +91,10 @@ public:
     void addAlliance(Player* player1, Player* player2);
     // Determine two players are allies or not
     bool isAllied(Player* player1, Player* player2);
+
+    // Getter and Setter for playerList only used in test driver
+    void setPlayerList(vector<Player*> playerList);
+    vector<Player*> getPlayerList();
 };
 
 extern GameEngine* ge;
