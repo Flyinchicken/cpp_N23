@@ -118,6 +118,10 @@ void Player::setTerritories(vector<Territory *> newTerritories)
     this->territories = newTerritories;
 }
 
+void Player::setTurn(bool isComplete){
+    this->turnCompleted = isComplete;
+}
+
 void Player::addTerritory(Territory* territory) {
     territories.push_back(territory);
 }

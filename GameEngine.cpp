@@ -367,7 +367,7 @@ void GameEngine::gameStart(Command *command) {
     if(playerNumber < 2){
         command->saveEffect("At least two players are needed to start the game! Failure: ");
     } else {
-        // assignPlayersOrder();
+        assignPlayersOrder(&playerList);
         // distributeTerritories();
         for (Player* i : playerList) {
             i->setReinforcementPool(50);
@@ -381,8 +381,16 @@ void GameEngine::gameStart(Command *command) {
 }
 
 void GameEngine::assignPlayersOrder(vector<Player*>* playerList)
-{
-
+{   
+    cout << "Original player list: " << endl;
+    for(auto& player : *playerList){
+        cout << player->getName() << endl;
+    }
+    std::random_shuffle(playerList->begin(),playerList->end());
+    cout << "Randomize player order: " << endl;
+    for(auto& player : *playerList){
+        cout << player->getName() << endl;
+    }
 }
 
 void GameEngine::distributeTerritories(Map* worldMap, vector<Player*>* playerList)

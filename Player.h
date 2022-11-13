@@ -8,6 +8,7 @@
 #include <list>
 #include <vector>
 #include <ostream>
+#include <algorithm>
 using namespace std;
 
 class Territory;

@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 
     // testLoggingObserver();
 
-    // testStartupPhase();
+    testStartupPhase();
 
     // testCommandProcessor();
 
