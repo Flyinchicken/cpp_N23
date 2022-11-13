@@ -28,7 +28,7 @@ class Subject{
     ~Subject();
     virtual void attach(Observer* observer);
     virtual void detach(Observer* observer);
-    virtual void notify();
+    virtual void notify(Subject*);
 };
 
 

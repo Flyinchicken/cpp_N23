@@ -9,7 +9,7 @@ using std::endl;
 void testCommandProcessor(int argc, char **argv)
 {
 
-    CommandProcessor *processor;
+    CommandProcessor* processor = new CommandProcessor();
 
     if (argc < 2)
     {
