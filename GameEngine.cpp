@@ -351,6 +351,8 @@ void GameEngine::addPlayer(Command *command) {
     if (playerNumber <= 6){
         string playerName = commandProcessor->splitStringByDelim(command->getCommand(), ' ').back();
         Player* player = new Player();
+        Hand* tempHand = new Hand(player);
+        player->setHand(tempHand);
         player->setName(playerName);
         playerList.push_back(player);
         setGameState(PLAYERSADDED);
@@ -444,7 +446,7 @@ void GameEngine::mainGameLoop()
 void GameEngine::reinforcementPhase() {
     for (Player* i : playerList) {
         int pool = i->getTerritories().size();
-        // INSERT CODE TO SEE IF PLAYER OWNS A CONTINENT AND ADD THE BONUS
+        
         int continent_bonus = i->getContinentsBonus();
         int total_bonus = ((pool / 3) > 3)? (pool / 3) : 3;
         total_bonus += continent_bonus;
@@ -483,18 +485,16 @@ void GameEngine::issueOrdersPhase() {
                 temp->issueOrder();
             }
         }
-
-    // }
+    }
 }
 
 void GameEngine::executeOrdersPhase()
 {
-
-    // for (Player* i : playerList) {
-    //     for (Order* p : i->getOrdersList().order_list) {
-    //         p->execute();
-    //     }
-    // }
+    for (Player* i : playerList) {
+        for (Order* p : i->getOrdersList().order_list) {
+            p->execute();
+        }
+    }
 }
 
 /**

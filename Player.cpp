@@ -172,14 +172,14 @@ void Player::issueOrder()
         { // If we can attack any territory that we have not yet attacked
 
             Territory *target = potentialAttacks.at(numAttacks);
-            vector<Territory *> adj; // Should be equal to the adjacent territories of target
+            vector<Territory *> adj = worldMap->getNeighboursPtr(*target->getTerritoryName()); //VERIFY WORLD
             for (Territory *p : adj)
             {
                 vector<Territory *>::iterator it = find(outposts.begin(), outposts.end(), p); // Tries to find which territory should be the source
                 if (it != outposts.end())
                 {
                     Territory *source = outposts.at(it - outposts.begin()); // Source territory
-                    this->orderslist->push_back(new Advance());
+                    this->orderslist->push_back(new Advance(this, source, target, source->getArmyNumber() - 1));  // VERIFY ORDER
                     numAttacks++;
                     break;
                 }
@@ -194,14 +194,13 @@ void Player::issueOrder()
 
             for (int i = numDefense; i < outposts.size(); i++)
             {
-
                 if (hasDefended)
                 {
                     return;
                 }
-
+                
                 Territory *target = outposts.at(i);
-                vector<Territory *> adj; // Should be equal to the adjacents of target
+                vector<Territory *> adj = worldMap->getNeighboursPtr(*target->getTerritoryName()); //VERIFY WORLD
 
                 for (Territory *tempAdj : adj)
                 {
@@ -212,7 +211,7 @@ void Player::issueOrder()
                         if (index > i)
                         {
                             Territory *source = outposts.at(index);
-                            this->orderslist->push_back(new Advance()); // Should take source and target as argument
+                            this->orderslist->push_back(new Advance(this, source, target, source->getArmyNumber()/2)); // VERIFY ORDER
                             hasDefended = true;
                             numDefense = i + 1;
                             break;
