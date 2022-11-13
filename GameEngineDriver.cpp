@@ -5,7 +5,6 @@
  * Starts a new Warzone game via the GameEngine class.
 */
 void testGameStates() {
-    GameEngine *ge = new GameEngine();
 
     ge->startNewGame();
     
@@ -13,7 +12,6 @@ void testGameStates() {
 }
 
 // void testMainGameLoop(){
-//     GameEngine *ge = new GameEngine();
 
 //     ge->mainGameLoop();
     
@@ -21,8 +19,7 @@ void testGameStates() {
 // }
 
 void testStartupPhase() {
-    GameEngine *ge = new GameEngine();
-
+    
     ge->startupPhase();
 
     delete ge;

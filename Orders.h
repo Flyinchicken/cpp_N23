@@ -3,11 +3,13 @@
 #include <string>
 #include <vector>
 #include "Map.h"
+#include "Player.h"
 
 using std::string;
 using std::vector;
 
 class Territory;
+class Player;
 // Each kind of order is implemented as a subclass of the Order class.
 // classes must implement a correct copy constructor,
 // assignment operator,
@@ -16,48 +18,51 @@ class Territory;
 class Order
 {
 public:
-	Order();
-	~Order();
-	Order(const Order& order);            // copy constructor
-	Order& operator=(const Order& order); // assignment operator
-	int getId() const;
-	string getType() const;
-	int setId();
-	string setType(string type);
+  Order();
+  virtual ~Order(); // destructor should be virtual since the order class is abstract now
+  Order(Player *);
+  Order(const Order &order);            // copy constructor
+  Order &operator=(const Order &order); // assignment operator
+  int getId() const;
+  string getType() const;
+  int setId();
+  string setType(string type);
+  // add the player to the order
+  Player *player;
+  Player *get_player() const;
 
-	// define virtual function of validate and execute,
-	// allow calling this function of a subclass with a pointer to the base class
-	virtual bool validate();
-	virtual void execute();
+  // define virtual function of validate and execute,
+  // allow calling this function of a subclass with a pointer to the base class
+  virtual bool validate();
+  virtual void execute() = 0;
 
 private:
-	// friend stream insertion operator to the class to access private member
-	friend std::ostream& operator<<(std::ostream&, const Order&);
-	static int order_id; // static variable use to automatic generate id for all objects
-	int id;              // store the id of the order (Each order have one unique id)
-	string order_type;
+  // friend stream insertion operator to the class to access private member
+  friend std::ostream &operator<<(std::ostream &, const Order &);
+  static int order_id; // static variable use to automatic generate id for all objects
+  int id;              // store the id of the order (Each order have one unique id)
+  string order_type;
 };
 
 // The OrdersList class contains a list of Order objects.
 class OrdersList
 {
 public:
-	OrdersList();
-	~OrdersList();
-	OrdersList(const OrdersList& orders_List);
-	OrdersList& operator=(const OrdersList& orders_List);
-	void remove(int anOrder_id);
-	void move(int old_position, int new_position);
-	void push_back(Order* order);
-	void print();
-	vector<Order*> order_list;
+  OrdersList();
+  ~OrdersList();
+  OrdersList(const OrdersList &orders_List);
+  OrdersList &operator=(const OrdersList &orders_List);
+  void remove(int anOrder_id);
+  void move(int old_position, int new_position);
+  void push_back(Order *order);
+  void print();
+  vector<Order *> order_list;
 
 private:
-	// friend stream insertion operator to the class to access private member
-	friend std::ostream&
-		operator<<(std::ostream&, const OrdersList&);
-	// All data members of user-defined class type must be of pointer type.
-
+  // friend stream insertion operator to the class to access private member
+  friend std::ostream &
+  operator<<(std::ostream &, const OrdersList &);
+  // All data members of user-defined class type must be of pointer type.
 };
 
 // The different kinds of orders are:
@@ -65,100 +70,107 @@ private:
 class Deploy : public Order
 {
 public:
-	Deploy();
-	Deploy(int numberOfArmyUnits, Territory* targetTerritory);
-	~Deploy();
-	Deploy(const Deploy& deploy);
-	Deploy& operator=(const Deploy& deploy);
+  Deploy();
+  Deploy(Player *player, int numberOfArmyUnits, Territory *targetTerritory);
+  ~Deploy();
+  Deploy(const Deploy &deploy);
+  Deploy &operator=(const Deploy &deploy);
 
-	bool validate();
-	void execute();
+  bool validate();
+  void execute();
 
-	int getNumberOfArmyUnits();
-	Territory* getTargetTerritory();
+  int getNumberOfArmyUnits();
+  Territory *getTargetTerritory();
 
 private:
-	int numberOfArmyUnits;
-	Territory* targetTerritory;
-	friend std::ostream& operator<<(std::ostream&, const Deploy&);
+  int numberOfArmyUnits;
+  Territory *targetTerritory;
+  friend std::ostream &operator<<(std::ostream &, const Deploy &);
 };
 
 class Advance : public Order
 {
 public:
-	Advance();
-	Advance(Territory* sourceTerritory, Territory* targetTerritory);
-	~Advance();
-	Advance(const Advance& advance);
-	Advance& operator=(const Advance& advance);
+  Advance();
+  Advance(Player *player, Territory *sourceTerritory, Territory *targetTerritory, int numberOfArmies);
+  ~Advance();
+  Advance(const Advance &advance);
+  Advance &operator=(const Advance &advance);
 
-	bool validate();
-	void execute();
+  bool validate();
+  void execute();
 
-	Territory* getSourceTerritory();
-	Territory* getTargetTerritory();
+  Territory *getSourceTerritory();
+  Territory *getTargetTerritory();
+  int getNumberOfArmies();
+
 private:
-	Territory* sourceTerritory;
-	Territory* targetTerritory;
-	friend std::ostream& operator<<(std::ostream&, const Advance&);
+  Territory *sourceTerritory;
+  Territory *targetTerritory;
+  int numberOfArmies;
+  friend std::ostream &operator<<(std::ostream &, const Advance &);
 };
 
 class Bomb : public Order
 {
 public:
-	Bomb();
-	~Bomb();
-	Bomb(const Bomb& bomb);
-	Bomb& operator=(const Bomb& bomb);
+  Bomb();
+  Bomb(Player *player, Territory *targetTerritory);
+  ~Bomb();
+  Bomb(const Bomb &bomb);
+  Bomb &operator=(const Bomb &bomb);
 
-	bool validate();
-	void execute();
+  bool validate();
+  void execute();
 
 private:
-	friend std::ostream& operator<<(std::ostream&, const Bomb&);
+  Territory *targetTerritory;
+  friend std::ostream &operator<<(std::ostream &, const Bomb &);
 };
 
 class Blockade : public Order
 {
 public:
-	Blockade();
-	~Blockade();
-	Blockade(const Blockade& blockade);
-	Blockade& operator=(const Blockade& blockade);
+  Blockade();
+  Blockade(Player *player, Territory *targetTerritory);
+  ~Blockade();
+  Blockade(const Blockade &blockade);
+  Blockade &operator=(const Blockade &blockade);
 
-	bool validate();
-	void execute();
+  bool validate();
+  void execute();
 
 private:
-	friend std::ostream& operator<<(std::ostream&, const Blockade&);
+  Territory *targetTerritory;
+  friend std::ostream &operator<<(std::ostream &, const Blockade &);
 };
 
 class Airlift : public Order
 {
 public:
-	Airlift();
-	~Airlift();
-	Airlift(const Airlift& airlift);
-	Airlift& operator=(const Airlift& airlift);
+  Airlift();
+  ~Airlift();
+  Airlift(const Airlift &airlift);
+  Airlift &operator=(const Airlift &airlift);
 
-	bool validate();
-	void execute();
+  bool validate();
+  void execute();
 
 private:
-	friend std::ostream& operator<<(std::ostream&, const Airlift&);
+  friend std::ostream &operator<<(std::ostream &, const Airlift &);
 };
 
 class Negotiate : public Order
 {
 public:
-	Negotiate();
-	~Negotiate();
-	Negotiate(const Negotiate& negotiate);
-	Negotiate& operator=(const Negotiate& negotiate);
+  Negotiate();
+  ~Negotiate();
+  Negotiate(const Negotiate &negotiate);
+  Negotiate &operator=(const Negotiate &negotiate);
 
-	bool validate();
-	void execute();
+  bool validate();
+  void execute();
 
 private:
-	friend std::ostream& operator<<(std::ostream&, const Negotiate&);
+  friend std::ostream &operator<<(std::ostream &, const Negotiate &);
 };

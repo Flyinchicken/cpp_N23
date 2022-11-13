@@ -98,7 +98,16 @@ Player* Territory::getOwner() const {
 }
 
 void Territory::setOwner(Player* owner) {
-    this->owner = owner;
+    if(this->owner != owner){
+        // old owner remove territory
+        this->owner->removeTerritory(this);
+        // change owner
+        this->owner = owner;
+        owner->addTerritory(this);
+    } else {
+        cout << this->getTerritoryName() << " belongs to " << owner->getName() << " no need to set again." << endl;
+    }
+    
 }
 
 void Territory::addArmy(int armyNumber) {
@@ -122,6 +131,25 @@ void Graph::addNode(string territory_name){
 
 }
 
+Territory* Graph::getNode(string territory_name){
+    return nodes.at(territory_name);
+}
+
+vector<Territory*> Graph::getNodesPtr(){
+    vector<Territory*> territoriesPtr;
+    for(auto& kv : this->nodes){
+        territoriesPtr.push_back(kv.second);
+    }
+    return territoriesPtr;
+}
+
+vector<Territory*> Graph::getNeighboursPtr(string territory_name){
+    vector<Territory*> neighborsPtr;
+    for(auto& name : edges.at(territory_name)){
+        neighborsPtr.push_back(getNode(name));
+    }
+    return neighborsPtr;
+}
 
 void Graph::addNeighbor(string territory, string neighbor){
     this->edges[territory].push_back(neighbor);

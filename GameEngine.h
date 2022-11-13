@@ -3,12 +3,13 @@
 #include "CommandProcessing.h"
 #include "Map.h"
 #include "Player.h"
-
+#include <algorithm>
 #include <string>
 #include <ostream>
-
+#include <vector>
 using std::ostream;
 using std::string;
+
 
 /**
  * Represents the principle game engine of Warzone that allows a user to start a new game with a console-driven
@@ -23,14 +24,10 @@ private:
 
     CommandProcessor *commandProcessor;
 
-    Map *worldMap;
-
     vector<Player *> playerList;
 
     void displayWelcomeMessage();
-    void displayFarewellMessage();
     void displayVictoryMessage();
-    void displayCurrentGameState();
 
     string getUserInput();
 
@@ -42,6 +39,8 @@ private:
     void validateMap(Command *command);
     void addPlayer(Command *command);
     void gameStart(Command *command);
+    void assignPlayersOrder(vector<Player*>* playerList);
+    void distributeTerritories(Map* worldMap, vector<Player*>* playerList);
 
     // bool changeStateFromCommand(string commandString);
 
@@ -54,22 +53,24 @@ public:
     GameEngine(const GameEngine &);
 
     GameEngine &operator=(const GameEngine &engine);
-    bool changeStateFromCommand(string commandString);
+    bool changeStateFromCommand(Command *command);
 
     // friend ostream& operator << (ostream&, const GameEngine&);
 
     void startNewGame();
 
     void startupPhase();
-
     void mainGameLoop();
-
     void reinforcementPhase();
-
     void issueOrdersPhase();
-
     void executeOrdersPhase();
 
     GameStates getCurrentGameState();
     void setGameState(GameStates newState);
+    void displayCurrentGameState();
+    
+    void displayFarewellMessage();
 };
+
+extern GameEngine* ge;
+extern Map* worldMap;
