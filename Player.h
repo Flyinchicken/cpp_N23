@@ -9,6 +9,7 @@
 #include <vector>
 #include <ostream>
 #include <algorithm>
+#include <set>
 using namespace std;
 
 class Territory;

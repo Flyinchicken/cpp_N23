@@ -323,6 +323,9 @@ int Player::getContinentsBonus()
     return bonus;
 }
 
+bool compareArmyNumber(Territory* t1, Territory* t2){
+    return (t1->getArmyNumber() < t2->getArmyNumber());
+}
 // return a list of arbitrary territories to defend
 vector<Territory*> Player::toDefend()
 {
@@ -331,22 +334,34 @@ vector<Territory*> Player::toDefend()
     {
         d_territories.push_back(territories.at(i));
     }
+
+    // needs to sort the vector
     return d_territories;
 }
 
 // return a list of arbitrary territories to attack
 vector<Territory*> Player::toAttack()
 {
-    Territory* t1 = new Territory(new string("territoryTA 1"), new string("continentTA 1"), 3, false, this);
-    Territory* t2 = new Territory(new string("territoryTA 2"), new string("continentTA 2"), 3, false, this);
-    vector<Territory*> territories;
-    territories.push_back(t1);
-    territories.push_back(t2);
+    vector<Territory*> a_territories;
+    set<Territory*> a_set;
+    
     for (int i = 0; i < territories.size(); i++)
     {
-        cout << (*territories.at(i)->getTerritoryName()) << endl;
+        vector<Territory*> temp = worldMap->getNeighboursPtr(*(territories.at(i)->getTerritoryName()));
+        for(auto& neighbor : temp){
+            if(neighbor->getOwner() != this){
+                a_set.insert(neighbor);
+            }
+        }
     }
-    return territories;
+
+    for(auto& neighbor : a_set){
+        a_territories.push_back(neighbor);
+    }
+
+    sort(a_territories.begin(),a_territories.end(), compareArmyNumber);
+
+    return a_territories;
 }
 
 // stream operator that prints the player's owned countries
