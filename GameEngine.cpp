@@ -240,7 +240,11 @@ void GameEngine::startupPhase()
     {
         Command *nextCommand = commandProcessor->getCommand();
 
-        vector<Command *> commands = commandProcessor->getCommandsList();
+        if (nextCommand->getCommand() == "fileEnd") {
+            inStartup = false;
+            cout << "Reached end of file" << endl;
+            continue;
+        }
 
         if (commandProcessor->validate(nextCommand, currentGameState))
         {
