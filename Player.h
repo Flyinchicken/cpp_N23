@@ -10,6 +10,7 @@
 #include <ostream>
 #include <algorithm>
 #include <set>
+#include "GameEngine.h"
 using namespace std;
 
 class Territory;
@@ -17,6 +18,7 @@ class OrdersList;
 class Hand;
 
 extern int finishedPlayers;
+extern GameEngine* ge;
 
 class Player
 {
