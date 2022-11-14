@@ -21,9 +21,5 @@ void testMainGameLoop(){
  * Demonstrates startup phase works
 */
 void testStartupPhase() {
-    GameEngine *testGe = new GameEngine();
-    
-    testGe->startupPhase();
-
-    delete testGe;
+    ge->startupPhase();
 }
