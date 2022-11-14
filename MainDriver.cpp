@@ -14,10 +14,10 @@
 using namespace std;
 
 std::string filePath = "";
-//GameEngine *ge = new GameEngine();
+GameEngine *ge;
 Map *worldMap;
 
-Deck *x = new Deck();
+Deck *x;
 
 int main(int argc, char **argv)
 {
@@ -26,6 +26,7 @@ int main(int argc, char **argv)
     // Need file path before creating
     // ge = new GameEngine();
     ge = new GameEngine();
+    x = new Deck();
     // testLoggingObserver();
     testStartupPhase();
     // testStartupPhase();
