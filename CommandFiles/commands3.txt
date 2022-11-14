@@ -1,0 +1,5 @@
+loadmap ./MapFiles/001_I72_Ghtroc720.map
+validatemap
+addplayer tester1
+addplayer tester2
+gamestart
