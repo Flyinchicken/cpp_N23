@@ -1,0 +1,5 @@
+loadmap ./MapFiles/3D.map
+validatemap
+addplayer tester1
+addplayer tester2
+gamestart
