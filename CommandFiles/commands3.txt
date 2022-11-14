@@ -1,4 +1,4 @@
-loadmap ./MapFiles/001_I72_Ghtroc720.map
+loadmap ./MapFiles/3D.map
 validatemap
 addplayer tester1
 addplayer tester2
