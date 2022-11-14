@@ -14,7 +14,7 @@ void testPlayers()
     //create random orders to add to the Player's list of orders
     cout << "Orders created: " << endl;
     player->issueOrder();
-    player->getOrdersList().print();
+    (*player->getOrdersList()).print();
 
     //create random territories to add to the Player's list of territories
     cout << "Territories created: " << endl;

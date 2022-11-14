@@ -9,6 +9,7 @@
 #include <vector>
 #include <ostream>
 #include <algorithm>
+#include <set>
 using namespace std;
 
 class Territory;
@@ -60,7 +61,7 @@ public:
 
 	//getters
 	string getName() const;
-	OrdersList getOrdersList() const;
+	OrdersList* getOrdersList() const;
 	Hand* getHand();
 	vector<Territory*> getTerritories() const;
 	int getReinforcementPool();
