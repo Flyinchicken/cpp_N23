@@ -21,8 +21,9 @@ void Subject::detach(Observer* observer){
 }
 
 void Subject::notify(Subject *subject){
-    for(auto& observer : *observers){
-        observer->update(dynamic_cast<ILoggable*>(this));
+    vector<Observer*>* observers = subject->observers;
+    for (auto& observer : *observers) {
+        observer->update(dynamic_cast<ILoggable*>(subject));
     }
 }
 
@@ -31,8 +32,7 @@ Observer::~Observer(){}
 Observer::Observer(){}
 
 LogObserver::LogObserver(){
-    outputfile.open("test.txt",ios_base::app);
-    cout << "open file" << endl;
+    outputfile.open("gamelog.txt",ios_base::app);
 }
 
 LogObserver::~LogObserver(){

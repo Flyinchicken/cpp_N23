@@ -373,7 +373,7 @@ vector<Command*> CommandProcessor::getCommandsList()
 //Return the Command saved
 string CommandProcessor::stringToLog()
 {
-    return this->savedCommand + "\n";
+    return "\n"+ this->savedCommand + "\n";
 }
 
 ///

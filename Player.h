@@ -61,7 +61,7 @@ public:
 
 	//getters
 	string getName() const;
-	OrdersList getOrdersList() const;
+	OrdersList* getOrdersList() const;
 	Hand* getHand();
 	vector<Territory*> getTerritories() const;
 	int getReinforcementPool();

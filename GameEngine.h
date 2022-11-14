@@ -34,7 +34,7 @@ private:
     bool hasGameBeenEnded(string command);
     bool hasPlayerWon();
 
-    bool processCommand(Command* command);
+    //bool processCommand(Command* command);
     void loadMap(Command* command);
     void validateMap(Command* command);
     void addPlayer(Command* command);
@@ -63,7 +63,7 @@ public:
     // friend ostream& operator << (ostream&, const GameEngine&);
 
     void startNewGame();
-
+    bool processCommand(Command* command);
     void startupPhase();
     void mainGameLoop();
     void reinforcementPhase();

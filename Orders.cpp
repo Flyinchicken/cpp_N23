@@ -108,6 +108,7 @@ std::ostream &operator<<(std::ostream &strm, const Order &order)
 
 string Order::stringToLog()
 {
+    cout << "STRINGTOLOG ORDER"  << endl;
   return this->getOrderEffect();
 }
 
@@ -216,7 +217,7 @@ Order *OrdersList::getAddedOrder()
 // Return the added Order's name
 string OrdersList::stringToLog()
 {
-  return this->addedOrder->getType();
+  return this->addedOrder->getType() + " Order added \n";
 }
 
 // implement of Deploy class
@@ -292,10 +293,8 @@ void Deploy::execute()
     cout << " Deploying " << numberOfArmyUnits << " armies to " << *targetTerritory->getTerritoryName() << "." << endl;
 
     ostringstream oss;
-
     oss << " Deploying " << numberOfArmyUnits << " armies to " << *targetTerritory->getTerritoryName() << "." << endl;
     string effect = oss.str();
-    cout << effect << endl;
     setOrderEffect(this->getType() + " is valid. " + effect);
   }
   else
@@ -533,6 +532,7 @@ Bomb &Bomb::operator=(const Bomb &bomb)
 
 bool Bomb::validate()
 {
+    cout << "validate" << endl;
   bool isAdjacent = false;
   for (auto iter : player->toAttack()) // Need to check this method when toAttack is done.
   {
@@ -553,6 +553,7 @@ bool Bomb::validate()
 
 void Bomb::execute()
 {
+    cout << "bomb execute start" << endl;
   if (validate())
   {
     int currentArmyInTargetTerr = targetTerritory->getArmyNumber();
@@ -573,6 +574,7 @@ void Bomb::execute()
     cout << "Invalid bomb order. Cannot execute this bomb order." << endl;
     setOrderEffect("Invalid bomb order. Cannot execute this bomb order.");
   }
+  cout << "notify bomb execute"  << endl;
   notify(this);
 }
 

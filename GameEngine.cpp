@@ -2,6 +2,8 @@
 #include "MapLoader.h"
 #include "LoggingObserver.h"
 #include <iostream>
+#include <string>
+#include <sstream>
 
 using std::cin;
 using std::cout;
@@ -184,26 +186,31 @@ bool GameEngine::changeStateFromCommand(Command *command)
     {
         command->saveEffect("Successfully loaded map file. State changed to MAPLOADED ");
         this->currentGameState = MAPLOADED;
+        notify(this);
     }
     else if (commandString == CommandStrings::validateMap)
     {
         command->saveEffect("Map was successfully validated. State changed to MAPVALIDATED ");
         this->currentGameState = MAPVALIDATED;
+        notify(this);
     }
     else if (commandString.find("addplayer") != std::string::npos)
     {
         command->saveEffect("Player  was added successfully ");
         this->currentGameState = PLAYERSADDED;
+        notify(this);
     }
     else if (commandString == CommandStrings::gameStart)
     {
         command->saveEffect("Map added and validated successfully. All players added. Transitioned from start up phase into main game loop! ");
         this->currentGameState = ASSIGNREINFORCEMENTS;
+        notify(this);
     }
     else if (commandString == CommandStrings::replay)
     {
         command->saveEffect("Restarting game");
         this->currentGameState = START;
+        notify(this);
     }
     else
     {
@@ -336,6 +343,14 @@ void GameEngine::addPlayer(Command *command) {
     }
     
     string playerName = commandProcessor->splitStringByDelim(command->getCommand(), ' ').back();
+
+    //check if the name entered is already in the list of player names
+    for (auto& player : playerList) {
+        if (player->getName() == playerName) {
+            command->saveEffect("Duplicate player name. No change to state.");
+            return;
+        }
+    }
 
     Player* player = new Player();
     Hand* tempHand = new Hand(player);
@@ -536,6 +551,7 @@ void GameEngine::reinforcementPhase() {
 
         i->setReinforcementPool(total_bonus);
     }
+    setGameState(ISSUEORDERS);
 }
 
 void GameEngine::issueOrdersPhase() {
@@ -567,7 +583,7 @@ void GameEngine::issueOrdersPhase() {
 
             cout << "Order for player " << temp->getName() << endl;
 
-            if (temp->getOrdersList().order_list.size() > 5) {
+            if ((*temp->getOrdersList()).order_list.size() > 5) {
                 if (!temp->getHand()->getHand().empty()) {
                     vector<Card*> cards = temp->getHand()->getHand();
                     cards[0]->play(temp->getHand());
@@ -592,7 +608,7 @@ void GameEngine::executeOrdersPhase()
 {
     cout << "Execute Order Phase";
     for (Player* i : playerList) {
-        for (Order* p : i->getOrdersList().order_list) {
+        for (Order* p : (* i->getOrdersList()).order_list) {
             p->execute();
         }
     }
@@ -611,9 +627,10 @@ void GameEngine::startNewGame() {
     mainGameLoop();
 }
 
+//Return game state
 string GameEngine::stringToLog()
 {
-    return "New game state is: " + getGameStateAsString();
+    return "New game state is: " + getGameStateAsString() + "\n";
 }
 
 //Getter and Setter for playerList

@@ -72,9 +72,9 @@ string Player::getName() const
 }
 
 // ordersList getter returning the player's list of orders
-OrdersList Player::getOrdersList() const
+OrdersList* Player::getOrdersList() const
 {
-    return *orderslist;
+    return orderslist;
 }
 
 // hand getter returning the player's hand
