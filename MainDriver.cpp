@@ -16,7 +16,6 @@ using namespace std;
 std::string filePath = "";
 GameEngine *ge;
 Map *worldMap;
-
 Deck *x;
 
 int main(int argc, char **argv)
@@ -28,11 +27,11 @@ int main(int argc, char **argv)
     ge = new GameEngine();
     x = new Deck();
     // testLoggingObserver();
-    testStartupPhase();
+    //testStartupPhase();
     // testStartupPhase();
-    testMainGameLoop();
+    //testMainGameLoop();
     // testCommandProcessor();
-    testOrderExecution();
+    //testOrderExecution();
     /*std::cout << "Welcome everyone!" << std::endl;
 
     // Map Test
