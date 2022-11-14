@@ -1,5 +1,6 @@
-/*#include "GameEngineDriver.h"
+#include "GameEngineDriver.h"
 #include "GameEngine.h"
+#include "Card.h"
 #include "Player.h"
 #include <iostream>
 #include "MapDriver.h"
@@ -7,29 +8,53 @@
 #include "OrdersDriver.h"
 #include "CardDriver.h"
 #include "PlayerDriver.h"
-#include "CommandProcessingDriver.h"*/
+#include "CommandProcessingDriver.h"
 #include "LoggingObserverDriver.h"
 
 using namespace std;
 
 std::string filePath = "";
-// GameEngine *ge;
-// Map *worldMap;
+GameEngine* ge;
+Map* worldMap;
+Deck* x;
 
-// Deck *x = new Deck();
-
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
-    // testCommandProcessor(argc, argv);
+    //testOrderExecution();
 
     // Need file path before creating
     // ge = new GameEngine();
-
+    //ge = new GameEngine();
+    //x = new Deck();
+     testLoggingObserver();
+    //testStartupPhase();
     // testStartupPhase();
+    //testMainGameLoop();
+    // testCommandProcessor();
+    //testOrderExecution();
+    /*std::cout << "Welcome everyone!" << std::endl;
 
-    // testMainGameLoop();
+    // Map Test
+    cout << "*** First, demonstrate map load test ***" << endl;
+    //testLoadMaps();
 
-    // testOrderExecution();
+    // Game Engine Tests
+    std::cout << std::endl
+              << "Game Engine Tests Commencing" << std::endl
+              << std::endl;
 
-    testLoggingObserver();
+    //testGameStates();
+
+    // OrdersList Test
+    cout << "*** Order list test ***" << endl;
+    testOrdersLists();
+
+    // Card Test
+    cout << "*** Starting the Card test ***" << endl;
+    testCards();
+
+    // Player Test
+    cout << "*** Starting the Player test ***" << endl;
+    testPlayers();*/
+    //}
 }

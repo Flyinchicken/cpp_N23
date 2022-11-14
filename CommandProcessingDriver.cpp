@@ -64,6 +64,12 @@ void testCommandProcessor(int argc, char** argv)
             continue;
         }
 
+        if (nextCommand->getCommand() == "fileEnd") {
+            gameInProgress = false;
+            cout << "Reached end of file" << endl;
+            continue;
+        }
+
         if (processor->validate(nextCommand, game->getCurrentGameState())) {
             game->changeStateFromCommand(nextCommand);
         }

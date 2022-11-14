@@ -3,6 +3,7 @@
 #include "CommandProcessing.h"
 #include "Map.h"
 #include "Player.h"
+#include "Card.h"
 #include <algorithm>
 #include <string>
 #include <ostream>
@@ -10,6 +11,10 @@
 using std::ostream;
 using std::string;
 
+class Deck;
+class Command;
+class Map;
+class CommandProcessor;
 
 /**
  * Represents the principle game engine of Warzone that allows a user to start a new game with a console-driven
