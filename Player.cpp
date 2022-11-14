@@ -251,31 +251,53 @@ void Player::issueOrder()
 // helper method to get a specific order which adds to the player's orderslist
 void Player::cardOrder(int orderNumber)
 {
+    vector<Territory*> outposts = this->toDefend();
+    vector<Territory*> enemies = this->toAttack();
+
     Order* newOrder{};
     switch (orderNumber)
     {
     case 1:
-        newOrder = new Deploy();
+        newOrder = new Deploy(this, 10, outposts.at(rand() % outposts.size()));
         break;
     case 2:
         newOrder = new Advance();
         break;
     case 3:
-        newOrder = new Bomb();
+        newOrder = new Bomb(this, enemies.at(rand() % enemies.size()));
         break;
     case 4:
-        newOrder = new Blockade();
+        newOrder = new Blockade(this, outposts.at(rand() % outposts.size()));
         break;
     case 5:
-        newOrder = new Airlift();
+        if(outposts.size() == 1){
+            cout << "Only one territory, can't airlift" << endl;
+            return;
+        }
+        int index = rand() % outposts.size();
+        int index2 = rand() % outposts.size();
+        while (index == index2)
+        {
+            index2 = rand() % outposts.size();
+        }
+        
+        newOrder = new Airlift(this, outposts.at(index), outposts.at(index2), outposts.at(index)->getArmyNumber() - 1);
         break;
     case 6:
-        newOrder = new Negotiate();
+        Player* temp = ge->getPlayerList().at(rand() % ge->getPlayerList().size());
+        while (this == temp)
+        {
+            temp = ge->getPlayerList().at(rand() % ge->getPlayerList().size());
+        }
+        
+        newOrder = new Negotiate(this, temp);
+        
         break;
     default:
         cout << "Invalid card type" << endl;
         break;
     }
+    
     if (newOrder != nullptr)
     {
         cout << (*newOrder) << endl;
