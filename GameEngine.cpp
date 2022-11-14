@@ -648,7 +648,6 @@ void GameEngine::issueOrdersPhase() {
             
             if (numOrders > 2) {
                 if (!temp->getHand()->getHand().empty()) {
-                    cout << "busy" << endl;
                     vector<Card*> cards = temp->getHand()->getHand();
                     cards[0]->play(temp->getHand());
                 }

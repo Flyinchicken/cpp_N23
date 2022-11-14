@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     // testLoggingObserver();
     testStartupPhase();
 
-    //testMainGameLoop();
+    testMainGameLoop();
 
     // testStartupPhase();
     //testMainGameLoop();
