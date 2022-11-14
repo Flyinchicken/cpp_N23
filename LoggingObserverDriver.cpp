@@ -26,19 +26,6 @@ void testLoggingObserver()
 {
     LogObserver *gameLog = new LogObserver();
 
-    /*Chicken* myChicken = new Chicken();
-=======
-    Chicken *myChicken = new Chicken();
->>>>>>> 7c4ec112eec1a74c747dd7dc11c93a7920ae8fdd
-    myChicken->attach(gameLog);
-    myChicken->scream();
-    myChicken->scream();
-    myChicken->scream();
-    myChicken->scream();
-    myChicken->scream();
-    myChicken->scream();
-    myChicken->scream();*/
-
 
     CommandProcessor *processor = new CommandProcessor();
     processor->attach(gameLog);
@@ -68,17 +55,32 @@ void testLoggingObserver()
     game->reinforcementPhase();
 
     for (auto& player : game->getPlayerList()) {
-        player->getOrdersList().attach(gameLog);
-        for (auto& order : player->getOrdersList().order_list) {
+        OrdersList *orders = player->getOrdersList();
+        orders->attach(gameLog);
+
+        Order *bomb = new Bomb();
+        Order *deploy = new Deploy();
+
+        //bomb->attach(gameLog);
+        //deploy->attach(gameLog);
+
+        orders->addOrder(bomb);
+        orders->addOrder(deploy);
+    }
+
+    for (auto& player : game->getPlayerList()) {
+        cout << "2nd loop"  << endl;
+        for (auto& order : (*player->getOrdersList()).order_list) {
             order->attach(gameLog);
+            cout << "inside orderslist" << endl;
+
+            order->execute();
         }
     }
-    game->issueOrdersPhase();
-    
 
     gameLog->endOutput();
 }
 
-// int main(){
-//      testLoggingObserver();
-//  }
+ int main(){
+      testLoggingObserver();
+  }

@@ -344,6 +344,14 @@ void GameEngine::addPlayer(Command *command) {
     
     string playerName = commandProcessor->splitStringByDelim(command->getCommand(), ' ').back();
 
+    //check if the name entered is already in the list of player names
+    for (auto& player : playerList) {
+        if (player->getName() == playerName) {
+            command->saveEffect("Duplicate player name. No change to state.");
+            return;
+        }
+    }
+
     Player* player = new Player();
     Hand* tempHand = new Hand(player);
     player->setHand(tempHand);
@@ -575,7 +583,7 @@ void GameEngine::issueOrdersPhase() {
 
             cout << "Order for player " << temp->getName() << endl;
 
-            if (temp->getOrdersList().order_list.size() > 5) {
+            if ((*temp->getOrdersList()).order_list.size() > 5) {
                 if (!temp->getHand()->getHand().empty()) {
                     vector<Card*> cards = temp->getHand()->getHand();
                     cards[0]->play(temp->getHand());
@@ -600,7 +608,7 @@ void GameEngine::executeOrdersPhase()
 {
     cout << "Execute Order Phase";
     for (Player* i : playerList) {
-        for (Order* p : i->getOrdersList().order_list) {
+        for (Order* p : (* i->getOrdersList()).order_list) {
             p->execute();
         }
     }
