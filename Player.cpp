@@ -1,7 +1,7 @@
 #include "Player.h"
+#include <iostream>
 
 using namespace std;
-#include <iostream>
 extern Map* worldMap;
 
 // Default constructor
@@ -138,7 +138,7 @@ void Player::removeTerritory(Territory* territory)
 
 void Player::setReinforcementPool(int pool)
 {
-    this->reinforcementPool = reinforcementPool;
+    this->reinforcementPool = pool;
 }
 
 void Player::setTurn(bool turn)
@@ -154,6 +154,7 @@ bool Player::getTurn()
 // orders created adding to the player's orderslist
 void Player::issueOrder()
 {
+    cout << "Issue order for player " << this->getName() << " with " << this->getReinforcementPool()<< endl;
     if (this->getReinforcementPool() > 4)
     {
         vector<Territory*> outposts = this->toDefend();

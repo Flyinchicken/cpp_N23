@@ -27,7 +27,10 @@ int main(int argc, char **argv)
     ge = new GameEngine();
     x = new Deck();
     // testLoggingObserver();
-    //testStartupPhase();
+    testStartupPhase();
+
+    //testMainGameLoop();
+
     // testStartupPhase();
     //testMainGameLoop();
     // testCommandProcessor();
