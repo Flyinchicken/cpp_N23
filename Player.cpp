@@ -334,7 +334,7 @@ vector<Territory*> Player::toDefend()
         d_territories.push_back(territories.at(i));
     }
 
-    // needs to sort the vector
+    sort(d_territories.begin(),d_territories.end(), compareArmyNumber);
     return d_territories;
 }
 
