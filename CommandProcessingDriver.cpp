@@ -6,10 +6,10 @@ using std::cin;
 using std::cout;
 using std::endl;
 
-void testCommandProcessor(int argc, char **argv)
+void testCommandProcessor(int argc, char** argv)
 {
 
-    CommandProcessor *processor = new CommandProcessor();
+    CommandProcessor* processor = new CommandProcessor();
 
     if (argc < 2)
     {
@@ -34,8 +34,7 @@ void testCommandProcessor(int argc, char **argv)
         {
             filePath = argv[2];
 
-            if (ifstream(filePath).fail())
-            {
+            if (ifstream(filePath).fail()) {
                 cout << "File " << filePath << " does not exist!" << endl;
                 return;
             }
@@ -50,24 +49,28 @@ void testCommandProcessor(int argc, char **argv)
         return;
     }
 
-    GameEngine *game = new GameEngine();
+    GameEngine* game = new GameEngine();
     game->displayCurrentGameState();
 
     bool gameInProgress = true;
 
     while (gameInProgress)
     {
-        Command *nextCommand = processor->getCommand();
+        Command* nextCommand = processor->getCommand();
 
-        if (processor->validate(nextCommand, game->getCurrentGameState()))
-        {
+        if (nextCommand->getCommand() == "fileEnd") {
+            gameInProgress = false;
+            cout << "Reached end of file" << endl;
+            continue;
+        }
+
+        if (processor->validate(nextCommand, game->getCurrentGameState())) {
             game->changeStateFromCommand(nextCommand);
         }
 
         cout << nextCommand->getEffect() << endl;
 
-        if (game->getCurrentGameState() == WIN && nextCommand->getCommand() == CommandStrings::quit)
-        {
+        if (game->getCurrentGameState() == WIN && nextCommand->getCommand() == CommandStrings::quit) {
             gameInProgress = false;
             game->displayFarewellMessage();
             continue;
@@ -75,12 +78,11 @@ void testCommandProcessor(int argc, char **argv)
 
         game->displayCurrentGameState();
 
-        if (game->getCurrentGameState() == ASSIGNREINFORCEMENTS)
-        {
+        if (game->getCurrentGameState() == ASSIGNREINFORCEMENTS) {
             cout << "Simulating a Warzone game..."
-                 << endl
-                 << "Congratulations! All signs point to your victory, oh glorious one."
-                 << endl;
+                << endl
+                << "Congratulations! All signs point to your victory, oh glorious one."
+                << endl;
 
             game->setGameState(WIN);
 

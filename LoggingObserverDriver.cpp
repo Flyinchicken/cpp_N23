@@ -69,7 +69,7 @@ void testLoggingObserver()
 
     for (auto& player : game->getPlayerList()) {
         for (auto& order : (*player->getOrdersList()).order_list) {
-            //order->attach(gameLog);
+            order->attach(gameLog);
 
             //BUG HERE, STOPS AT VALIDATE()
             order->execute();
@@ -78,7 +78,3 @@ void testLoggingObserver()
 
     gameLog->endOutput();
 }
-
- int main(){
-      testLoggingObserver();
-  }
