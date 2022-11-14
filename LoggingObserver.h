@@ -38,7 +38,7 @@ class Subject{
 
 class LogObserver : public Observer{
     public:
-    LogObserver(Subject *subject);
+    LogObserver();
     ~LogObserver();
     void update(ILoggable* subject);
     void endOutput();
