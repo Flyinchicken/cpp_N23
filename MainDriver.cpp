@@ -1,5 +1,6 @@
 #include "GameEngineDriver.h"
 #include "GameEngine.h"
+#include "Card.h"
 #include "Player.h"
 #include <iostream>
 #include "MapDriver.h"
@@ -13,14 +14,13 @@
 using namespace std;
 
 std::string filePath = "";
-GameEngine *ge;
+//GameEngine *ge = new GameEngine();
 Map *worldMap;
 
 Deck *x = new Deck();
 
-//int main(int argc, char **argv)
-//{
-
+int main(int argc, char **argv)
+{
     //testOrderExecution();
     // testCommandProcessor(argc, argv);
 
@@ -57,4 +57,4 @@ Deck *x = new Deck();
     // Player Test
     cout << "*** Starting the Player test ***" << endl;
     testPlayers();*/
-//}
+}

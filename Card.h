@@ -4,6 +4,7 @@
 #include<vector> //The Hand and Deck classes declare members of type vector
 #include<cstdlib> //Uses the find() member for vectors
 #include<algorithm>
+#include "Player.h"
 using namespace std;
 
 class Hand; //Card uses Hand and deck objects before they are declared so these needed to be added
