@@ -382,12 +382,24 @@ string Advance::getAdvanceType()
 
 bool Advance::validate()
 {
+    bool isAdjacent = false;
+    for (auto it : player->toAttack())
+    {
+        if (it == targetTerritory)
+        {
+            isAdjacent = true;
+            break;
+        }
+    }
   if (get_player() == sourceTerritory->getOwner())
   {
     cout << "Source territory is not owned by the player." << endl;
     return false;
   }
-  // Need method to determine two territories are adjacent
+  else if (!isAdjacent) {
+      cout << "Target territory is not adjacent to the source territory." << endl;
+        return false;
+  }
   else if (game->isAllied(sourceTerritory->getOwner(), targetTerritory->getOwner()))
   {
     cout << "Target player is your alliance, you cannot attack this turn" << endl;
