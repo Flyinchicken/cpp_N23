@@ -40,7 +40,9 @@ private:
     void addPlayer(Command* command);
     void gameStart(Command* command);
     void assignPlayersOrder(vector<Player*>* playerList);
-    void distributeTerritories(Map* worldMap, vector<Player*>* playerList);
+    void distributeTerritories();
+
+    void displayMapTerritories();
 
     // Alliances pair of players created by card negotiate in current turn
     // Empty it at the end of the turn

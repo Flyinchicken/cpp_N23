@@ -53,11 +53,11 @@ Territory& Territory::operator=(const Territory& territory) {
 }
 
 ostream& operator<<(ostream& outs, Territory& o) {
-    outs << "Territory Name: " << *o.territoryName << endl;
-    outs << "Continent Name: " << *o.continentName << endl;
+    outs << "Territory Name: " << o.territoryName << endl;
+    outs << "Continent Name: " << o.continentName << endl;
     outs << "Army Number: " << o.armyNumber << endl;
     outs << "Is Occupied: " << o.isOccupied << endl;
-    outs << "Owner: " << *o.owner << endl;
+    outs << "Owner: " << o.owner->getName() << endl;
     return outs;
 }
 
@@ -100,7 +100,10 @@ Player* Territory::getOwner() const {
 void Territory::setOwner(Player* owner) {
     if(this->owner != owner){
         // old owner remove territory
-        this->owner->removeTerritory(this);
+        if (this->owner != nullptr) {
+            this->owner->removeTerritory(this);
+        }
+        
         // change owner
         this->owner = owner;
         owner->addTerritory(this);
