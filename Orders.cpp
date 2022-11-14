@@ -544,6 +544,8 @@ Bomb &Bomb::operator=(const Bomb &bomb)
 
 bool Bomb::validate()
 {
+    cout << "bomb validate" << endl;
+
   bool isAdjacent = false;
   for (auto iter : player->toAttack()) // Need to check this method when toAttack is done.
   {

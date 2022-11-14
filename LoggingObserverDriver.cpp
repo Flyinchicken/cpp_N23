@@ -59,7 +59,9 @@ void testLoggingObserver()
         orders->attach(gameLog);
 
         Order *bomb = new Bomb();
+        bomb->attach(gameLog);
         Order *deploy = new Deploy();
+        deploy->attach(gameLog);
 
         orders->addOrder(bomb);
         orders->addOrder(deploy);
@@ -67,7 +69,7 @@ void testLoggingObserver()
 
     for (auto& player : game->getPlayerList()) {
         for (auto& order : (*player->getOrdersList()).order_list) {
-            order->attach(gameLog);
+            //order->attach(gameLog);
 
             //BUG HERE, STOPS AT VALIDATE()
             order->execute();
@@ -77,6 +79,6 @@ void testLoggingObserver()
     gameLog->endOutput();
 }
 
- //int main(){
-      //testLoggingObserver();
- // }
+ int main(){
+      testLoggingObserver();
+  }
