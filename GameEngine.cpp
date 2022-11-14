@@ -2,6 +2,9 @@
 #include "MapLoader.h"
 #include "LoggingObserver.h"
 #include <iostream>
+#include <algorithm>
+#include <random>
+#include <stdlib.h>
 
 using std::cin;
 using std::cout;
@@ -359,7 +362,9 @@ void GameEngine::gameStart(Command *command) {
     }
 
     assignPlayersOrder(&playerList);
-    // distributeTerritories();
+
+    distributeTerritories();
+
     for (Player* i : playerList) {
         i->setReinforcementPool(50);
         x->draw(i->getHand());
@@ -381,20 +386,68 @@ void GameEngine::assignPlayersOrder(vector<Player*>* playerList)
     for(auto& player : *playerList){
         cout << player->getName() << endl;
     }
-    //std::random_shuffle(playerList->begin(),playerList->end());
+
+    // std::random_shuffle(playerList->begin(),playerList->end());
+
     cout << "Randomize player order: " << endl;
     for(auto& player : *playerList){
         cout << player->getName() << endl;
     }
 }
 
-void GameEngine::distributeTerritories(Map* worldMap, vector<Player*>* playerList)
+/**
+ * Distributes all the territories in the game map to each user. Starts in the first continent, assigning territories
+ * until there are none left in said continent, then will go to the next one and continue until the player's quota
+ * for territories in satiated.
+ * Quota for players is determined by the number of territories / number of players. Any leftover are then 
+ * distributed amongst the players, starting at a random one and working forward from there.
+*/
+void GameEngine::distributeTerritories()
 {
-    for(auto& kv : worldMap->nodes){
-        for(auto& player : *playerList){
+    int territoriesPerPlayer = worldMap->nodes.size() / this->playerList.size();
+    int leftoverTerritories = worldMap->nodes.size() % this->playerList.size();
+
+    vector<int> playerAllotedTerritories;
+    for (Player *p : playerList) {
+        playerAllotedTerritories.push_back(territoriesPerPlayer);
+    }
+
+    int index = rand() % playerList.size();
+    while (leftoverTerritories > 0) {
+        ++playerAllotedTerritories.at(index);
+        ++index;
+        if (index == playerList.size()) {
+            index = 0;
+        }
+        --leftoverTerritories;
+    }
+
+    int currentPlayerIndex = 0;
+    int currentPlayerTerritories = 0;
+    int territoriesForPlayer = playerAllotedTerritories.at(currentPlayerTerritories);
+
+    for (auto &kv : worldMap->continents) {
+        for (auto &kv2 : kv.second->nodes) {
+            Territory *currentTerritory = kv2.second;
+
+            if (territoriesForPlayer == 0) {
+                ++currentPlayerTerritories;
+                territoriesForPlayer = playerAllotedTerritories.at(currentPlayerTerritories);
+                currentPlayerIndex = currentPlayerIndex + 1;
+            }
+
+            if (currentPlayerIndex == playerList.size()) {
+                continue;
+            }
+
+            currentTerritory->setOccupied(true);
+            currentTerritory->setOwner(playerList[currentPlayerIndex]);
             
+            --territoriesForPlayer;
         }
     }
+
+    displayMapTerritories();    
 }
 
 /**
@@ -404,6 +457,16 @@ void GameEngine::displayPlayerList() {
     cout << "Current player list: " << endl;
     for (int i = 0; i < playerList.size(); i++) {
         cout << i + 1 << ": " << playerList[i]->getName() << endl;
+    }
+}
+
+/**
+ * Displays all territories in the map
+*/
+void GameEngine::displayMapTerritories() {
+    for(auto& kv : worldMap->nodes){
+        cout << kv.first << endl;
+        cout << *kv.second << endl;
     }
 }
 
