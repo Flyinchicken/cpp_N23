@@ -43,6 +43,11 @@ void testOrderExecution()
   territories_player2.push_back(territory4);
   player2->setTerritories(territories_player2);
 
+  map->addNeighbor("territory 1", "territory 2");
+
+  map->addNeighbor("territory 1", "territory 3");
+
+
   //    gameEngine->distributeTerritories(map, player_list);
   worldMap = map;
   ge = gameEngine;
@@ -67,7 +72,47 @@ void testOrderExecution()
   Bomb *o5 = new Bomb(player1, territory3);
   Blockade *o6 = new Blockade(player1, territory1);
   Airlift *o7 = new Airlift(player1, territory2, territory5, 2);
-  Negotiate *o8 = new Negotiate(player1, player2);
+
+    //Test advance Move behavior
+    Advance* orderAdvanceMove = new Advance(player1, territory1, territory2, 2);
+
+    cout << "Before advance order execution" << endl;
+    cout << "Test VALIDATE" << endl;
+
+    orderAdvanceMove->validate();
+    cout << "Test EXECUTE" << endl;
+
+    orderAdvanceMove->execute();
+
+    //Test advance Attack behavior
+    Advance* orderAdvanceAttack = new Advance(player1, territory1, territory3, 2);
+
+    cout << "Before advance order execution" << endl;
+    cout << "Test VALIDATE" << endl;
+
+    orderAdvanceAttack->validate();
+    cout << "Test EXECUTE" << endl;
+
+    orderAdvanceAttack->execute();
+
+    //Test Negotiate
+    Negotiate* orderNegotiate = new Negotiate(player1, player2);
+
+    cout << "Before negotiate order execution" << endl;
+    cout << "Test VALIDATE" << endl;
+    orderNegotiate->validate();
+
+    cout << "Test EXECUTE" << endl;
+    orderNegotiate->execute();
+
+    cout << "After negotiate order execution" << endl;
+
+    Advance* orderAdvance = new Advance(player1, territory1, territory3, 2);
+
+    orderAdvance->validate();
+    cout << "Here should be invalid since the Negotiate order has been executed" << endl;
+
+
   Bomb *o9 = new Bomb(player2, territory5);
   o3->execute();
   o5->execute();
@@ -76,57 +121,4 @@ void testOrderExecution()
   o8->execute();
   o9->execute();
 
-  //  OrdersList ordersList1;
-  //  cout << "*********" << endl;
-  //  cout << ordersList1 << endl;
-  //  cout << "*********" << endl;
-  //  // Order *o1 = new Order();
-  //  // Order *o2 = new Order(*o1);
-  //  Player *p1 = new Player("Player1");
-  //  Territory *territory1 = new Territory(new string("territory 1"), new string("continent 1"), 3, false, p1);
-  //  Territory *territory2 = new Territory(new string("territory 2"), new string("continent 2"), 2, false, p1);
-  //  vector<Territory *> territories;
-  //  territories.push_back(territory1);
-  //  territories.push_back(territory2);
-  //  p1->setTerritories(territories);
-  //  Deploy *o3 = new Deploy(p1, 3, territory1);
-  //  Advance *o4 = new Advance();
-  //  // ordersList1.push_back(o1);
-  //  // ordersList1.push_back(o2);
-  //  ordersList1.push_back(o3);
-  //  ordersList1.push_back(o4);
-  //  cout
-  //      //      << o1 << endl
-  //      //      << o2 << endl
-  //      << o3 << endl
-  //      << o4 << endl;
-  //  cout << "++++++++" << endl;
-  //  cout
-  //      // << *o1 << *o2
-  //      << *o3 << *o4 << endl;
-  //  cout << "++++++++" << endl;
-  //  cout << ordersList1 << endl;
-  //  cout << "*********" << endl;
-  //  ordersList1.move(2, 1);
-  //  cout << ordersList1 << endl;
-  //  cout << "*********" << endl;
-  //  // o1->execute();
-  //  ordersList1.remove(2);
-  //  Bomb *o5 = new Bomb();
-  //  Blockade *o6 = new Blockade(p1, territory1);
-  //  Airlift *o7 = new Airlift(p1, territory1, territory2, 2);
-  //  Negotiate *o8 = new Negotiate();
-  //  ordersList1.push_back(o5);
-  //  ordersList1.push_back(o6);
-  //  ordersList1.remove(2);
-  //  ordersList1.push_back(o7);
-  //  ordersList1.push_back(o8);
-  //  o3->execute();
-  //  cout << o3->getId() << endl;
-  //  o6->execute();
-  //  o7->execute();
-  //  // cout << "The Player: " << *(o4->get_player()) << endl;
-  //  cout << ordersList1 << endl;
-  //  ordersList1.print();
-  //  o8->validate();
 }

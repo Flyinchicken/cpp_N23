@@ -2,6 +2,11 @@
 #include "MapLoader.h"
 #include "LoggingObserver.h"
 #include <iostream>
+#include <algorithm>
+#include <random>
+#include <stdlib.h>
+#include <string>
+#include <sstream>
 
 using std::cin;
 using std::cout;
@@ -184,26 +189,31 @@ bool GameEngine::changeStateFromCommand(Command *command)
     {
         command->saveEffect("Successfully loaded map file. State changed to MAPLOADED ");
         this->currentGameState = MAPLOADED;
+        notify(this);
     }
     else if (commandString == CommandStrings::validateMap)
     {
         command->saveEffect("Map was successfully validated. State changed to MAPVALIDATED ");
         this->currentGameState = MAPVALIDATED;
+        notify(this);
     }
     else if (commandString.find("addplayer") != std::string::npos)
     {
         command->saveEffect("Player  was added successfully ");
         this->currentGameState = PLAYERSADDED;
+        notify(this);
     }
     else if (commandString == CommandStrings::gameStart)
     {
         command->saveEffect("Map added and validated successfully. All players added. Transitioned from start up phase into main game loop! ");
         this->currentGameState = ASSIGNREINFORCEMENTS;
+        notify(this);
     }
     else if (commandString == CommandStrings::replay)
     {
         command->saveEffect("Restarting game");
         this->currentGameState = START;
+        notify(this);
     }
     else
     {
@@ -237,7 +247,11 @@ void GameEngine::startupPhase()
     {
         Command *nextCommand = commandProcessor->getCommand();
 
-        vector<Command *> commands = commandProcessor->getCommandsList();
+        if (nextCommand->getCommand() == "fileEnd") {
+            inStartup = false;
+            cout << "Reached end of file" << endl;
+            continue;
+        }
 
         if (commandProcessor->validate(nextCommand, currentGameState))
         {
@@ -337,6 +351,14 @@ void GameEngine::addPlayer(Command *command) {
     
     string playerName = commandProcessor->splitStringByDelim(command->getCommand(), ' ').back();
 
+    //check if the name entered is already in the list of player names
+    for (auto& player : playerList) {
+        if (player->getName() == playerName) {
+            command->saveEffect("Duplicate player name. No change to state.");
+            return;
+        }
+    }
+
     Player* player = new Player();
     Hand* tempHand = new Hand(player);
     player->setHand(tempHand);
@@ -359,7 +381,9 @@ void GameEngine::gameStart(Command *command) {
     }
 
     assignPlayersOrder(&playerList);
-    // distributeTerritories();
+
+    distributeTerritories();
+
     for (Player* i : playerList) {
         i->setReinforcementPool(50);
         x->draw(i->getHand());
@@ -381,20 +405,68 @@ void GameEngine::assignPlayersOrder(vector<Player*>* playerList)
     for(auto& player : *playerList){
         cout << player->getName() << endl;
     }
-    //std::random_shuffle(playerList->begin(),playerList->end());
+
+    std::random_shuffle(playerList->begin(),playerList->end());
+
     cout << "Randomize player order: " << endl;
     for(auto& player : *playerList){
         cout << player->getName() << endl;
     }
 }
 
-void GameEngine::distributeTerritories(Map* worldMap, vector<Player*>* playerList)
+/**
+ * Distributes all the territories in the game map to each user. Starts in the first continent, assigning territories
+ * until there are none left in said continent, then will go to the next one and continue until the player's quota
+ * for territories in satiated.
+ * Quota for players is determined by the number of territories / number of players. Any leftover are then 
+ * distributed amongst the players, starting at a random one and working forward from there.
+*/
+void GameEngine::distributeTerritories()
 {
-    for(auto& kv : worldMap->nodes){
-        for(auto& player : *playerList){
+    int territoriesPerPlayer = worldMap->nodes.size() / this->playerList.size();
+    int leftoverTerritories = worldMap->nodes.size() % this->playerList.size();
+
+    vector<int> playerAllotedTerritories;
+    for (Player *p : playerList) {
+        playerAllotedTerritories.push_back(territoriesPerPlayer);
+    }
+
+    int index = rand() % playerList.size();
+    while (leftoverTerritories > 0) {
+        ++playerAllotedTerritories.at(index);
+        ++index;
+        if (index == playerList.size()) {
+            index = 0;
+        }
+        --leftoverTerritories;
+    }
+
+    int currentPlayerIndex = 0;
+    int currentPlayerTerritories = 0;
+    int territoriesForPlayer = playerAllotedTerritories.at(currentPlayerTerritories);
+
+    for (auto &kv : worldMap->continents) {
+        for (auto &kv2 : kv.second->nodes) {
+            Territory *currentTerritory = kv2.second;
+
+            if (territoriesForPlayer == 0) {
+                ++currentPlayerTerritories;
+                territoriesForPlayer = playerAllotedTerritories.at(currentPlayerTerritories);
+                currentPlayerIndex = currentPlayerIndex + 1;
+            }
+
+            if (currentPlayerIndex == playerList.size()) {
+                continue;
+            }
+
+            currentTerritory->setOccupied(true);
+            currentTerritory->setOwner(playerList[currentPlayerIndex]);
             
+            --territoriesForPlayer;
         }
     }
+
+    displayMapTerritories();    
 }
 
 /**
@@ -404,6 +476,16 @@ void GameEngine::displayPlayerList() {
     cout << "Current player list: " << endl;
     for (int i = 0; i < playerList.size(); i++) {
         cout << i + 1 << ": " << playerList[i]->getName() << endl;
+    }
+}
+
+/**
+ * Displays all territories in the map
+*/
+void GameEngine::displayMapTerritories() {
+    for(auto& kv : worldMap->nodes){
+        cout << kv.first << endl;
+        cout << *kv.second << endl;
     }
 }
 
@@ -536,6 +618,7 @@ void GameEngine::reinforcementPhase() {
 
         i->setReinforcementPool(total_bonus);
     }
+    setGameState(ISSUEORDERS);
 }
 
 void GameEngine::issueOrdersPhase() {
@@ -567,7 +650,7 @@ void GameEngine::issueOrdersPhase() {
 
             cout << "Order for player " << temp->getName() << endl;
 
-            if (temp->getOrdersList().order_list.size() > 5) {
+            if ((*temp->getOrdersList()).order_list.size() > 5) {
                 if (!temp->getHand()->getHand().empty()) {
                     vector<Card*> cards = temp->getHand()->getHand();
                     cards[0]->play(temp->getHand());
@@ -592,7 +675,7 @@ void GameEngine::executeOrdersPhase()
 {
     cout << "Execute Order Phase";
     for (Player* i : playerList) {
-        for (Order* p : i->getOrdersList().order_list) {
+        for (Order* p : (* i->getOrdersList()).order_list) {
             p->execute();
         }
     }
@@ -611,9 +694,10 @@ void GameEngine::startNewGame() {
     mainGameLoop();
 }
 
+//Return game state
 string GameEngine::stringToLog()
 {
-    return "New game state is: " + getGameStateAsString();
+    return "New game state is: " + getGameStateAsString() + "\n";
 }
 
 //Getter and Setter for playerList

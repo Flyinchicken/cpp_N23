@@ -34,13 +34,15 @@ private:
     bool hasGameBeenEnded(string command);
     bool hasPlayerWon();
 
-    bool processCommand(Command* command);
+    //bool processCommand(Command* command);
     void loadMap(Command* command);
     void validateMap(Command* command);
     void addPlayer(Command* command);
     void gameStart(Command* command);
     void assignPlayersOrder(vector<Player*>* playerList);
-    void distributeTerritories(Map* worldMap, vector<Player*>* playerList);
+    void distributeTerritories();
+
+    void displayMapTerritories();
 
     // Alliances pair of players created by card negotiate in current turn
     // Empty it at the end of the turn
@@ -63,7 +65,7 @@ public:
     // friend ostream& operator << (ostream&, const GameEngine&);
 
     void startNewGame();
-
+    bool processCommand(Command* command);
     void startupPhase();
     void mainGameLoop();
     void reinforcementPhase();

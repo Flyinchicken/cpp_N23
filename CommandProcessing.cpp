@@ -219,6 +219,12 @@ bool has_suffix(const std::string& str, const std::string& suffix)
  * */
 bool CommandProcessor::validate(Command* command, GameStates currentGameState)
 {
+    if (command->getCommand().empty()) {
+        command->saveEffect("Command strings cannot be empty!");
+
+        return false;
+    }
+
     stringstream commandStream(command->getCommand());
     vector<string> segmentList;
     string commandSegment;
@@ -373,7 +379,7 @@ vector<Command*> CommandProcessor::getCommandsList()
 //Return the Command saved
 string CommandProcessor::stringToLog()
 {
-    return this->savedCommand + "\n";
+    return "\n"+ this->savedCommand + "\n";
 }
 
 ///
@@ -481,6 +487,10 @@ FileLineReader &FileLineReader::operator=(const FileLineReader &reader) { return
  * @returns Line from the command file as a string
 */
 string FileLineReader::readLineFromFile() {
+    if (fileInputStream.eof()) {
+        return "fileEnd";
+    }
+
     string fileLine;
 
     getline(fileInputStream, fileLine);

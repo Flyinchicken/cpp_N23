@@ -9,6 +9,7 @@
 #include <vector>
 #include <ostream>
 #include <algorithm>
+#include <set>
 #include "GameEngine.h"
 using namespace std;
 
@@ -62,7 +63,7 @@ public:
 
 	//getters
 	string getName() const;
-	OrdersList getOrdersList() const;
+	OrdersList* getOrdersList() const;
 	Hand* getHand();
 	vector<Territory*> getTerritories() const;
 	int getReinforcementPool();
