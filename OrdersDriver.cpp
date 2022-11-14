@@ -47,7 +47,6 @@ void testOrderExecution()
 
   map->addNeighbor("territory 1", "territory 3");
 
-
   //    gameEngine->distributeTerritories(map, player_list);
   worldMap = map;
   ge = gameEngine;
@@ -68,57 +67,93 @@ void testOrderExecution()
     cout << *territory->getTerritoryName() << endl;
   }
 
+  // Test Deploy Order
   Deploy *o3 = new Deploy(player1, 3, territory1);
+
+  cout << "Before Deploy order execution" << endl;
+  cout << "Test VALIDATE" << endl;
+
+  o3->validate();
+  cout << "Test EXECUTE" << endl;
+
+  o3->execute();
+
+  // Test Bomb Order
   Bomb *o5 = new Bomb(player1, territory3);
+
+  cout << "Before Bomb order execution" << endl;
+  cout << "Test VALIDATE" << endl;
+
+  o5->validate();
+  cout << "Test EXECUTE" << endl;
+
+  o5->execute();
+
+  // Test Blockade Order
   Blockade *o6 = new Blockade(player1, territory1);
+
+  cout << "Before Blockade order execution" << endl;
+  cout << "Test VALIDATE" << endl;
+
+  o6->validate();
+  cout << "Test EXECUTE" << endl;
+
+  o6->execute();
+
+  // Test Airlift Order
   Airlift *o7 = new Airlift(player1, territory2, territory5, 2);
 
-    //Test advance Move behavior
-    Advance* orderAdvanceMove = new Advance(player1, territory1, territory2, 2);
+  cout << "Before Airlift order execution" << endl;
+  cout << "Test VALIDATE" << endl;
 
-    cout << "Before advance order execution" << endl;
-    cout << "Test VALIDATE" << endl;
+  o7->validate();
+  cout << "Test EXECUTE" << endl;
 
-    orderAdvanceMove->validate();
-    cout << "Test EXECUTE" << endl;
-
-    orderAdvanceMove->execute();
-
-    //Test advance Attack behavior
-    Advance* orderAdvanceAttack = new Advance(player1, territory1, territory3, 2);
-
-    cout << "Before advance order execution" << endl;
-    cout << "Test VALIDATE" << endl;
-
-    orderAdvanceAttack->validate();
-    cout << "Test EXECUTE" << endl;
-
-    orderAdvanceAttack->execute();
-
-    //Test Negotiate
-    Negotiate* orderNegotiate = new Negotiate(player1, player2);
-
-    cout << "Before negotiate order execution" << endl;
-    cout << "Test VALIDATE" << endl;
-    orderNegotiate->validate();
-
-    cout << "Test EXECUTE" << endl;
-    orderNegotiate->execute();
-
-    cout << "After negotiate order execution" << endl;
-
-    Advance* orderAdvance = new Advance(player1, territory1, territory3, 2);
-
-    orderAdvance->validate();
-    cout << "Here should be invalid since the Negotiate order has been executed" << endl;
-
-
-  Bomb *o9 = new Bomb(player2, territory5);
-  o3->execute();
-  o5->execute();
-  o6->execute();
   o7->execute();
-  o8->execute();
-  o9->execute();
 
+  // Test advance Move behavior
+  Advance *orderAdvanceMove = new Advance(player1, territory1, territory2, 2);
+
+  cout << "Before advance order execution" << endl;
+  cout << "Test VALIDATE" << endl;
+
+  orderAdvanceMove->validate();
+  cout << "Test EXECUTE" << endl;
+
+  orderAdvanceMove->execute();
+
+  // Test advance Attack behavior
+  Advance *orderAdvanceAttack = new Advance(player1, territory1, territory3, 2);
+
+  cout << "Before advance order execution" << endl;
+  cout << "Test VALIDATE" << endl;
+
+  orderAdvanceAttack->validate();
+  cout << "Test EXECUTE" << endl;
+
+  orderAdvanceAttack->execute();
+
+  // Test Negotiate
+  Negotiate *orderNegotiate = new Negotiate(player1, player2);
+
+  cout << "Before negotiate order execution" << endl;
+  cout << "Test VALIDATE" << endl;
+  orderNegotiate->validate();
+
+  cout << "Test EXECUTE" << endl;
+  orderNegotiate->execute();
+
+  cout << "After negotiate order execution" << endl;
+
+  Advance *orderAdvance = new Advance(player1, territory1, territory3, 2);
+
+  orderAdvance->validate();
+  cout << "Here should be invalid since the Negotiate order has been executed" << endl;
+
+  // Bomb *o9 = new Bomb(player2, territory5);
+  // o3->execute();
+  // o5->execute();
+  // o6->execute();
+  // o7->execute();
+  // o9->execute();
 }
