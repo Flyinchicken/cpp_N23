@@ -1,15 +1,15 @@
 #pragma once
 
 #include "CommandProcessing.h"
-#include "Map.h"
 #include "Player.h"
+
 #include <algorithm>
 #include <string>
 #include <ostream>
 #include <vector>
+
 using std::ostream;
 using std::string;
-
 
 /**
  * Represents the principle game engine of Warzone that allows a user to start a new game with a console-driven
