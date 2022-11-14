@@ -61,19 +61,15 @@ void testLoggingObserver()
         Order *bomb = new Bomb();
         Order *deploy = new Deploy();
 
-        //bomb->attach(gameLog);
-        //deploy->attach(gameLog);
-
         orders->addOrder(bomb);
         orders->addOrder(deploy);
     }
 
     for (auto& player : game->getPlayerList()) {
-        cout << "2nd loop"  << endl;
         for (auto& order : (*player->getOrdersList()).order_list) {
             order->attach(gameLog);
-            cout << "inside orderslist" << endl;
 
+            //BUG HERE, STOPS AT VALIDATE()
             order->execute();
         }
     }
