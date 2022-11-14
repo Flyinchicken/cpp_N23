@@ -16,20 +16,21 @@ std::string filePath = "";
 GameEngine *ge;
 Map *worldMap;
 
-Deck* x = new Deck();
+Deck *x = new Deck();
 
 int main(int argc, char **argv)
 {
+    testOrderExecution();
     // testCommandProcessor(argc, argv);
 
     // Need file path before creating
-    ge = new GameEngine();
+    // ge = new GameEngine();
 
-    //testLoggingObserver();
+    // testLoggingObserver();
 
-    testStartupPhase();
+    // testStartupPhase();
 
-    //testCommandProcessor();
+    // testCommandProcessor();
 
     /*std::cout << "Welcome everyone!" << std::endl;
 
