@@ -18,10 +18,10 @@ Map *worldMap;
 
 Deck *x = new Deck();
 
-//int main(int argc, char **argv)
-//{
+int main(int argc, char **argv)
+{
 
-    //testOrderExecution();
+    // testOrderExecution();
     // testCommandProcessor(argc, argv);
 
     // Need file path before creating
@@ -57,4 +57,4 @@ Deck *x = new Deck();
     // Player Test
     cout << "*** Starting the Player test ***" << endl;
     testPlayers();*/
-//}
+}

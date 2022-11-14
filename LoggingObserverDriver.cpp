@@ -77,6 +77,6 @@ void testLoggingObserver()
     gameLog->endOutput();
 }
 
- int main(){
-      testLoggingObserver();
-  }
+ //int main(){
+      //testLoggingObserver();
+ // }

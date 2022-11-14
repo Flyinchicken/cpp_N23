@@ -532,7 +532,6 @@ Bomb &Bomb::operator=(const Bomb &bomb)
 
 bool Bomb::validate()
 {
-    cout << "validate" << endl;
   bool isAdjacent = false;
   for (auto iter : player->toAttack()) // Need to check this method when toAttack is done.
   {
@@ -553,7 +552,6 @@ bool Bomb::validate()
 
 void Bomb::execute()
 {
-    cout << "bomb execute start" << endl;
   if (validate())
   {
     int currentArmyInTargetTerr = targetTerritory->getArmyNumber();
