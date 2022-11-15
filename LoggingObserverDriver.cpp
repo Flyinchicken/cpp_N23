@@ -53,29 +53,33 @@ void testLoggingObserver()
         cout << nextCommand->getEffect() << endl;
     }
 
-    game->reinforcementPhase();
+    //game->reinforcementPhase();
 
+ 
+    Territory *randomTerritory = new Territory();
     for (auto& player : game->getPlayerList()) {
-        OrdersList *orders = player->getOrdersList();
-        orders->attach(gameLog);
+        cout << "ADDING ORDERS" << endl;
 
-        Order *bomb = new Bomb();
-        bomb->attach(gameLog);
-        Order *deploy = new Deploy();
-        deploy->attach(gameLog);
+        player->getOrdersList()->attach(gameLog);
 
-        orders->addOrder(bomb);
-        orders->addOrder(deploy);
+        Order *bomb = new Bomb(player, randomTerritory);
+
+
+        player->getOrdersList()->addOrder(bomb);
     }
+
 
     for (auto& player : game->getPlayerList()) {
         for (auto& order : (*player->getOrdersList()).order_list) {
             order->attach(gameLog);
 
-            //BUG HERE, STOPS AT VALIDATE()
+            //BUG HERE, STOPS AT VALIDATE() BECAUSE TOATTACK()
             order->execute();
         }
     }
-
     gameLog->endOutput();
+
+
+    
+
 }
