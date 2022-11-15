@@ -3,24 +3,6 @@
 #include "CommandProcessing.h"
 #include "GameEngine.h"
 
-Chicken::Chicken()
-{
-    name = "Test chicken";
-    age = 5;
-}
-
-Chicken::~Chicken() {}
-
-void Chicken::scream()
-{
-    cout << "Chicken screaming" << endl;
-    notify(this);
-}
-
-string Chicken::stringToLog()
-{
-    return (name + "\n");
-}
 
 void testLoggingObserver()
 {
@@ -53,27 +35,31 @@ void testLoggingObserver()
         cout << nextCommand->getEffect() << endl;
     }
 
-    //game->reinforcementPhase();
+    game->reinforcementPhaseForLogObserverDriver();
 
- 
-    Territory *randomTerritory = new Territory();
+    //Add orders for players
     for (auto& player : game->getPlayerList()) {
-        cout << "ADDING ORDERS" << endl;
 
         player->getOrdersList()->attach(gameLog);
 
-        Order *blockade = new Blockade(player, randomTerritory);
+        vector<Territory*> enemies = player->toAttack();
 
+        //valid, uses enemy territory
+        Order *bomb = new Bomb(player, enemies.at(rand() % enemies.size()));
 
+        //invalid, uses ennemy territory instead of own
+        Order *blockade = new Blockade(player, enemies.at(rand() % enemies.size()));
+
+        player->getOrdersList()->addOrder(bomb);
         player->getOrdersList()->addOrder(blockade);
     }
 
+    game->setGameState(EXECUTEORDERS);
 
+    //execute the orders for players
     for (auto& player : game->getPlayerList()) {
         for (auto& order : (*player->getOrdersList()).order_list) {
             order->attach(gameLog);
-
-            //BUG HERE, STOPS AT VALIDATE() BECAUSE TOATTACK()
             order->execute();
         }
     }
