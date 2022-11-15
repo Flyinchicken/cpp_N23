@@ -573,7 +573,7 @@ void GameEngine::mainGameLoop()
             continue;
         }
 
-        if(turnNumber == 10){
+        if(turnNumber == 3){
             setGameState(WIN);
             continue;
         }
@@ -646,7 +646,7 @@ void GameEngine::issueOrdersPhase() {
 
             int numOrders = temp->getOrdersList()->order_list.size();
             
-            if (numOrders > 2) {
+            if (numOrders > 4) {
                 if (!temp->getHand()->getHand().empty()) {
                     vector<Card*> cards = temp->getHand()->getHand();
                     cards[0]->play(temp->getHand());

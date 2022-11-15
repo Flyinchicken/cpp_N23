@@ -154,12 +154,12 @@ bool Player::getTurn()
 // orders created adding to the player's orderslist
 void Player::issueOrder()
 {
-    if (this->getReinforcementPool() > 4)
+    if (this->getReinforcementPool() > 60)
     {
         vector<Territory*> outposts = this->toDefend();
         int random = rand() % outposts.size();
-        this->orderslist->addOrder(new Deploy(this, 5, outposts.at(random))); // Deploy order, should take certain params
-        this->setReinforcementPool(this->getReinforcementPool() - 5);
+        this->orderslist->addOrder(new Deploy(this, 60, outposts.at(random))); // Deploy order, should take certain params
+        this->setReinforcementPool(this->getReinforcementPool() - 60);
         cout << "Deploy order of 5 issued by player " << this->getName() << " onto territory " << outposts.at(random) << ". \nCurrent reinforcement pool = " << this->getReinforcementPool() << endl;
     }
     else if (this->getReinforcementPool() > 0)
@@ -178,7 +178,7 @@ void Player::issueOrder()
         vector<Territory*> reinforcers = outposts;
         reverse(reinforcers.begin(), reinforcers.end());
 
-        if (potentialAttacks.size() > numAttacks)
+        if (potentialAttacks.size() - 1 > numAttacks)
         { // If we can attack any territory that we have not yet attacked
 
             cout << "Player has targets to attack. Player has attacked " << numAttacks << " territories this turn" << endl;
@@ -187,25 +187,27 @@ void Player::issueOrder()
 
             for (Territory* p : reinforcers)
             {
-                vector<Territory*> adj = worldMap->getNeighboursPtr(*p->getTerritoryName()); //VERIFY WORLD
+                vector<Territory*> adj = worldMap->getNeighboursPtr(*p->getTerritoryName()); 
 
                 vector<Territory*>::iterator it = find(adj.begin(), adj.end(), target); // Tries to find which territory should be the source
                 
                 if (it != adj.end())
                 {
                     Territory* source = p; // Source territory
-                    this->orderslist->addOrder(new Advance(this, source, target, source->getArmyNumber() - 1));  // VERIFY ORDER
+                    this->orderslist->addOrder(new Advance(this, source, target, source->getArmyNumber() - 1));  
                     numAttacks++;
 
                     cout << "Attack Order from territory " << source->getTerritoryName() << " to territory " << target->getTerritoryName() << endl;
                     break;
                 }
             }
+            numAttacks++;
         }
+        
         else
         { // If it can't attack it will try to defend
 
-            cout << "No new targets to attack. So we try to defend " << endl;
+            cout << "No new targets to attack. So we try to defend " << numDefense<< endl;
             bool hasDefended = false;
 
             for (int i = numDefense; i < outposts.size(); i++)
@@ -259,23 +261,30 @@ void Player::cardOrder(int orderNumber)
     switch (orderNumber)
     {
     case 1:
+        {
         newOrder = new Deploy(this, 10, outposts.at(rand() % outposts.size()));
         break;
+        }
     case 2:
+        {
         newOrder = new Advance();
         break;
+        }
     case 3:
+        {
         newOrder = new Bomb(this, enemies.at(rand() % enemies.size()));
         break;
+        }
     case 4:
+        {
         newOrder = new Blockade(this, outposts.at(rand() % outposts.size()));
         break;
+        }
     case 5:
         {
-            
             if(outposts.size() == 1){
                 cout << "Only one territory, can't airlift" << endl;
-                return;
+                break;
             }
 
             int index = rand() % outposts.size();
