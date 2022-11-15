@@ -30,7 +30,7 @@ int main(int argc, char** argv)
     // vector<Territory*> neighbors = worldMap->getNeighboursPtr();
     testStartupPhase();
 
-    //testMainGameLoop();
+    testMainGameLoop();
 
     // testStartupPhase();
     //testMainGameLoop();

@@ -160,7 +160,7 @@ void Player::issueOrder()
         int random = rand() % outposts.size();
         this->orderslist->addOrder(new Deploy(this, 60, outposts.at(random))); // Deploy order, should take certain params
         this->setReinforcementPool(this->getReinforcementPool() - 60);
-        cout << "Deploy order of 5 issued by player " << this->getName() << " onto territory " << outposts.at(random) << ". \nCurrent reinforcement pool = " << this->getReinforcementPool() << endl;
+        cout << "Deploy order of 5 issued by player " << this->getName() << " onto territory " << *outposts.at(random)->getTerritoryName() << ". \nCurrent reinforcement pool = " << this->getReinforcementPool() << endl;
     }
     else if (this->getReinforcementPool() > 0)
     {
@@ -169,7 +169,7 @@ void Player::issueOrder()
         int random = rand() % outposts.size();
         this->orderslist->addOrder(new Deploy(this, this->getReinforcementPool(), outposts.at(random))); // Deply order but now with the rest of the reinforcement pool
         this->setReinforcementPool(0);
-        cout << "Deploy order of " << tempRein << " issued by player " << this->getName() << " onto territory " << outposts.at(random) << ". \nCurrent reinforcement pool = " << this->getReinforcementPool() << endl;
+        cout << "Deploy order of " << tempRein << " issued by player " << this->getName() << " onto territory " << *outposts.at(random)->getTerritoryName() << ". \nCurrent reinforcement pool = " << this->getReinforcementPool() << endl;
     }
     else
     {
@@ -197,7 +197,7 @@ void Player::issueOrder()
                     this->orderslist->addOrder(new Advance(this, source, target, source->getArmyNumber() - 1));  
                     numAttacks++;
 
-                    cout << "Attack Order from territory " << source->getTerritoryName() << " to territory " << target->getTerritoryName() << endl;
+                    cout << "Attack Order from territory " << *source->getTerritoryName() << " to territory " << *target->getTerritoryName() << endl;
                     break;
                 }
             }
@@ -230,7 +230,7 @@ void Player::issueOrder()
                         hasDefended = true;
                         numDefense = i + 1;
 
-                        cout << "Defense Order from territory " << source->getTerritoryName() << " to territory " << target->getTerritoryName() << endl;
+                        cout << "Defense Order from territory " << *source->getTerritoryName() << " to territory " << *target->getTerritoryName() << endl;
 
                         break;
                     }
