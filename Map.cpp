@@ -53,8 +53,8 @@ Territory& Territory::operator=(const Territory& territory) {
 }
 
 ostream& operator<<(ostream& outs, Territory& o) {
-    outs << "Territory Name: " << o.territoryName << endl;
-    outs << "Continent Name: " << o.continentName << endl;
+    outs << "Territory Name: " << *o.territoryName << endl;
+    outs << "Continent Name: " << *o.continentName << endl;
     outs << "Army Number: " << o.armyNumber << endl;
     outs << "Is Occupied: " << o.isOccupied << endl;
     outs << "Owner: " << o.owner->getName() << endl;
