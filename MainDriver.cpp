@@ -24,10 +24,13 @@ int main(int argc, char** argv)
 
     // Need file path before creating
     // ge = new GameEngine();
-    //ge = new GameEngine();
-    //x = new Deck();
-     testLoggingObserver();
-    //testStartupPhase();
+    ge = new GameEngine();
+    x = new Deck();
+    // testLoggingObserver();
+    testStartupPhase();
+
+    testMainGameLoop();
+
     // testStartupPhase();
     //testMainGameLoop();
     // testCommandProcessor();

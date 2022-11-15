@@ -1,7 +1,7 @@
 #include "Player.h"
+#include <iostream>
 
 using namespace std;
-#include <iostream>
 extern Map* worldMap;
 
 // Default constructor
@@ -138,7 +138,7 @@ void Player::removeTerritory(Territory* territory)
 
 void Player::setReinforcementPool(int pool)
 {
-    this->reinforcementPool = reinforcementPool;
+    this->reinforcementPool = pool;
 }
 
 void Player::setTurn(bool turn)
@@ -251,6 +251,7 @@ void Player::issueOrder()
 // helper method to get a specific order which adds to the player's orderslist
 void Player::cardOrder(int orderNumber)
 {
+    cout << "card order being executed " << orderNumber << endl;
     vector<Territory*> outposts = this->toDefend();
     vector<Territory*> enemies = this->toAttack();
 
@@ -271,10 +272,12 @@ void Player::cardOrder(int orderNumber)
         break;
     case 5:
         {
+            
             if(outposts.size() == 1){
                 cout << "Only one territory, can't airlift" << endl;
                 return;
             }
+
             int index = rand() % outposts.size();
             int index2 = rand() % outposts.size();
             while (index == index2)

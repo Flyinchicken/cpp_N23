@@ -553,7 +553,7 @@ void GameEngine::mainGameLoop()
         vector<Player*> currentPlayers = this->playerList;
 
         for(Player* current : currentPlayers){
-            if(current->getTerritories().size()){
+            if(current->getTerritories().size() < 1){
                 vector<Player*>::iterator playerIt = find(currentPlayers.begin(), currentPlayers.end(), current);
                 if(playerIt != currentPlayers.end()){
                     cout << "Player " << current->getName() << " has been eliminated" << endl;
@@ -582,14 +582,6 @@ void GameEngine::mainGameLoop()
         {
             reinforcementPhase();
         }
-        else if (currentGameState == ISSUEORDERS)
-        {
-            issueOrdersPhase();
-        }
-        else
-        {
-            executeOrdersPhase();
-        }
 
         turnNumber++;
     }
@@ -610,6 +602,7 @@ void GameEngine::reinforcementPhase() {
         int continent_bonus = i->getContinentsBonus();
         int total_bonus = ((pool / 3) > 3)? (pool / 3) : 3;
         total_bonus += continent_bonus;
+        total_bonus += i->getReinforcementPool();
 
         cout << "Reinforcing player " << i->getName() << " with " << total_bonus << " troops" << endl << "Type anything to continue ";
         
@@ -619,6 +612,7 @@ void GameEngine::reinforcementPhase() {
         i->setReinforcementPool(total_bonus);
     }
     setGameState(ISSUEORDERS);
+    issueOrdersPhase();
 }
 
 void GameEngine::issueOrdersPhase() {
@@ -650,7 +644,9 @@ void GameEngine::issueOrdersPhase() {
 
             cout << "Order for player " << temp->getName() << endl;
 
-            if ((*temp->getOrdersList()).order_list.size() > 5) {
+            int numOrders = temp->getOrdersList()->order_list.size();
+            
+            if (numOrders > 2) {
                 if (!temp->getHand()->getHand().empty()) {
                     vector<Card*> cards = temp->getHand()->getHand();
                     cards[0]->play(temp->getHand());
@@ -669,6 +665,7 @@ void GameEngine::issueOrdersPhase() {
     }
 
     setGameState(EXECUTEORDERS);
+    executeOrdersPhase();
 }
 
 void GameEngine::executeOrdersPhase()
