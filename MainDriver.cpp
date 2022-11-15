@@ -26,8 +26,9 @@ int main(int argc, char** argv)
     // ge = new GameEngine();
     ge = new GameEngine();
     x = new Deck();
-     testLoggingObserver();
-    //testStartupPhase();
+    //testLoggingObserver();
+    // vector<Territory*> neighbors = worldMap->getNeighboursPtr();
+    testStartupPhase();
 
     //testMainGameLoop();
 

@@ -127,9 +127,13 @@ void Territory::removeArmy(int armyNumber) {
 // End of the Territory Class *********************************************************************************************************
 
 // Methods implementation of the Graph Class ******************************************************************************************
-void Graph::addNode(string territory_name){
+void Graph::addNode(string territory_name, string continent_name){
     if(this->nodes.count(territory_name) == 0){
-        this->nodes.insert_or_assign(territory_name, new Territory());
+        Territory* currentTerritory = new Territory();
+        currentTerritory->setTerritoryName(new string(territory_name));
+        currentTerritory->setContinentName(new string(continent_name));
+        this->nodes.insert_or_assign(territory_name, currentTerritory);
+
     }
 
 }
@@ -140,19 +144,12 @@ Territory* Graph::getNode(string territory_name){
 
 vector<Territory*> Graph::getNodesPtr(){
     vector<Territory*> territoriesPtr;
-    for(auto& kv : this->nodes){
+    for(auto& kv : nodes){
         territoriesPtr.push_back(kv.second);
     }
     return territoriesPtr;
 }
 
-vector<Territory*> Graph::getNeighboursPtr(string territory_name){
-    vector<Territory*> neighborsPtr;
-    for(auto& name : edges.at(territory_name)){
-        neighborsPtr.push_back(getNode(name));
-    }
-    return neighborsPtr;
-}
 
 void Graph::addNeighbor(string territory, string neighbor){
     this->edges[territory].push_back(neighbor);
@@ -263,6 +260,14 @@ Map::Map() {
 
 Map::~Map() {
 
+}
+
+vector<Territory*> Map::getNeighboursPtr(string territory_name){
+    vector<Territory*> neighborsPtr;
+    for(string name : edges.at(territory_name)){
+        neighborsPtr.push_back(nodes.at(name));
+    }
+    return neighborsPtr;
 }
 
 void Map::operator=(Map*) {
