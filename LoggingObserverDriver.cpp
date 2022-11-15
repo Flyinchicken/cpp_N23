@@ -38,6 +38,7 @@ void testLoggingObserver()
 
     bool inStartup = true;
 
+    //C:\Users\3D.map
     while (inStartup)
     {
         Command* nextCommand = processor->getCommand();
