@@ -546,7 +546,7 @@ bool Bomb::validate()
 {
 
   bool isAdjacent = false;
-  for (auto iter : player->toAttack()) // Need to check this method when toAttack is done.
+  for (auto iter : player->toAttack()) 
   {
     if (targetTerritory == iter)
     {

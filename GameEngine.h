@@ -103,6 +103,8 @@ public:
 
     void setDeadPlayer(vector<Player*> deadPlayers);
     vector<Player*> getDeadPlayers();
+
+    void reinforcementPhaseForLogObserverDriver();
 };
 
 extern GameEngine* ge;

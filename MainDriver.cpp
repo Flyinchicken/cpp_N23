@@ -26,13 +26,13 @@ int main(int argc, char** argv)
     // ge = new GameEngine();
     ge = new GameEngine();
     x = new Deck();
-    //testLoggingObserver();
+    testLoggingObserver();
     // vector<Territory*> neighbors = worldMap->getNeighboursPtr();
-    testStartupPhase();
+    //testStartupPhase();
 
-    testMainGameLoop();
+    //testMainGameLoop();
 
-    // testStartupPhase();
+    //testStartupPhase();
     //testMainGameLoop();
     // testCommandProcessor();
     //testOrderExecution();
