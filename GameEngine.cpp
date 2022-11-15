@@ -646,7 +646,7 @@ void GameEngine::issueOrdersPhase() {
 
             int numOrders = temp->getOrdersList()->order_list.size();
             
-            if (numOrders > 2) {
+            if (numOrders > 3) {
                 if (!temp->getHand()->getHand().empty()) {
                     vector<Card*> cards = temp->getHand()->getHand();
                     cards[0]->play(temp->getHand());

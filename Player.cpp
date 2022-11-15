@@ -259,23 +259,30 @@ void Player::cardOrder(int orderNumber)
     switch (orderNumber)
     {
     case 1:
+        {
         newOrder = new Deploy(this, 10, outposts.at(rand() % outposts.size()));
         break;
+        }
     case 2:
+        {
         newOrder = new Advance();
         break;
+        }
     case 3:
+        {
         newOrder = new Bomb(this, enemies.at(rand() % enemies.size()));
         break;
+        }
     case 4:
+        {
         newOrder = new Blockade(this, outposts.at(rand() % outposts.size()));
         break;
+        }
     case 5:
         {
-            
             if(outposts.size() == 1){
                 cout << "Only one territory, can't airlift" << endl;
-                return;
+                break;
             }
 
             int index = rand() % outposts.size();
