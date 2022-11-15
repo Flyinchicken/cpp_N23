@@ -62,10 +62,10 @@ void testLoggingObserver()
 
         player->getOrdersList()->attach(gameLog);
 
-        Order *bomb = new Bomb(player, randomTerritory);
+        Order *blockade = new Blockade(player, randomTerritory);
 
 
-        player->getOrdersList()->addOrder(bomb);
+        player->getOrdersList()->addOrder(blockade);
     }
 
 
