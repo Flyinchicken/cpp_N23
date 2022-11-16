@@ -20,62 +20,62 @@ class GameEngine;
 class Order : public Subject, public ILoggable
 {
 public:
-  Order();
-  virtual ~Order(); // destructor should be virtual since the order class is abstract now
-  Order(Player *);
-  Order(const Order &order);            // copy constructor
-  Order &operator=(const Order &order); // assignment operator
-  int getId() const;
-  string getType() const;
-  int setId();
-  string setType(string type);
-  // add the player to the order
-  Player *player;
-  Player *get_player() const;
-  string getOrderEffect();
-  void setOrderEffect(string);
+	Order();
+	virtual ~Order(); // destructor should be virtual since the order class is abstract now
+	Order(Player*);
+	Order(const Order& order);            // copy constructor
+	Order& operator=(const Order& order); // assignment operator
+	int getId() const;
+	string getType() const;
+	int setId();
+	string setType(string type);
+	// add the player to the order
+	Player* player;
+	Player* get_player() const;
+	string getOrderEffect();
+	void setOrderEffect(string);
 
-  // define virtual function of validate and execute,
-  // allow calling this function of a subclass with a pointer to the base class
-  virtual bool validate();
-  virtual void execute() = 0;
+	// define virtual function of validate and execute,
+	// allow calling this function of a subclass with a pointer to the base class
+	virtual bool validate();
+	virtual void execute() = 0;
 
-  string stringToLog();
-  // This is use save alliance and advance
-  static GameEngine* game;
+	string stringToLog();
+	// This is use save alliance and advance
+	static GameEngine* game;
 
 private:
-  // friend stream insertion operator to the class to access private member
-  friend std::ostream &operator<<(std::ostream &, const Order &);
-  static int order_id; // static variable use to automatic generate id for all objects
-  int id;              // store the id of the order (Each order have one unique id)
-  string order_type;
-  string order_effect;
+	// friend stream insertion operator to the class to access private member
+	friend std::ostream& operator<<(std::ostream&, const Order&);
+	static int order_id; // static variable use to automatic generate id for all objects
+	int id;              // store the id of the order (Each order have one unique id)
+	string order_type;
+	string order_effect;
 };
 
 // The OrdersList class contains a list of Order objects.
 class OrdersList : public Subject, public ILoggable
 {
 public:
-  OrdersList();
-  ~OrdersList();
-  OrdersList(const OrdersList &orders_List);
-  OrdersList &operator=(const OrdersList &orders_List);
-  void remove(int anOrder_id);
-  void move(int old_position, int new_position);
-  void push_back(Order *order);
-  void print();
-  vector<Order *> order_list;
-  string stringToLog();
-  void addOrder(Order *order);
-  Order* getAddedOrder();
+	OrdersList();
+	~OrdersList();
+	OrdersList(const OrdersList& orders_List);
+	OrdersList& operator=(const OrdersList& orders_List);
+	void remove(int anOrder_id);
+	void move(int old_position, int new_position);
+	void push_back(Order* order);
+	void print();
+	vector<Order*> order_list;
+	string stringToLog();
+	void addOrder(Order* order);
+	Order* getAddedOrder();
 
 private:
-  // friend stream insertion operator to the class to access private member
-  friend std::ostream &
-  operator<<(std::ostream &, const OrdersList &);
-  Order *addedOrder;
-  // All data members of user-defined class type must be of pointer type.
+	// friend stream insertion operator to the class to access private member
+	friend std::ostream&
+		operator<<(std::ostream&, const OrdersList&);
+	Order* addedOrder;
+	// All data members of user-defined class type must be of pointer type.
 };
 
 // The different kinds of orders are:
@@ -83,116 +83,116 @@ private:
 class Deploy : public Order
 {
 public:
-  Deploy();
-  Deploy(Player *player, int numberOfArmyUnits, Territory *targetTerritory);
-  ~Deploy();
-  Deploy(const Deploy &deploy);
-  Deploy &operator=(const Deploy &deploy);
+	Deploy();
+	Deploy(Player* player, int numberOfArmyUnits, Territory* targetTerritory);
+	~Deploy();
+	Deploy(const Deploy& deploy);
+	Deploy& operator=(const Deploy& deploy);
 
-  bool validate();
-  void execute();
+	bool validate();
+	void execute();
 
-  int getNumberOfArmyUnits();
-  Territory *getTargetTerritory();
+	int getNumberOfArmyUnits();
+	Territory* getTargetTerritory();
 
 private:
-  int numberOfArmyUnits;
-  Territory *targetTerritory;
-  friend std::ostream &operator<<(std::ostream &, const Deploy &);
+	int numberOfArmyUnits;
+	Territory* targetTerritory;
+	friend std::ostream& operator<<(std::ostream&, const Deploy&);
 };
 
 class Advance : public Order
 {
 public:
-  Advance();
-  Advance(Player *player, Territory *sourceTerritory, Territory *targetTerritory, int numberOfArmies);
-  ~Advance();
-  Advance(const Advance &advance);
-  Advance &operator=(const Advance &advance);
+	Advance();
+	Advance(Player* player, Territory* sourceTerritory, Territory* targetTerritory, int numberOfArmies);
+	~Advance();
+	Advance(const Advance& advance);
+	Advance& operator=(const Advance& advance);
 
-  bool validate();
-  void execute();
+	bool validate();
+	void execute();
 
-  Territory *getSourceTerritory();
-  Territory *getTargetTerritory();
-  int getNumberOfArmies();
-  string getAdvanceType();
-  void setAdvanceType(string type);
+	Territory* getSourceTerritory();
+	Territory* getTargetTerritory();
+	int getNumberOfArmies();
+	string getAdvanceType();
+	void setAdvanceType(string type);
 
 private:
-  Territory *sourceTerritory;
-  Territory *targetTerritory;
-  int numberOfArmies;
-  string advanceType = "Attack";
-  friend std::ostream &operator<<(std::ostream &, const Advance &);
+	Territory* sourceTerritory;
+	Territory* targetTerritory;
+	int numberOfArmies;
+	string advanceType = "Attack";
+	friend std::ostream& operator<<(std::ostream&, const Advance&);
 };
 
 class Bomb : public Order
 {
 public:
-  Bomb();
-  Bomb(Player *player, Territory *targetTerritory);
-  ~Bomb();
-  Bomb(const Bomb &bomb);
-  Bomb &operator=(const Bomb &bomb);
+	Bomb();
+	Bomb(Player* player, Territory* targetTerritory);
+	~Bomb();
+	Bomb(const Bomb& bomb);
+	Bomb& operator=(const Bomb& bomb);
 
-  bool validate();
-  void execute();
+	bool validate();
+	void execute();
 
 private:
-  Territory *targetTerritory;
-  friend std::ostream &operator<<(std::ostream &, const Bomb &);
+	Territory* targetTerritory;
+	friend std::ostream& operator<<(std::ostream&, const Bomb&);
 };
 
 class Blockade : public Order
 {
 public:
-  Blockade();
-  Blockade(Player *player, Territory *targetTerritory);
-  ~Blockade();
-  Blockade(const Blockade &blockade);
-  Blockade &operator=(const Blockade &blockade);
+	Blockade();
+	Blockade(Player* player, Territory* targetTerritory);
+	~Blockade();
+	Blockade(const Blockade& blockade);
+	Blockade& operator=(const Blockade& blockade);
 
-  bool validate();
-  void execute();
+	bool validate();
+	void execute();
 
 private:
-  Territory *targetTerritory;
-  friend std::ostream &operator<<(std::ostream &, const Blockade &);
+	Territory* targetTerritory;
+	friend std::ostream& operator<<(std::ostream&, const Blockade&);
 };
 
 class Airlift : public Order
 {
 public:
-  Airlift();
-  Airlift(Player *player, Territory *sourceTerritory, Territory *targetTerritory, int numberOfArmies);
-  ~Airlift();
-  Airlift(const Airlift &airlift);
-  Airlift &operator=(const Airlift &airlift);
+	Airlift();
+	Airlift(Player* player, Territory* sourceTerritory, Territory* targetTerritory, int numberOfArmies);
+	~Airlift();
+	Airlift(const Airlift& airlift);
+	Airlift& operator=(const Airlift& airlift);
 
-  bool validate();
-  void execute();
+	bool validate();
+	void execute();
 
 private:
-  Territory *sourceTerritory;
-  Territory *targetTerritory;
-  int numberOfArmies;
-  friend std::ostream &operator<<(std::ostream &, const Airlift &);
+	Territory* sourceTerritory;
+	Territory* targetTerritory;
+	int numberOfArmies;
+	friend std::ostream& operator<<(std::ostream&, const Airlift&);
 };
 
 class Negotiate : public Order
 {
 public:
-  Negotiate();
-  Negotiate(Player *player, Player *targetPlayer);
-  ~Negotiate();
-  Negotiate(const Negotiate &negotiate);
-  Negotiate &operator=(const Negotiate &negotiate);
+	Negotiate();
+	Negotiate(Player* player, Player* targetPlayer);
+	~Negotiate();
+	Negotiate(const Negotiate& negotiate);
+	Negotiate& operator=(const Negotiate& negotiate);
 
-  bool validate();
-  void execute();
+	bool validate();
+	void execute();
 
 private:
-  Player* targetPlayer;
-  friend std::ostream &operator<<(std::ostream &, const Negotiate &);
+	Player* targetPlayer;
+	friend std::ostream& operator<<(std::ostream&, const Negotiate&);
 };

@@ -1,8 +1,4 @@
-#include<iostream> //The Code uses the ostream, cout, etc
 #include "Card.h" //Below is the implementation of all the members of the class Card, Deck and Hand
-#include<string> //uses strings and to_string
-#include<vector>
-#include "Player.h"
 
 /*****************************************************************************************
 Below are the definitions for the Card class
@@ -58,7 +54,7 @@ void Card::play(Hand* hand) {
     cout << "Playing card " << _name << " from hand " << hand->getName() << endl;
     bool isRemoved;
     isRemoved = hand->removeCardFromHand(this); //Attemps to remove the Card from the Hand
-    if (isRemoved) { //If the Card was removed 
+    if (isRemoved) { //If the Card was removed
         x->addCardToDeck(this); //Adds to the deck
         hand->getPlayer()->cardOrder(generateOrderNumber(_type)); //Calls member of the Player class which issues an order based on the type of the card and adds it to its list
     }

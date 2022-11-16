@@ -3,24 +3,6 @@
 #include "CommandProcessing.h"
 #include "GameEngine.h"
 
-Chicken::Chicken()
-{
-    name = "Test chicken";
-    age = 5;
-}
-
-Chicken::~Chicken() {}
-
-void Chicken::scream()
-{
-    cout << "Chicken screaming" << endl;
-    notify(this);
-}
-
-string Chicken::stringToLog()
-{
-    return (name + "\n");
-}
 
 void testLoggingObserver()
 {
@@ -38,6 +20,7 @@ void testLoggingObserver()
 
     bool inStartup = true;
 
+    //C:\Users\3D.map
     while (inStartup)
     {
         Command* nextCommand = processor->getCommand();
@@ -52,27 +35,37 @@ void testLoggingObserver()
         cout << nextCommand->getEffect() << endl;
     }
 
-    game->reinforcementPhase();
+    game->reinforcementPhaseForLogObserverDriver();
 
+    //Add orders for players
     for (auto& player : game->getPlayerList()) {
-        OrdersList *orders = player->getOrdersList();
-        orders->attach(gameLog);
 
-        Order *bomb = new Bomb();
-        Order *deploy = new Deploy();
+        player->getOrdersList()->attach(gameLog);
 
-        orders->addOrder(bomb);
-        orders->addOrder(deploy);
+        vector<Territory*> enemies = player->toAttack();
+
+        //valid, uses enemy territory
+        Order *bomb = new Bomb(player, enemies.at(rand() % enemies.size()));
+
+        //invalid, uses ennemy territory instead of own
+        Order *blockade = new Blockade(player, enemies.at(rand() % enemies.size()));
+
+        player->getOrdersList()->addOrder(bomb);
+        player->getOrdersList()->addOrder(blockade);
     }
 
+    game->setGameState(EXECUTEORDERS);
+
+    //execute the orders for players
     for (auto& player : game->getPlayerList()) {
         for (auto& order : (*player->getOrdersList()).order_list) {
             order->attach(gameLog);
-
-            //BUG HERE, STOPS AT VALIDATE()
             order->execute();
         }
     }
-
     gameLog->endOutput();
+
+
+    
+
 }

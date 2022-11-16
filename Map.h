@@ -80,7 +80,7 @@ public:
     unordered_map<string, vector<string>> edges;
 
     // setters and getters:
-    void addNode(std::string);
+    void addNode(std::string t_name, std::string c_name);
     void addNode(string,Territory*);
     void addNeighbor(std::string territory, std::string neighbor);
     void addNeighbor(string territory, vector<string> neighbor);
@@ -88,7 +88,6 @@ public:
     Territory* getNode(std::string);
     vector<Territory*> getNodesPtr();
     std::vector<std::string> getNeighbours(std::string);
-    vector<Territory*> getNeighboursPtr(std::string);
 
     virtual
     // map methods:
@@ -137,6 +136,7 @@ class Map : public Graph
 
 public:
     unordered_map<string, Continent*> continents;
+    vector<Territory*> getNeighboursPtr(string territoryName);
 
 public:
 // constructors and destructors

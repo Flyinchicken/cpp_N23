@@ -6,7 +6,7 @@ using std::cin;
 using std::cout;
 using std::endl;
 
-void testCommandProcessor(int argc, char **argv)
+void testCommandProcessor(int argc, char** argv)
 {
 
     CommandProcessor* processor = new CommandProcessor();
@@ -49,14 +49,20 @@ void testCommandProcessor(int argc, char **argv)
         return;
     }
 
-    GameEngine *game = new GameEngine();
+    GameEngine* game = new GameEngine();
     game->displayCurrentGameState();
-    
+
     bool gameInProgress = true;
 
     while (gameInProgress)
     {
-        Command *nextCommand = processor->getCommand();
+        Command* nextCommand = processor->getCommand();
+
+        if (nextCommand->getCommand() == "fileEnd") {
+            gameInProgress = false;
+            cout << "Reached end of file" << endl;
+            continue;
+        }
 
         if (nextCommand->getCommand() == "fileEnd") {
             gameInProgress = false;
@@ -79,14 +85,14 @@ void testCommandProcessor(int argc, char **argv)
         game->displayCurrentGameState();
 
         if (game->getCurrentGameState() == ASSIGNREINFORCEMENTS) {
-            cout << "Simulating a Warzone game..." 
-                << endl 
-                << "Congratulations! All signs point to your victory, oh glorious one." 
+            cout << "Simulating a Warzone game..."
+                << endl
+                << "Congratulations! All signs point to your victory, oh glorious one."
                 << endl;
 
             game->setGameState(WIN);
 
             game->displayCurrentGameState();
         }
-    }    
+    }
 }

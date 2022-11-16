@@ -21,7 +21,7 @@ int turnNumber = 0;
  * */
 GameEngine::GameEngine()
 {
-    this->currentGameState = START;
+    setGameState(START);
     worldMap = nullptr;
 
     if (filePath.empty())
@@ -189,40 +189,33 @@ bool GameEngine::changeStateFromCommand(Command *command)
     if (commandString.find("loadmap") != std::string::npos)
     {
         command->saveEffect("Successfully loaded map file. State changed to MAPLOADED ");
-        this->currentGameState = MAPLOADED;
-        notify(this);
+        setGameState(MAPLOADED);
     }
     else if (commandString == CommandStrings::validateMap)
     {
         command->saveEffect("Map was successfully validated. State changed to MAPVALIDATED ");
-        this->currentGameState = MAPVALIDATED;
-        notify(this);
+        setGameState(MAPVALIDATED);
     }
     else if (commandString.find("addplayer") != std::string::npos)
     {
         command->saveEffect("Player  was added successfully ");
-        this->currentGameState = PLAYERSADDED;
-        notify(this);
+        setGameState(PLAYERSADDED);
     }
     else if (commandString == CommandStrings::gameStart)
     {
         command->saveEffect("Map added and validated successfully. All players added. Transitioned from start up phase into main game loop! ");
-        this->currentGameState = ASSIGNREINFORCEMENTS;
-        notify(this);
+        setGameState(ASSIGNREINFORCEMENTS);
     }
     else if (commandString == CommandStrings::replay)
     {
         command->saveEffect("Restarting game");
-        this->currentGameState = START;
-        notify(this);
+        setGameState(START);
     }
     else
     {
         cout << "Error: command string is invalid after being checked for validity!" << endl;
         return false;
     }
-
-    notify(this);
 
     return true;
 }
@@ -407,7 +400,7 @@ void GameEngine::assignPlayersOrder(vector<Player*>* playerList)
         cout << player->getName() << endl;
     }
 
-    std::random_shuffle(playerList->begin(),playerList->end());
+    //std::random_shuffle(playerList->begin(),playerList->end());
 
     cout << "Randomize player order: " << endl;
     for(auto& player : *playerList){
@@ -497,7 +490,7 @@ void GameEngine::displayMapTerritories() {
  */
 void GameEngine::setGameState(GameStates newGameState)
 {
-    currentGameState = newGameState;
+    this->currentGameState = newGameState;
     notify(this);
 }
 
@@ -554,7 +547,7 @@ void GameEngine::mainGameLoop()
         vector<Player*> currentPlayers = this->playerList;
 
         for(Player* current : currentPlayers){
-            if(current->getTerritories().size()){
+            if(current->getTerritories().size() < 1){
                 vector<Player*>::iterator playerIt = find(currentPlayers.begin(), currentPlayers.end(), current);
                 if(playerIt != currentPlayers.end()){
                     cout << "Player " << current->getName() << " has been eliminated" << endl;
@@ -574,7 +567,7 @@ void GameEngine::mainGameLoop()
             continue;
         }
 
-        if(turnNumber == 10){
+        if(turnNumber == 3){
             setGameState(WIN);
             continue;
         }
@@ -582,14 +575,6 @@ void GameEngine::mainGameLoop()
         if (currentGameState == ASSIGNREINFORCEMENTS)
         {
             reinforcementPhase();
-        }
-        else if (currentGameState == ISSUEORDERS)
-        {
-            issueOrdersPhase();
-        }
-        else
-        {
-            executeOrdersPhase();
         }
 
         turnNumber++;
@@ -604,18 +589,42 @@ void GameEngine::mainGameLoop()
 void GameEngine::reinforcementPhase() {
 
     cout << "Reinforcement Phase for turn " << turnNumber << endl;
-    for (Player* i : playerList) {
 
+    for (Player* i : playerList) {
         int pool = i->getTerritories().size();
         
         int continent_bonus = i->getContinentsBonus();
         int total_bonus = ((pool / 3) > 3)? (pool / 3) : 3;
         total_bonus += continent_bonus;
+        total_bonus += i->getReinforcementPool();
 
         cout << "Reinforcing player " << i->getName() << " with " << total_bonus << " troops" << endl << "Type anything to continue ";
         
         string temp;
         cin >> temp; 
+        
+        i->setReinforcementPool(total_bonus);
+    }
+    setGameState(ISSUEORDERS);
+    issueOrdersPhase();
+}
+
+void GameEngine::reinforcementPhaseForLogObserverDriver() {
+
+    cout << "Reinforcement Phase for turn " << turnNumber << endl;
+    for (Player* i : playerList) {
+
+        int pool = i->getTerritories().size();
+
+        int continent_bonus = i->getContinentsBonus();
+        int total_bonus = ((pool / 3) > 3) ? (pool / 3) : 3;
+        total_bonus += continent_bonus;
+        total_bonus += i->getReinforcementPool();
+
+        cout << "Reinforcing player " << i->getName() << " with " << total_bonus << " troops" << endl << "Type anything to continue ";
+
+        string temp;
+        cin >> temp;
 
         i->setReinforcementPool(total_bonus);
     }
@@ -651,7 +660,9 @@ void GameEngine::issueOrdersPhase() {
 
             cout << "Order for player " << temp->getName() << endl;
 
-            if ((*temp->getOrdersList()).order_list.size() > 5) {
+            int numOrders = temp->getOrdersList()->order_list.size();
+            
+            if (numOrders > 4) {
                 if (!temp->getHand()->getHand().empty()) {
                     vector<Card*> cards = temp->getHand()->getHand();
                     cards[0]->play(temp->getHand());
@@ -670,6 +681,7 @@ void GameEngine::issueOrdersPhase() {
     }
 
     setGameState(EXECUTEORDERS);
+    executeOrdersPhase();
 }
 
 void GameEngine::executeOrdersPhase()

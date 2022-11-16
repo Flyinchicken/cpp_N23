@@ -68,7 +68,7 @@ Map* MapLoader::LoadMap(string fileName) {
             }
 
             if (territoryInfo.size() > 1) {
-                map->addNode(territoryInfo[0]);
+                map->addNode(territoryInfo[0], territoryInfo[3]);
                 map->continents.at(territoryInfo[3])->addNode(territoryInfo[0], map->nodes.at(territoryInfo[0]));
             }
 

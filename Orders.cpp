@@ -108,8 +108,8 @@ std::ostream &operator<<(std::ostream &strm, const Order &order)
 
 string Order::stringToLog()
 {
-    cout << "STRINGTOLOG ORDER"  << endl;
-  return this->getOrderEffect();
+  string playername = this->get_player()->getName();
+  return playername + ": " + this->getOrderEffect() + "\n";
 }
 
 // implement of OrdersList class
@@ -287,8 +287,9 @@ void Deploy::execute()
   {
     cout << " Current Armies of  " << *targetTerritory->getTerritoryName() << " : " << targetTerritory->getArmyNumber() << endl;
     int previousArmyInReinforcementPool = player->getReinforcementPool();
-    int currentArmyInReinforcementPool = previousArmyInReinforcementPool - numberOfArmyUnits;
-    player->setReinforcementPool(currentArmyInReinforcementPool);
+    //Duplicate removal of armies
+    //int currentArmyInReinforcementPool = previousArmyInReinforcementPool - numberOfArmyUnits;
+    //player->setReinforcementPool(currentArmyInReinforcementPool);
     targetTerritory->addArmy(numberOfArmyUnits);
     cout << " Deploying " << numberOfArmyUnits << " armies to " << *targetTerritory->getTerritoryName() << "." << endl;
 
@@ -544,16 +545,16 @@ Bomb &Bomb::operator=(const Bomb &bomb)
 
 bool Bomb::validate()
 {
-    cout << "validate" << endl;
+
   bool isAdjacent = false;
-  for (auto iter : player->toAttack()) // Need to check this method when toAttack is done.
+  for (auto iter : player->toAttack()) 
   {
     if (targetTerritory == iter)
     {
       isAdjacent = true;
       break;
     }
-  };
+  }
   if (get_player() != targetTerritory->getOwner() && isAdjacent)
   {
     cout << "Valid Bomb Order." << endl;
@@ -565,7 +566,6 @@ bool Bomb::validate()
 
 void Bomb::execute()
 {
-    cout << "bomb execute start" << endl;
   if (validate())
   {
     int currentArmyInTargetTerr = targetTerritory->getArmyNumber();
@@ -586,7 +586,6 @@ void Bomb::execute()
     cout << "Invalid bomb order. Cannot execute this bomb order." << endl;
     setOrderEffect("Invalid bomb order. Cannot execute this bomb order.");
   }
-  cout << "notify bomb execute"  << endl;
   notify(this);
 }
 
