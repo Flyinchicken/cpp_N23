@@ -4,6 +4,7 @@
 #include "Orders.h"
 #include "Card.h"
 #include "Map.h"
+#include "PlayerStrategies.h"
 #include <string>
 #include <list>
 #include <vector>
@@ -36,11 +37,14 @@ private:
     bool canBeAttacked = true;
     bool canAttack = true;
 
+	// Strategy for how issueOrder, toAttack, and toDefend will behave
+	PlayerStrategy *playerStrategy;
 public:
 
 	int numAttacks = 0;
 	int numDefense = 0;
 	
+	// TODO: How init Strategy?
 	Player();
 	~Player();
 	//copy constructor
@@ -76,5 +80,6 @@ public:
 	void setTerritories(vector<Territory*> territories);
 	void setReinforcementPool(int pool);
 	void setTurn(bool turn);
+	void setPlayerStrategy(PlayerStrategy*);
 };
 #endif

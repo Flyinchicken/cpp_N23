@@ -11,6 +11,7 @@ Player::Player()
     this->orderslist = new OrdersList();
     this->hand = new Hand();
     this->territories = vector<Territory*>();
+    this->playerStrategy = new HumanPlayerStrategy();   // Assumes player is human unless otherwise specified
 }
 
 // Non-default constructor accepting a player name
@@ -41,6 +42,7 @@ Player::~Player()
         this->territories[i] = nullptr;
     }
     this->territories.clear();
+    delete this->playerStrategy;
 }
 
 // Copy constructor
@@ -51,17 +53,32 @@ Player::Player(const Player& player)
     this->hand = new Hand(*(player.hand));
     this->territories = vector<Territory*>(player.territories);
     this->reinforcementPool = player.reinforcementPool;
+    this->playerStrategy = player.playerStrategy;
 }
 
 // Assignment operator
 Player& Player::operator=(const Player& player)
 {
-    this->name = player.name;
-    this->orderslist = new OrdersList(*(player.orderslist));
-    this->hand = new Hand(*(player.hand));
-    this->territories = vector<Territory*>(player.territories);
-    this->reinforcementPool = player.reinforcementPool;
+    if (&player != this) {
+        this->name = player.name;
+        this->reinforcementPool = player.reinforcementPool;
 
+        delete this->orderslist;
+        delete this->hand;
+        delete this->playerStrategy;
+        for (int i = 0; i < this->territories.size(); i++)
+        {
+            delete this->territories[i];
+            this->territories[i] = nullptr;
+        }
+        this->territories.clear();
+
+        this->orderslist = new OrdersList(*(player.orderslist));
+        this->hand = new Hand(*(player.hand));
+        this->playerStrategy = player.playerStrategy;
+        this->territories = vector<Territory*>(player.territories);
+    }
+    
     return *this;
 }
 
@@ -116,6 +133,15 @@ void Player::setHand(Hand* newHand)
 void Player::setTerritories(vector<Territory*> newTerritories)
 {
     this->territories = newTerritories;
+}
+
+/**
+ * Sets current player strategy
+ * 
+ * @param newStrategy The new type of strategy this player should follow
+*/
+void Player::setPlayerStrategy(PlayerStrategy *newStrategy) {
+    this->playerStrategy = newStrategy;
 }
 
 void Player::addTerritory(Territory* territory) {
@@ -404,6 +430,7 @@ vector<Territory*> Player::toAttack()
 // stream operator that prints the player's owned countries
 ostream& operator<<(ostream& outs, Player& player)
 {
+    // TODO: Add Strategy
     outs << player.getName() << "'s owned territories: " << endl;
 
     for (int i = 0; i < player.territories.size(); i++)
