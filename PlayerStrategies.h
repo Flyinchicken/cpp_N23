@@ -10,10 +10,12 @@ class Territory;
 
 // Abstract strategy class
 class PlayerStrategy {
+    friend ostream& operator << (ostream&, const PlayerStrategy&);
     public:
         virtual void issueOrder() = 0;
         virtual vector<Territory*> toAttack() = 0;
         virtual vector<Territory*> toDefend() = 0;
+        virtual string getStrategyAsString() const = 0;
 };
 
 // Concrete strategy classes
@@ -22,6 +24,7 @@ class HumanPlayerStrategy : public PlayerStrategy {
         void issueOrder();
         vector<Territory*> toAttack();
         vector<Territory*> toDefend();
+        string getStrategyAsString() const;
 };
 
 class AggressivePlayerStrategy : public PlayerStrategy {
@@ -29,6 +32,7 @@ class AggressivePlayerStrategy : public PlayerStrategy {
         void issueOrder();
         vector<Territory*> toAttack();
         vector<Territory*> toDefend();
+        string getStrategyAsString()const;
 };
 
 class BenevolentPlayerStrategy : public PlayerStrategy {
@@ -36,6 +40,7 @@ class BenevolentPlayerStrategy : public PlayerStrategy {
         void issueOrder();
         vector<Territory*> toAttack();
         vector<Territory*> toDefend();
+        string getStrategyAsString() const;
 };
 
 class NeutralPlayerStrategy : public PlayerStrategy {
@@ -43,6 +48,7 @@ class NeutralPlayerStrategy : public PlayerStrategy {
         void issueOrder();
         vector<Territory*> toAttack();
         vector<Territory*> toDefend();
+        string getStrategyAsString() const;
 };
 
 // ??Not in instructions??
@@ -51,6 +57,5 @@ class CheaterPlayerStrategy : public PlayerStrategy {
         void issueOrder();
         vector<Territory*> toAttack();
         vector<Territory*> toDefend();
-
-        friend ostream& operator<<(ostream&, PlayerStrategy);
+        string getStrategyAsString() const;
 };
