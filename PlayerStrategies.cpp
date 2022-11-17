@@ -1,5 +1,11 @@
 #include "PlayerStrategies.h"
 
+ostream& operator << (ostream &out, const PlayerStrategy &strategy) {
+    out << strategy.getStrategyAsString();
+
+    return out;
+}
+
 ///
 /// HUMAN PLAYER
 ///
@@ -98,10 +104,4 @@ vector<Territory*> CheaterPlayerStrategy::toDefend() {
 
 string CheaterPlayerStrategy::getStrategyAsString() const {
     return "Cheater Player (bot)";
-}
-
-ostream& operator << (ostream &out, const PlayerStrategy &strategy) {
-    out << strategy.getStrategyAsString();
-
-    return out;
 }

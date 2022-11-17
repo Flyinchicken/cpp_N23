@@ -431,7 +431,10 @@ vector<Territory*> Player::toAttack()
 ostream& operator<<(ostream& outs, Player& player)
 {
     // TODO: Add Strategy
-    outs << player.getName() << "'s owned territories: " << endl;
+    outs << player.getName() 
+        << " ("
+        << player.playerStrategy->getStrategyAsString()
+        << ")'s owned territories: " << endl;
 
     for (int i = 0; i < player.territories.size(); i++)
     {
