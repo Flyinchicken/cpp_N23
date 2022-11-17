@@ -389,9 +389,8 @@ string CommandProcessor::stringToLog()
 /**
  * Default constructor.
 */
-FileCommandProcessorAdapter::FileCommandProcessorAdapter()
+FileCommandProcessorAdapter::FileCommandProcessorAdapter() 
 {
-    CommandProcessor();
     this->fileReader = new FileLineReader();
 }
 
@@ -400,9 +399,8 @@ FileCommandProcessorAdapter::FileCommandProcessorAdapter()
  *
  * @param file FileLineReader to set current fileReade to
 */
-FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileLineReader* file)
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileLineReader* file) 
 {
-    CommandProcessor();
     this->fileReader = file;
 }
 
@@ -412,7 +410,6 @@ FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileLineReader* file)
  * @param adapter FileCommandProcessorAdapter to copy
 */
 FileCommandProcessorAdapter::FileCommandProcessorAdapter(const FileCommandProcessorAdapter& adapter) {
-    CommandProcessor();
     this->fileReader = adapter.fileReader;
 }
 
