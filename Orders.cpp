@@ -287,8 +287,9 @@ void Deploy::execute()
   {
     cout << " Current Armies of  " << *targetTerritory->getTerritoryName() << " : " << targetTerritory->getArmyNumber() << endl;
     int previousArmyInReinforcementPool = player->getReinforcementPool();
-    int currentArmyInReinforcementPool = previousArmyInReinforcementPool - numberOfArmyUnits;
-    player->setReinforcementPool(currentArmyInReinforcementPool);
+    //Duplicate removal of armies
+    //int currentArmyInReinforcementPool = previousArmyInReinforcementPool - numberOfArmyUnits;
+    //player->setReinforcementPool(currentArmyInReinforcementPool);
     targetTerritory->addArmy(numberOfArmyUnits);
     cout << " Deploying " << numberOfArmyUnits << " armies to " << *targetTerritory->getTerritoryName() << "." << endl;
 
