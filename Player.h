@@ -17,6 +17,7 @@ using namespace std;
 class Territory;
 class OrdersList;
 class Hand;
+class PlayerStrategy;
 
 extern int finishedPlayers;
 extern GameEngine* ge;

@@ -1,8 +1,12 @@
+#pragma once
+
 #include <vector>
 
 #include "Map.h"
 
 using std::vector;
+
+class Territory;
 
 // Abstract strategy class
 class PlayerStrategy {
@@ -10,8 +14,6 @@ class PlayerStrategy {
         virtual void issueOrder() = 0;
         virtual vector<Territory*> toAttack() = 0;
         virtual vector<Territory*> toDefend() = 0;
-
-        virtual friend ostream& operator<<(ostream&, HumanPlayerStrategy) = 0;
 };
 
 // Concrete strategy classes
@@ -20,8 +22,6 @@ class HumanPlayerStrategy : public PlayerStrategy {
         void issueOrder();
         vector<Territory*> toAttack();
         vector<Territory*> toDefend();
-
-        friend ostream& operator<<(ostream&, HumanPlayerStrategy);
 };
 
 class AggressivePlayerStrategy : public PlayerStrategy {
@@ -29,8 +29,6 @@ class AggressivePlayerStrategy : public PlayerStrategy {
         void issueOrder();
         vector<Territory*> toAttack();
         vector<Territory*> toDefend();
-
-        friend ostream& operator<<(ostream&, HumanPlayerStrategy);
 };
 
 class BenevolentPlayerStrategy : public PlayerStrategy {
@@ -38,8 +36,6 @@ class BenevolentPlayerStrategy : public PlayerStrategy {
         void issueOrder();
         vector<Territory*> toAttack();
         vector<Territory*> toDefend();
-
-        friend ostream& operator<<(ostream&, HumanPlayerStrategy);
 };
 
 class NeutralPlayerStrategy : public PlayerStrategy {
@@ -47,8 +43,6 @@ class NeutralPlayerStrategy : public PlayerStrategy {
         void issueOrder();
         vector<Territory*> toAttack();
         vector<Territory*> toDefend();
-
-        friend ostream& operator<<(ostream&, HumanPlayerStrategy);
 };
 
 // ??Not in instructions??
@@ -58,5 +52,5 @@ class CheaterPlayerStrategy : public PlayerStrategy {
         vector<Territory*> toAttack();
         vector<Territory*> toDefend();
 
-        friend ostream& operator<<(ostream&, HumanPlayerStrategy);
+        friend ostream& operator<<(ostream&, PlayerStrategy);
 };

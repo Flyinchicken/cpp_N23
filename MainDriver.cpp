@@ -10,6 +10,7 @@
 #include "PlayerDriver.h"
 #include "CommandProcessingDriver.h"
 #include "LoggingObserverDriver.h"
+#include "PlayerStrategiesDriver.h"
 
 using namespace std;
 
@@ -20,13 +21,14 @@ Deck* x;
 
 int main(int argc, char** argv)
 {
+    testPlayerStrategies();
     //testOrderExecution();
 
     // Need file path before creating
     // ge = new GameEngine();
-    ge = new GameEngine();
-    x = new Deck();
-    testLoggingObserver();
+    // ge = new GameEngine();
+    // x = new Deck();
+    // testLoggingObserver();
     // vector<Territory*> neighbors = worldMap->getNeighboursPtr();
     //testStartupPhase();
 
