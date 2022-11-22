@@ -1,6 +1,7 @@
 #include "GameEngine.h"
 #include "MapLoader.h"
 #include "LoggingObserver.h"
+#include "Player.h"
 
 #include <iostream>
 #include <algorithm>
