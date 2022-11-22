@@ -21,6 +21,7 @@ Deck* x;
 
 int main(int argc, char** argv)
 {
+    x = new Deck();
     testPlayerStrategies();
     //testOrderExecution();
 
