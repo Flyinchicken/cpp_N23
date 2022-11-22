@@ -4,6 +4,7 @@
 //
 
 #include "Map.h"
+#include "Player.h"
 
 Territory::Territory() {
     territoryName = nullptr;
