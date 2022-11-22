@@ -1,4 +1,6 @@
 #include "Player.h"
+#include "PlayerStrategies.h"
+
 #include <iostream>
 
 using namespace std;
@@ -11,7 +13,7 @@ Player::Player()
     this->orderslist = new OrdersList();
     this->hand = new Hand();
     this->territories = vector<Territory*>();
-    this->playerStrategy = new HumanPlayerStrategy();   // Assumes player is human unless otherwise specified
+    this->playerStrategy = new HumanPlayerStrategy(this);   // Assumes player is human unless otherwise specified
 }
 
 // Non-default constructor accepting a player name
