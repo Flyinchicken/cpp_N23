@@ -1,16 +1,42 @@
 #include "PlayerStrategies.h"
 #include "Map.h"
+#include "Player.h"
 
+#include <vector>
+#include <iostream>
+#include <string>
+
+using std::vector;
+using std::string;
+using std::ostream;
+
+///
+/// PLAYER STRATEGY
+///
+
+/**
+ * Uses polymorphism to display the type of Strategy this is
+*/
 ostream& operator << (ostream &out, const PlayerStrategy &strategy) {
     out << strategy.getStrategyAsString();
 
     return out;
 }
 
+/**
+ * Constructor that takes a Player and sets the player pointer this Strategy is associated with
+ * 
+ * No default constructor since Player is needed for toAttack and toDefend.
+ * 
+ * @param p The player this strategy is assocuated with
+*/
 PlayerStrategy::PlayerStrategy(Player *p) {
     this->player = p;
 }
 
+/**
+ * Basic destructor
+*/
 PlayerStrategy::~PlayerStrategy() {
     delete this->player;
 }
@@ -161,16 +187,45 @@ void CheaterPlayerStrategy::issueOrder() {
 
 }
 
+/**
+ * @returns List of territories the player can attack
+*/
 vector<Territory*> CheaterPlayerStrategy::toAttack() {
-
+    return getAdjacentEnemyTerritories();
 }
 
+/**
+ * Gets all enemy territoties adjacent to the player's own territories.
+ * Results are not ordered since a Cheater player will conquer all these anyway, regardless
+ * of army (a true hero).
+ * 
+ * @returns Vector of all adjacent enemy territories
+*/
 vector<Territory*> CheaterPlayerStrategy::getAdjacentEnemyTerritories() {
+    vector<Territory*> playerTerritories = this->player->getTerritories();
+    vector<Territory*> a_territories;
+    set<Territory*> a_set;
     
+    for (int i = 0; i < playerTerritories.size(); i++)
+    {
+        vector<Territory*> temp = worldMap->getNeighboursPtr(*(playerTerritories.at(i)->getTerritoryName()));
+        for(auto& neighbor : temp){
+            if(neighbor->getOwner() != this->player){
+                a_set.insert(neighbor);
+            }
+        }
+    }
+
+    for(auto& neighbor : a_set){
+        a_territories.push_back(neighbor);
+    }
+
+    return a_territories;
 }
 
+// Doesn't defend?
 vector<Territory*> CheaterPlayerStrategy::toDefend() {
-
+    return {};
 }
 
 string CheaterPlayerStrategy::getStrategyAsString() const {

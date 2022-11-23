@@ -29,6 +29,7 @@ class GameEngine : public Subject, public ILoggable
 
         CommandProcessor* commandProcessor;
 
+        vector<Player*> playerList;
         vector<Player*> deadPlayers;
         void displayPlayerList();
 
@@ -74,7 +75,6 @@ class GameEngine : public Subject, public ILoggable
         // Public for testing
         void loadMap(Command* command);
         void addPlayer(Command* command);
-        vector<Player*> playerList;
         void gameStart(Command* command);
 
         void displayFarewellMessage();

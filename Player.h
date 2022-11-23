@@ -72,6 +72,7 @@ public:
 	vector<Territory*> getTerritories() const;
 	int getReinforcementPool();
 	bool getTurn();
+	PlayerStrategy* getPlayerStrategy();
 
 	//setters
 	void setName(string name);

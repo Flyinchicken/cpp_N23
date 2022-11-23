@@ -108,6 +108,13 @@ vector<Territory*> Player::getTerritories() const
     return territories;
 }
 
+/**
+ * Returns current player strategy
+*/
+PlayerStrategy* Player::getPlayerStrategy() {
+    return playerStrategy;
+}
+
 int Player::getReinforcementPool()
 {
     return reinforcementPool;

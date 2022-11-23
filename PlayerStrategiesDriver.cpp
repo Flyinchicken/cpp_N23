@@ -25,21 +25,36 @@ void testPlayerStrategies() {
     std::cout << *ps << endl;
     std::cout << *p << endl;
 
+    // Mock game setup
     GameEngine *strategyEngine = new GameEngine();
     strategyEngine->loadMap(new Command("loadmap ./MapFiles/3D.map"));  // Known valid map so won't validate
     strategyEngine->addPlayer(new Command("addplayer StratTester1"));
     strategyEngine->addPlayer(new Command("addplayer StratTester2"));
-     strategyEngine->gameStart(new Command("gamestart"));
-    vector<Territory*> testAttack = strategyEngine->playerList.at(0)->toAttack();
-    cout << "TERS" << endl;
+    strategyEngine->gameStart(new Command("gamestart"));
+
+    vector<Player*> playerList = strategyEngine->getPlayerList();
+
+
+    // "Conquers" 1t/1c (the bridge between the two players) for StratTester1
+    // to get more bang for your buck for toAttack territories
+    vector<Territory*> testAttack = playerList.at(0)->toAttack();
+    testAttack.at(0)->setOwner(playerList.at(0));
+    testAttack = playerList.at(0)->toAttack();
+    cout << "TO ATTACK: " << endl;
     for (auto ter : testAttack) {
-        // cout << *ter << endl;
-        ter->setOwner(strategyEngine->playerList.at(0));
-    }
-    vector<Territory*> testAttack2 = strategyEngine->playerList.at(0)->toAttack();
-    testAttack2.at(0)->setOwner(strategyEngine->playerList.at(0));
-    vector<Territory*> testAttack3 = strategyEngine->playerList.at(0)->toAttack();
-    for (auto ter : testAttack3) {
         cout << *ter << endl;
     }
+
+    cout << "--------------" << endl;
+
+    playerList.at(0)->setPlayerStrategy(new CheaterPlayerStrategy(playerList.at(0)));
+    testAttack = playerList.at(0)->getPlayerStrategy()->toAttack();
+    cout << "TO ATTACK2: " << endl;
+    for (auto ter : testAttack) {
+        cout << *ter << endl;
+    }
+    cout << *(playerList.at(0)->getPlayerStrategy()) << *(playerList.at(1)->getPlayerStrategy()) << endl;
+
+    // delete ps;
+    // cout << *p;
 }
