@@ -33,6 +33,8 @@ class HumanPlayerStrategy : public PlayerStrategy {
         HumanPlayerStrategy(Player*);
         HumanPlayerStrategy(const HumanPlayerStrategy&);
         ~HumanPlayerStrategy();
+        HumanPlayerStrategy& operator = (const HumanPlayerStrategy&);
+
         void issueOrder();
         vector<Territory*> toAttack();
         vector<Territory*> toDefend();
@@ -45,6 +47,8 @@ class AggressivePlayerStrategy : public PlayerStrategy {
         AggressivePlayerStrategy(Player*);
         AggressivePlayerStrategy(const AggressivePlayerStrategy&);
         ~AggressivePlayerStrategy();
+        AggressivePlayerStrategy& operator = (const AggressivePlayerStrategy&);
+
         void issueOrder();
         vector<Territory*> toAttack();
         vector<Territory*> toDefend();
@@ -57,6 +61,8 @@ class BenevolentPlayerStrategy : public PlayerStrategy {
         BenevolentPlayerStrategy(Player*);
         BenevolentPlayerStrategy(const BenevolentPlayerStrategy&);
         ~BenevolentPlayerStrategy();
+        BenevolentPlayerStrategy& operator = (const BenevolentPlayerStrategy&);
+
         void issueOrder();
         vector<Territory*> toAttack();
         vector<Territory*> toDefend();
@@ -69,6 +75,8 @@ class NeutralPlayerStrategy : public PlayerStrategy {
         NeutralPlayerStrategy(Player*);
         NeutralPlayerStrategy(const NeutralPlayerStrategy&);
         ~NeutralPlayerStrategy();
+        NeutralPlayerStrategy& operator = (const NeutralPlayerStrategy&);
+
         void issueOrder();
         vector<Territory*> toAttack();
         vector<Territory*> toDefend();
@@ -81,6 +89,8 @@ class CheaterPlayerStrategy : public PlayerStrategy {
         CheaterPlayerStrategy(Player*);
         CheaterPlayerStrategy(const CheaterPlayerStrategy&);
         ~CheaterPlayerStrategy();
+        CheaterPlayerStrategy& operator = (const CheaterPlayerStrategy&);
+        
         void issueOrder();
         vector<Territory*> toAttack();
         vector<Territory*> toDefend();

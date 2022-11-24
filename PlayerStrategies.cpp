@@ -66,6 +66,20 @@ HumanPlayerStrategy::HumanPlayerStrategy(const HumanPlayerStrategy& strat) : Pla
 HumanPlayerStrategy::~HumanPlayerStrategy() {
 }
 
+/**
+ * Assignment operator.
+ * Doesn't delete player since should be managed elsewhere
+*/
+HumanPlayerStrategy& HumanPlayerStrategy::operator = (const HumanPlayerStrategy& toAssign) {
+    if (this == &toAssign) {
+        return *this;
+    }
+
+    player = toAssign.player;
+
+    return *this;
+}
+
 void HumanPlayerStrategy::issueOrder() {
 
 }
@@ -104,6 +118,20 @@ AggressivePlayerStrategy::AggressivePlayerStrategy(const AggressivePlayerStrateg
 AggressivePlayerStrategy::~AggressivePlayerStrategy() {
 }
 
+/**
+ * Assignment operator.
+ * Doesn't delete player since should be managed elsewhere
+*/
+AggressivePlayerStrategy& AggressivePlayerStrategy::operator = (const AggressivePlayerStrategy& toAssign) {
+    if (this == &toAssign) {
+        return *this;
+    }
+    
+    player = toAssign.player;
+
+    return *this;
+}
+
 void AggressivePlayerStrategy::issueOrder() {
 
 }
@@ -139,6 +167,20 @@ BenevolentPlayerStrategy::BenevolentPlayerStrategy(const BenevolentPlayerStrateg
 }
 
 BenevolentPlayerStrategy::~BenevolentPlayerStrategy() {
+}
+
+/**
+ * Assignment operator.
+ * Doesn't delete player since should be managed elsewhere
+*/
+BenevolentPlayerStrategy& BenevolentPlayerStrategy::operator = (const BenevolentPlayerStrategy& toAssign) {
+    if (this == &toAssign) {
+        return *this;
+    }
+    
+    player = toAssign.player;
+
+    return *this;
 }
 
 void BenevolentPlayerStrategy::issueOrder() {
@@ -182,6 +224,20 @@ NeutralPlayerStrategy::NeutralPlayerStrategy(const NeutralPlayerStrategy& strat)
  * Empty destructor
 */
 NeutralPlayerStrategy::~NeutralPlayerStrategy() {
+}
+
+/**
+ * Assignment operator.
+ * Doesn't delete player since should be managed elsewhere
+*/
+NeutralPlayerStrategy& NeutralPlayerStrategy::operator = (const NeutralPlayerStrategy& toAssign) {
+    if (this == &toAssign) {
+        return *this;
+    }
+    
+    player = toAssign.player;
+
+    return *this;
 }
 
 /**
@@ -235,6 +291,20 @@ CheaterPlayerStrategy::CheaterPlayerStrategy(const CheaterPlayerStrategy& strat)
  * Empty destructor
 */
 CheaterPlayerStrategy::~CheaterPlayerStrategy() {
+}
+
+/**
+ * Assignment operator.
+ * Doesn't delete player since should be managed elsewhere
+*/
+CheaterPlayerStrategy& CheaterPlayerStrategy::operator = (const CheaterPlayerStrategy& toAssign) {
+    if (this == &toAssign) {
+        return *this;
+    }
+    
+    player = toAssign.player;
+
+    return *this;
 }
 
 // TODO: The Cheater player should not issue orders. 
