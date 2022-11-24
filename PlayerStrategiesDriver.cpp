@@ -37,24 +37,63 @@ void testPlayerStrategies() {
 
     // "Conquers" 1t/1c (the bridge between the two players) for StratTester1
     // to get more bang for your buck for toAttack territories
-    vector<Territory*> testAttack = playerList.at(0)->toAttack();
-    testAttack.at(0)->setOwner(playerList.at(0));
-    testAttack = playerList.at(0)->toAttack();
-    cout << "TO ATTACK: " << endl;
-    for (auto ter : testAttack) {
-        cout << *ter << endl;
-    }
+    // vector<Territory*> testAttack = playerList.at(0)->toAttack();
+    // testAttack.at(0)->setOwner(playerList.at(0));
+    // testAttack = playerList.at(0)->toAttack();
+    // cout << "TO ATTACK: " << endl;
+    // for (auto ter : testAttack) {
+    //     cout << *ter << endl;
+    // }
 
     cout << "--------------" << endl;
 
-    playerList.at(0)->setPlayerStrategy(new CheaterPlayerStrategy(playerList.at(0)));
-    testAttack = playerList.at(0)->getPlayerStrategy()->toAttack();
-    cout << "TO ATTACK2: " << endl;
-    for (auto ter : testAttack) {
-        cout << *ter << endl;
-    }
-    cout << *(playerList.at(0)->getPlayerStrategy()) << *(playerList.at(1)->getPlayerStrategy()) << endl;
+    // playerList.at(0)->setPlayerStrategy(new CheaterPlayerStrategy(playerList.at(0)));
+    // testAttack = playerList.at(0)->getPlayerStrategy()->toAttack();
+    // cout << "TO ATTACK2: " << endl;
+    // for (auto ter : testAttack) {
+    //     cout << *ter << endl;
+    // }
+    // cout << *(playerList.at(0)->getPlayerStrategy()) << *(playerList.at(1)->getPlayerStrategy()) << endl;
 
     // delete ps;
     // cout << *p;
+
+    // Cheater player demo
+    cout << "-------CHEATER PLAYER DEMO-----------" << endl;
+    delete strategyEngine;
+
+    strategyEngine = new GameEngine();
+    strategyEngine->loadMap(new Command("loadmap ./MapFiles/3D.map"));  // Known valid map so won't validate
+    strategyEngine->addPlayer(new Command("addplayer StratTester1"));
+    strategyEngine->addPlayer(new Command("addplayer StratTester2"));
+    strategyEngine->gameStart(new Command("gamestart"));
+    
+    playerList = strategyEngine->getPlayerList();
+
+    playerList.at(0)->setPlayerStrategy(new CheaterPlayerStrategy(playerList.at(0)));
+    playerList.at(1)->setPlayerStrategy(new NeutralPlayerStrategy(playerList.at(1)));
+
+    int maxTurns = 2;
+    while (maxTurns > 0) {
+        // Show state of map
+        for (Player* p : playerList) {
+            cout << *p << endl;
+        }
+
+        cout << "----------END--------------" << endl;
+
+        for (Player *p : playerList) {  
+            // Issue one order each
+            // Neutral does nothing
+            // Cheater conquers
+            p->issueOrder();
+        }
+
+        maxTurns--;
+    }
+    // Show state of map (everything has been absorbed)
+    cout << "FINAL" << endl;
+    for (Player* p : playerList) {
+        cout << *p << endl;
+    }
 }

@@ -178,13 +178,30 @@ ostream& operator << (ostream& out, const NeutralPlayerStrategy &strategy) {
 /// CHEATER PLAYER
 ///
 
+/**
+ * Constructor takes Player and passes to PlayerStrategy()
+*/
 CheaterPlayerStrategy::CheaterPlayerStrategy(Player *p) : PlayerStrategy(p) { }
 
+/**
+ * Empty destructor
+*/
 CheaterPlayerStrategy::~CheaterPlayerStrategy() {
 }
 
+// TODO: The Cheater player should not issue orders. 
+// The code in its issueOrder() function should just change the ownership of all its neighboring territories to themself. 
+/**
+ * Changes ownership for all neighbouring territories and ends turn.
+*/
 void CheaterPlayerStrategy::issueOrder() {
+    vector<Territory*> territoriesToConquer = this->toAttack();
 
+    for (Territory* t : territoriesToConquer) {
+        t->setOwner(player);
+    }
+
+    player->setTurn(true);
 }
 
 /**
@@ -223,15 +240,27 @@ vector<Territory*> CheaterPlayerStrategy::getAdjacentEnemyTerritories() {
     return a_territories;
 }
 
-// Doesn't defend?
+/**
+ * Cheater player does nothing but absorb other territories
+ * 
+ * @returns Empty vector
+*/
 vector<Territory*> CheaterPlayerStrategy::toDefend() {
     return {};
 }
 
+/**
+ * @returns The type of strategy as a string
+*/
 string CheaterPlayerStrategy::getStrategyAsString() const {
     return "Cheater Player (bot)";
 }
 
+/**
+ * Outputs relevant information of the Player strategy.
+ * 
+ * @returns The strategy as a string
+*/
 ostream& operator << (ostream& out, const CheaterPlayerStrategy &strategy) {
     out << strategy.getStrategyAsString();
 
