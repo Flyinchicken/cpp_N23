@@ -20,6 +20,7 @@ class PlayerStrategy {
         virtual vector<Territory*> toAttack() = 0;
         virtual vector<Territory*> toDefend() = 0;
         virtual string getStrategyAsString() const = 0;
+        Player* getPlayer();                             // For testing purposes
     protected:
         PlayerStrategy(Player*);
         Player *player;
@@ -30,6 +31,7 @@ class HumanPlayerStrategy : public PlayerStrategy {
     friend ostream& operator << (ostream&, const HumanPlayerStrategy&);
     public:
         HumanPlayerStrategy(Player*);
+        HumanPlayerStrategy(const HumanPlayerStrategy&);
         ~HumanPlayerStrategy();
         void issueOrder();
         vector<Territory*> toAttack();
@@ -41,6 +43,7 @@ class AggressivePlayerStrategy : public PlayerStrategy {
     friend ostream& operator << (ostream&, const AggressivePlayerStrategy&);
     public:
         AggressivePlayerStrategy(Player*);
+        AggressivePlayerStrategy(const AggressivePlayerStrategy&);
         ~AggressivePlayerStrategy();
         void issueOrder();
         vector<Territory*> toAttack();
@@ -52,6 +55,7 @@ class BenevolentPlayerStrategy : public PlayerStrategy {
     friend ostream& operator << (ostream&, const BenevolentPlayerStrategy&);
     public:
         BenevolentPlayerStrategy(Player*);
+        BenevolentPlayerStrategy(const BenevolentPlayerStrategy&);
         ~BenevolentPlayerStrategy();
         void issueOrder();
         vector<Territory*> toAttack();
@@ -63,6 +67,7 @@ class NeutralPlayerStrategy : public PlayerStrategy {
     friend ostream& operator << (ostream&, const NeutralPlayerStrategy&);
     public:
         NeutralPlayerStrategy(Player*);
+        NeutralPlayerStrategy(const NeutralPlayerStrategy&);
         ~NeutralPlayerStrategy();
         void issueOrder();
         vector<Territory*> toAttack();
@@ -70,11 +75,11 @@ class NeutralPlayerStrategy : public PlayerStrategy {
         string getStrategyAsString() const;
 };
 
-// ??Not in instructions??
 class CheaterPlayerStrategy : public PlayerStrategy {
     friend ostream& operator << (ostream&, const CheaterPlayerStrategy&);
     public:
         CheaterPlayerStrategy(Player*);
+        CheaterPlayerStrategy(const CheaterPlayerStrategy&);
         ~CheaterPlayerStrategy();
         void issueOrder();
         vector<Territory*> toAttack();

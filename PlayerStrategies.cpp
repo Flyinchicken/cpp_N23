@@ -41,11 +41,27 @@ PlayerStrategy::~PlayerStrategy() {
     delete this->player;
 }
 
+/**
+ * Getter used for testing purposes
+ * 
+ * @returns Player attached to this strategy
+*/
+Player* PlayerStrategy::getPlayer() {
+    return this->player;
+}
+
 ///
 /// HUMAN PLAYER
 ///
 
 HumanPlayerStrategy::HumanPlayerStrategy(Player *p) : PlayerStrategy(p) { }
+
+/**
+ * Copy constructor
+*/
+HumanPlayerStrategy::HumanPlayerStrategy(const HumanPlayerStrategy& strat) : PlayerStrategy(strat.player) {
+    cout << "Copy" << endl;
+}
 
 HumanPlayerStrategy::~HumanPlayerStrategy() {
 }
@@ -78,6 +94,13 @@ ostream& operator << (ostream& out, const HumanPlayerStrategy &strategy) {
 
 AggressivePlayerStrategy::AggressivePlayerStrategy(Player *p) : PlayerStrategy(p) { }
 
+/**
+ * Copy constructor
+*/
+AggressivePlayerStrategy::AggressivePlayerStrategy(const AggressivePlayerStrategy& strat) : PlayerStrategy(strat.player) {
+    cout << "Copy" << endl;
+}
+
 AggressivePlayerStrategy::~AggressivePlayerStrategy() {
 }
 
@@ -109,6 +132,12 @@ ostream& operator << (ostream& out, const AggressivePlayerStrategy &strategy) {
 
 BenevolentPlayerStrategy::BenevolentPlayerStrategy(Player *p) : PlayerStrategy(p) { }
 
+/**
+ * Copy constructor
+*/
+BenevolentPlayerStrategy::BenevolentPlayerStrategy(const BenevolentPlayerStrategy& strat) : PlayerStrategy(strat.player) {
+}
+
 BenevolentPlayerStrategy::~BenevolentPlayerStrategy() {
 }
 
@@ -138,8 +167,20 @@ ostream& operator << (ostream& out, const BenevolentPlayerStrategy &strategy) {
 /// NEUTRAL PLAYER
 ///
 
+/**
+ * Constructor takes Player and passes to PlayerStrategy()
+*/
 NeutralPlayerStrategy::NeutralPlayerStrategy(Player *p) : PlayerStrategy(p) { }
 
+/**
+ * Copy constructor
+*/
+NeutralPlayerStrategy::NeutralPlayerStrategy(const NeutralPlayerStrategy& strat) : PlayerStrategy(strat.player) {
+}
+
+/**
+ * Empty destructor
+*/
 NeutralPlayerStrategy::~NeutralPlayerStrategy() {
 }
 
@@ -147,7 +188,7 @@ NeutralPlayerStrategy::~NeutralPlayerStrategy() {
  * Doesn't issue any orders
 */
 void NeutralPlayerStrategy::issueOrder() {
-
+    // I'll have an uh...uhhhhhhhhhhhhhhhh...
 }
 
 /**
@@ -182,6 +223,13 @@ ostream& operator << (ostream& out, const NeutralPlayerStrategy &strategy) {
  * Constructor takes Player and passes to PlayerStrategy()
 */
 CheaterPlayerStrategy::CheaterPlayerStrategy(Player *p) : PlayerStrategy(p) { }
+
+/**
+ * Copy constructor
+*/
+CheaterPlayerStrategy::CheaterPlayerStrategy(const CheaterPlayerStrategy& strat) : PlayerStrategy(strat.player) {
+    cout << "Copy" << endl;
+}
 
 /**
  * Empty destructor
