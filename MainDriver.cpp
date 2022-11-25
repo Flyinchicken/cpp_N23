@@ -18,10 +18,13 @@ std::string filePath = "";
 GameEngine* ge;
 Map* worldMap;
 Deck* x;
+bool realGame;
 
 int main(int argc, char** argv)
 {
     x = new Deck();
+    // This is a test since a test is being run
+    realGame = false;
     testPlayerStrategies();
     //testOrderExecution();
 

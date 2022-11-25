@@ -362,7 +362,12 @@ void GameEngine::addPlayer(Command *command) {
 
     setGameState(PLAYERSADDED);
     command->saveEffect("Player " + playerName + " was added successfully. State changed to PLAYERSADDED"); 
-    displayPlayerList();   
+
+    // Already now the players if its a test game
+    if (realGame) {
+        displayPlayerList();
+    }
+       
 }
 
 /**
@@ -375,7 +380,10 @@ void GameEngine::gameStart(Command *command) {
         x->addCardToDeck(new Card());
     }
 
-    assignPlayersOrder(&playerList);
+    // Don't care about shuffling players if its a test game
+    if (realGame) {
+        assignPlayersOrder(&playerList);
+    }    
 
     distributeTerritories();
 
@@ -441,6 +449,7 @@ void GameEngine::distributeTerritories()
     int territoriesForPlayer = playerAllotedTerritories.at(currentPlayerTerritories);
 
     for (auto &kv : worldMap->continents) {
+        // 6c is first in list for Cube
         for (auto &kv2 : kv.second->nodes) {
             Territory *currentTerritory = kv2.second;
 
@@ -461,7 +470,10 @@ void GameEngine::distributeTerritories()
         }
     }
 
-    displayMapTerritories();    
+    // Don't care about displaying territories in a test
+    if (realGame) {
+        displayMapTerritories(); 
+    }       
 }
 
 /**

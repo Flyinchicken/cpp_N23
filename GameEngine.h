@@ -106,3 +106,4 @@ class GameEngine : public Subject, public ILoggable
 extern GameEngine* ge;
 extern Map* worldMap;
 extern Deck* x;
+extern bool realGame;       // Indicating if game instance is real or a test
