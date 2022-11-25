@@ -95,7 +95,7 @@ void testPlayerStrategies() {
     while (turnCount < 2) {
         for (Player* p : playerList) {
             p->issueOrder();
-            cout << p->getName() << " has issued " << turnCount + 1 << " commands" << endl;
+            cout << p->getName() << " has issued " << turnCount + 1 << " orders" << endl;
         }
 
         ++turnCount;
@@ -106,7 +106,8 @@ void testPlayerStrategies() {
         cout << p->getName() << "'s order list: " << endl;
         if (p->getOrdersList()->order_list.size() == 0) {
             cout << p->getName() << " has issued no orders" << endl;
-        } else {
+        } 
+        else {        // Else exists in case something breaks 
             cout << "Error!" << p->getName() << " shouldn't have any orders!" << endl;
         }
     }
@@ -114,8 +115,8 @@ void testPlayerStrategies() {
     cout << endl << "Conclusion: Neutral players issue no orders" << endl;
     cout << "-------END NEUTRAL PLAYER DEMO-----------" << endl;
 
+
     // Cheater player demo
-    // TODO: Demonstrate no orders are issued
     cout << endl << "-------CHEATER PLAYER DEMO-----------" << endl << endl;
     delete strategyEngine;
 
@@ -129,25 +130,44 @@ void testPlayerStrategies() {
 
     playerList.at(0)->setPlayerStrategy(new CheaterPlayerStrategy(playerList.at(0)));
     playerList.at(1)->setPlayerStrategy(new NeutralPlayerStrategy(playerList.at(1)));
+    cout << endl << "Today's participants: " << endl;
+    cout << playerList.at(0)->getName() << " (" << *(playerList.at(0)->getPlayerStrategy()) << ")" << endl; 
+    cout << playerList.at(1)->getName() << " (" << *(playerList.at(1)->getPlayerStrategy()) << ")" << endl; 
 
-    int maxTurns = 2;
-    while (maxTurns > 0) {
-        // Show state of map
+    cout << "Inital Player territories: " << endl;
+    for (Player* p : playerList) {
+        cout << *p << endl;
+    }
+
+    cout << endl << "Mock issue order phase (each player issues two orders)" << endl;
+    turnCount = 0;
+    while (turnCount < 2) {
+        for (Player *p : playerList) {  
+            p->issueOrder();
+            cout << p->getName() << " has issued " << turnCount + 1 << " orders" << endl;
+        }
+
+        cout << endl << "Current Player territories: " << endl;
         for (Player* p : playerList) {
             cout << *p << endl;
         }
 
-        cout << "----------END--------------" << endl;
-
-        for (Player *p : playerList) {  
-            p->issueOrder();
-        }
-
-        maxTurns--;
+        ++turnCount;
     }
-    // Show state of map (everything has been absorbed)
-    cout << "FINAL" << endl;
+    
+    cout << "Final Player Territories: " << endl;
     for (Player* p : playerList) {
         cout << *p << endl;
     }
+
+    cout << playerList.at(0)->getName() << "'s order list contains: " << endl;
+    if (playerList.at(0)->getOrdersList()->order_list.size() == 0) {
+        cout << playerList.at(0)->getName() << " has issued no orders" << endl;
+    } 
+    else {        // Else exists in case something breaks 
+        cout << "Error!" << playerList.at(0)->getName() << " shouldn't have any orders!" << endl;
+    }
+
+    cout << endl << "Conclusion: Cheater player has taken over every adjacent territory without issuing a single order (because he cheats)" << endl;
+    cout << "-------END CHEATER PLAYER DEMO-----------" << endl;
 }
