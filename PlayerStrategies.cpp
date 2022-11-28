@@ -188,6 +188,30 @@ void HumanPlayerStrategy::issueOrder() {
         }
         // issueorder advance <source_territory> <target_territory> <armyunits>
         else if (commandType == "advance") {
+            if (splitCommand.size() != 5) {
+                cout << "Advance order must be formatted as: issueorder advance <source_territory> <target_territory> <num_armyunits>" << endl;
+                continue;
+            }
+
+            Territory* sourceTerritory = worldMap->getNode(splitCommand.at(2));
+            if (sourceTerritory == NULL) {
+                cout << "Could not find territory with name " << splitCommand.at(2) << " in world map" << endl;
+                continue;
+            }
+
+            Territory* targetTerritory = worldMap->getNode(splitCommand.at(3));
+            if (targetTerritory == NULL) {
+                cout << "Could not find territory with name " << splitCommand.at(3) << " in world map" << endl;
+                continue;
+            }
+
+            if (!isStringNumber(splitCommand.at(4))) {
+                cout << splitCommand.at(4) << " is not a valid number!" << endl;
+                continue;
+            }
+            int numArmyToDeploy = stoi(splitCommand.at(4));
+
+            player->addOrderToList(new Advance(player, sourceTerritory, targetTerritory, numArmyToDeploy));
             cout << "ADVANCED" << endl;
         }
         // issueorder bomb <target_territory>
