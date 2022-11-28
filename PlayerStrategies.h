@@ -22,6 +22,8 @@ class PlayerStrategy {
         virtual vector<Territory*> toDefend() = 0;
         virtual string getStrategyAsString() const = 0;
         Player* getPlayer();                             // For testing purposes
+        bool isStringNumber(string input);
+        Territory* getTerritoryByName(string name);
     protected:
         PlayerStrategy(Player*);
         Player *player;

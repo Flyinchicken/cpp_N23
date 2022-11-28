@@ -17,6 +17,7 @@ class Territory;
 class OrdersList;
 class Hand;
 class PlayerStrategy;
+class Order;
 
 extern int finishedPlayers;
 extern GameEngine* ge;
@@ -82,5 +83,7 @@ public:
 	void setReinforcementPool(int pool);
 	void setTurnCompleted(bool turn);
 	void setPlayerStrategy(PlayerStrategy*);
+
+	void addOrderToList(Order*);
 };
 #endif

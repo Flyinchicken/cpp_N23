@@ -140,6 +140,10 @@ void Graph::addNode(string territory_name, string continent_name){
 }
 
 Territory* Graph::getNode(string territory_name){
+    if (this->nodes.count(territory_name) == 0) {
+        return NULL;
+    }
+    
     return nodes.at(territory_name);
 }
 

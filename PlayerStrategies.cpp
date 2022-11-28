@@ -2,6 +2,7 @@
 #include "Map.h"
 #include "Player.h"
 #include "CommandProcessing.h"
+#include "Orders.h"
 
 #include <vector>
 #include <iostream>
@@ -10,6 +11,10 @@
 using std::vector;
 using std::string;
 using std::ostream;
+using std::cout;
+using std::cin;
+using std::isdigit;
+using std::stoi;
 
 ///
 /// PLAYER STRATEGY
@@ -49,6 +54,23 @@ PlayerStrategy::~PlayerStrategy() {
 */
 Player* PlayerStrategy::getPlayer() {
     return this->player;
+}
+
+/**
+ * Determines if a string is an int/number.
+ * 
+ * From: https://stackoverflow.com/questions/4654636/how-to-determine-if-a-string-is-a-number-with-c
+ * 
+ * @returns bool indicating if string is a number
+*/
+bool PlayerStrategy::isStringNumber(string input) {
+    std::string::const_iterator iterator = input.begin();
+
+    while (iterator != input.end() && isdigit(*iterator)) {
+        ++iterator;
+    }
+
+    return !input.empty() && iterator == input.end();
 }
 
 ///
@@ -92,7 +114,102 @@ void HumanPlayerStrategy::issueOrder() {
     // loop until set turn
     // set turn = setTurnCompleted
     // getTurn = isTurnCompleted?
+    while (!player->isTurnCompleted()) {
+        cout << "Beep boop I am a human that is issueing an order" << endl;
+        /*
+        1. Territories of toAttack
+        2. Territories of toDefend
+        3. World map
+        4. See deck
+        5. See reinforcement pool
+        6. See current territories
+        7. issue an order
+        */
+        // int displayOption;
+        // cin >> displayOption;
+        // if (displayOption >= 1 && displayOption <= 7) {
+        //     processInputOption(displayOption);
+        // }
+        // else {
+        //     cout << displayOption << " is not a valid input. Please input a nummber between 1 and 7." << endl;
+        //     continue;
+        // }
+        
+        // 1 get issueing orders working
+        // 2 dispay options
 
+        Command* nextCommand = commandProcessor->getCommand();
+        vector<string> splitCommand = commandProcessor->splitStringByDelim(nextCommand->getCommand(), ' ');
+        string commandKeyword = splitCommand.front();
+
+        if (commandKeyword == CommandStrings::issueOrdersEnd) {
+            player->setTurnCompleted(true);
+            cout << player->getName() << " has ended their turn" << endl;
+            continue;
+        }
+
+        if (commandKeyword != CommandStrings::issueOrder) {
+            cout << "Issue orders using the \"issueorder\" keyword. \""
+                << commandKeyword << "\" is not valid"
+                << endl;
+            nextCommand->saveEffect("Command doesn't include issueorder keyword");
+            continue;
+        }
+
+        if (splitCommand.size() < 2) {
+            cout << "Please specify an order type!" << endl;
+            continue;
+        }
+
+        string commandType = splitCommand.at(1);
+
+        // issueorder deploy <armyunits> <territory>
+        if (commandType == "deploy") {
+            if (splitCommand.size() != 4) {
+                cout << "Deploy order must be formatted as: issueorder deploy <num_armyunits> <target_territory>" << endl;
+                continue;
+            }
+
+            if (!isStringNumber(splitCommand.at(2))) {
+                cout << splitCommand.at(2) << " is not a valid number!" << endl;
+                continue;
+            }
+
+            int numArmyToDeploy = stoi(splitCommand.at(2));
+            Territory* targetTerritory = worldMap->getNode(splitCommand.at(3));
+
+            if (targetTerritory == NULL) {
+                cout << "Could not find territory with name " << splitCommand.at(3) << " in world map" << endl;
+                continue;
+            }
+
+            player->addOrderToList(new Deploy(player, numArmyToDeploy, targetTerritory));
+            cout << "DEPLOYED" << endl;
+        }
+        // issueorder advance <source_territory> <target_territory> <armyunits>
+        else if (commandType == "advance") {
+            cout << "ADVANCED" << endl;
+        }
+        // issueorder bomb <target_territory>
+        else if (commandType == "bomb") {
+            cout << "BOMBD" << endl;
+        }
+        // issueorder blockade <target_territory>
+        else if (commandType == "blockade") {
+            cout << "BLOCKADED" << endl;
+        }
+        // issueorder airlift <source_territory> <target_territory> <armyunits>
+        else if (commandType == "airlift") {
+            cout << "AIRLIFTED" << endl;
+        }
+        // issueorder negotiate <target_player>
+        else if (commandType == "negotiate") {
+            cout << "NEGOTIATED" << endl;
+        }
+        else {
+            cout << commandType << " is not a valid command type!" << endl;
+        }
+    }
 }
 
 vector<Territory*> HumanPlayerStrategy::toAttack() {
@@ -252,10 +369,11 @@ NeutralPlayerStrategy& NeutralPlayerStrategy::operator = (const NeutralPlayerStr
 }
 
 /**
- * Doesn't issue any orders
+ * Doesn't issue any orders so just ends turn
 */
 void NeutralPlayerStrategy::issueOrder() {
     // I'll have an uh...uhhhhhhhhhhhhhhhh...
+    player->setTurnCompleted(true);
 }
 
 /**

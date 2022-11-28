@@ -122,6 +122,8 @@ struct CommandStrings
     static const string gameStart;
     static const string replay;
     static const string quit;
+    static const string issueOrder;
+    static const string issueOrdersEnd;
 
     static bool isStringCommandString(string input);
 

@@ -74,6 +74,24 @@ void testPlayerStrategies() {
 
     // Human Player demo that demonstrates humans can create orders or play cards via console input
     cout << "-------HUMAN PLAYER DEMO-----------" << endl;
+    delete strategyEngine;
+    strategyEngine = new GameEngine();
+    strategyEngine->loadMap(new Command("loadmap ./MapFiles/3D.map"));  // Known valid map so won't validate
+    strategyEngine->addPlayer(new Command("addplayer HumanPlayer1"));
+    strategyEngine->addPlayer(new Command("addplayer HumanPlayer2"));
+    strategyEngine->gameStart(new Command("gamestart"));
+
+    cout << "Today's participants: " << endl;
+    playerList = strategyEngine->getPlayerList();
+    for (Player* p : playerList) {
+        p->setPlayerStrategy(new HumanPlayerStrategy(p));
+        cout << p->getName() << " (" << *(p->getPlayerStrategy()) << ")" << endl;
+    }
+
+    cout << endl << "Mock issue order phase (each player issues two orders)" << endl;
+    playerList.at(0)->issueOrder();
+    playerList.at(1)->issueOrder();
+
     cout << endl << "Conclusion: Nothing is implemented" << endl;
     cout << "-------END HUMAN PLAYER DEMO-----------" << endl;
 

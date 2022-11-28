@@ -186,6 +186,10 @@ bool Player::isTurnCompleted()
     return this->turnCompleted;
 }
 
+void Player::addOrderToList(Order* newOrder) {
+    this->orderslist->addOrder(newOrder);
+}
+
 // orders created adding to the player's orderslist
 void Player::issueOrder()
 {
