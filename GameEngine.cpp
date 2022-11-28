@@ -653,7 +653,7 @@ void GameEngine::issueOrdersPhase() {
     finishedPlayers = 0;
 
     for(Player* player : playerList){
-        player->setTurn(false);
+        player->setTurnCompleted(false);
         player->numAttacks = 0;
         player->numDefense = 0;
     }
@@ -667,7 +667,7 @@ void GameEngine::issueOrdersPhase() {
 
         for (Player * temp: playerList)
         {
-            if (temp->getTurn()) {
+            if (temp->isTurnCompleted()) {
                 continue; //Player has ended turn so we done
             }
 
@@ -680,7 +680,7 @@ void GameEngine::issueOrdersPhase() {
                     vector<Card*> cards = temp->getHand()->getHand();
                     cards[0]->play(temp->getHand());
                 }
-                temp->setTurn(true);
+                temp->setTurnCompleted(true);
                 finishedPlayers++;
                 cout << "Player " << temp->getName() << " has ended their turn" << endl;
 

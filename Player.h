@@ -71,7 +71,7 @@ public:
 	Hand* getHand();
 	vector<Territory*> getTerritories() const;
 	int getReinforcementPool();
-	bool getTurn();
+	bool isTurnCompleted();
 	PlayerStrategy* getPlayerStrategy();
 
 	//setters
@@ -80,7 +80,7 @@ public:
 	void setHand(Hand* hand);
 	void setTerritories(vector<Territory*> territories);
 	void setReinforcementPool(int pool);
-	void setTurn(bool turn);
+	void setTurnCompleted(bool turn);
 	void setPlayerStrategy(PlayerStrategy*);
 };
 #endif

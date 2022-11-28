@@ -88,6 +88,11 @@ HumanPlayerStrategy& HumanPlayerStrategy::operator = (const HumanPlayerStrategy&
 void HumanPlayerStrategy::issueOrder() {
     // TODO: Use command processor??
     // TODO: Make basic input system
+    // Create order or play card
+    // loop until set turn
+    // set turn = setTurnCompleted
+    // getTurn = isTurnCompleted?
+
 }
 
 vector<Territory*> HumanPlayerStrategy::toAttack() {
@@ -323,7 +328,7 @@ void CheaterPlayerStrategy::issueOrder() {
         t->setOwner(player);
     }
 
-    player->setTurn(true);
+    player->setTurnCompleted(true);
 }
 
 /**

@@ -176,12 +176,12 @@ void Player::setReinforcementPool(int pool)
     this->reinforcementPool = pool;
 }
 
-void Player::setTurn(bool turn)
+void Player::setTurnCompleted(bool turn)
 {
     this->turnCompleted = turn;
 }
 
-bool Player::getTurn()
+bool Player::isTurnCompleted()
 {
     return this->turnCompleted;
 }

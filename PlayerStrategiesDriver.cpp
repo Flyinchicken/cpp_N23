@@ -72,6 +72,11 @@ void testPlayerStrategies() {
     // cout << *p;
     int turnCount;
 
+    // Human Player demo that demonstrates humans can create orders or play cards via console input
+    cout << "-------HUMAN PLAYER DEMO-----------" << endl;
+    cout << endl << "Conclusion: Nothing is implemented" << endl;
+    cout << "-------END HUMAN PLAYER DEMO-----------" << endl;
+
     // Basic Neutral player demo that demonstrates their natural affinity for warfare
     cout << "-------NEUTRAL PLAYER DEMO (no change)-----------" << endl;
     delete strategyEngine;
