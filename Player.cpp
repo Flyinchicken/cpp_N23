@@ -178,7 +178,9 @@ void Player::issueOrder()
         vector<Territory*> reinforcers = outposts;
         reverse(reinforcers.begin(), reinforcers.end());
 
-        if (potentialAttacks.size() - 1 > numAttacks)
+        cout << potentialAttacks.size() << endl;
+
+        if (potentialAttacks.size() > numAttacks)
         { // If we can attack any territory that we have not yet attacked
 
             cout << "Player has targets to attack. Player has attacked " << numAttacks << " territories this turn" << endl;
