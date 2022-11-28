@@ -1,6 +1,7 @@
 #include "PlayerStrategies.h"
 #include "Map.h"
 #include "Player.h"
+#include "CommandProcessing.h"
 
 #include <vector>
 #include <iostream>
@@ -54,16 +55,19 @@ Player* PlayerStrategy::getPlayer() {
 /// HUMAN PLAYER
 ///
 
-HumanPlayerStrategy::HumanPlayerStrategy(Player *p) : PlayerStrategy(p) { }
+HumanPlayerStrategy::HumanPlayerStrategy(Player *p) : PlayerStrategy(p) {
+    commandProcessor = new CommandProcessor();
+ }
 
 /**
  * Copy constructor
 */
-HumanPlayerStrategy::HumanPlayerStrategy(const HumanPlayerStrategy& strat) : PlayerStrategy(strat.player) {
+HumanPlayerStrategy::HumanPlayerStrategy(const HumanPlayerStrategy& strat) : HumanPlayerStrategy(strat.player) {
     cout << "Copy" << endl;
 }
 
 HumanPlayerStrategy::~HumanPlayerStrategy() {
+    delete commandProcessor;
 }
 
 /**
@@ -71,25 +75,27 @@ HumanPlayerStrategy::~HumanPlayerStrategy() {
  * Doesn't delete player since should be managed elsewhere
 */
 HumanPlayerStrategy& HumanPlayerStrategy::operator = (const HumanPlayerStrategy& toAssign) {
-    if (this == &toAssign) {
-        return *this;
-    }
+    if (this != &toAssign) {
+        player = toAssign.player;
 
-    player = toAssign.player;
+        delete commandProcessor;
+        commandProcessor = toAssign.commandProcessor;
+    }    
 
     return *this;
 }
 
 void HumanPlayerStrategy::issueOrder() {
-
+    // TODO: Use command processor??
+    // TODO: Make basic input system
 }
 
 vector<Territory*> HumanPlayerStrategy::toAttack() {
-
+    // TODO: Sort by what? Lowest army score?
 }
 
 vector<Territory*> HumanPlayerStrategy::toDefend() {
-
+    // TODO: Sort by lowest army score?
 }
 
 string HumanPlayerStrategy::getStrategyAsString() const {
@@ -298,11 +304,9 @@ CheaterPlayerStrategy::~CheaterPlayerStrategy() {
  * Doesn't delete player since should be managed elsewhere
 */
 CheaterPlayerStrategy& CheaterPlayerStrategy::operator = (const CheaterPlayerStrategy& toAssign) {
-    if (this == &toAssign) {
-        return *this;
-    }
-    
-    player = toAssign.player;
+    if (this != &toAssign) {
+        player = toAssign.player;
+    } 
 
     return *this;
 }

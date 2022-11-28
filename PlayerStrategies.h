@@ -10,6 +10,7 @@ using std::string;
 
 class Territory;
 class Player;
+class CommandProcessor;
 
 // Abstract strategy class
 class PlayerStrategy {
@@ -39,6 +40,8 @@ class HumanPlayerStrategy : public PlayerStrategy {
         vector<Territory*> toAttack();
         vector<Territory*> toDefend();
         string getStrategyAsString() const;
+    private:
+        CommandProcessor* commandProcessor;
 };
 
 class AggressivePlayerStrategy : public PlayerStrategy {
