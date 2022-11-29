@@ -21,6 +21,20 @@ using std::stoi;
 ///
 
 /**
+ * Free function to compare army numbers between two territories, decreasing order 
+*/
+bool compareArmyNumberDecrease(Territory* t1, Territory* t2){
+    return (t1->getArmyNumber() < t2->getArmyNumber());
+}
+
+/**
+ * Free function to compare army numbers between two territories, increasing order 
+*/
+bool compareArmyNumberIncrease(Territory* t1, Territory* t2){
+    return (t1->getArmyNumber() > t2->getArmyNumber());
+}
+
+/**
  * Uses polymorphism to display the type of Strategy this is
 */
 ostream& operator << (ostream &out, const PlayerStrategy &strategy) {
@@ -289,11 +303,38 @@ void AggressivePlayerStrategy::issueOrder() {
 }
 
 vector<Territory*> AggressivePlayerStrategy::toAttack() {
+    vector<Territory*> a_territories;
+    set<Territory*> a_set;
+    
+    for (int i = 0; i < player->getTerritories().size(); i++)
+    {
+        vector<Territory*> temp = worldMap->getNeighboursPtr(*(player->getTerritories().at(i)->getTerritoryName()));
+        for(auto& neighbor : temp){
+            if(neighbor->getOwner() != player){
+                a_set.insert(neighbor);
+            }
+        }
+    }
 
+    for(auto& neighbor : a_set){
+        a_territories.push_back(neighbor);
+    }
+
+    sort(a_territories.begin(),a_territories.end(), compareArmyNumberIncrease);
+
+    return a_territories;
 }
 
+// Return vector of territories belong to the player in decreasing order, the first territory in the vector will be the strongest
 vector<Territory*> AggressivePlayerStrategy::toDefend() {
+    vector<Territory*> d_territories;
+    for (int i = 0; i < player->getTerritories().size(); i++)
+    {
+        d_territories.push_back(player->getTerritories().at(i));
+    }
 
+    sort(d_territories.begin(),d_territories.end(), compareArmyNumberDecrease);
+    return d_territories;
 }
 
 string AggressivePlayerStrategy::getStrategyAsString() const {
