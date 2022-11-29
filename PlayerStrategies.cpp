@@ -299,7 +299,26 @@ AggressivePlayerStrategy& AggressivePlayerStrategy::operator = (const Aggressive
 }
 
 void AggressivePlayerStrategy::issueOrder() {
+    // deploy all armies to the strongest territory
+    int numToDeploy = player->getReinforcementPool();
+    vector<Territory*> d_territories = this->toDefend();
+    Territory* target = d_territories.at(0);
+    player->addOrderToList(new Deploy(player, numToDeploy, target));
 
+    vector<Territory*> a_territories = this->toAttack();
+    // for each territory owned by the player, take all of its armies and advance to all possible toAttack territories
+    for(int i = 0; i < player->getTerritories().size(); i++){
+        for(auto& a_t : a_territories){
+            player->addOrderToList(new Advance(player, player->getTerritories().at(i), a_t, player->getTerritories().at(i)->getArmyNumber() - 1));
+        }
+    }
+
+    // use all possible aggressive cards to all possible toAttack territories
+    for(auto& a_t : a_territories){
+            player->addOrderToList(new Bomb(player, a_t));
+    }
+
+    player->setTurnCompleted(true);
 }
 
 vector<Territory*> AggressivePlayerStrategy::toAttack() {
