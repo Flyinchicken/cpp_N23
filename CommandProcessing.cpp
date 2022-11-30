@@ -21,6 +21,8 @@ const string CommandStrings::addPlayer = "addplayer";
 const string CommandStrings::gameStart = "gamestart";
 const string CommandStrings::replay = "replay";
 const string CommandStrings::quit = "quit";
+const string CommandStrings::issueOrder = "issueorder";
+const string CommandStrings::issueOrdersEnd = "issueordersend";
 
 /**
  * Checks if input string matches any of the valid command strings.

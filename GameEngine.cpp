@@ -1,6 +1,8 @@
 #include "GameEngine.h"
 #include "MapLoader.h"
 #include "LoggingObserver.h"
+#include "Player.h"
+
 #include <iostream>
 #include <algorithm>
 #include <random>
@@ -360,7 +362,12 @@ void GameEngine::addPlayer(Command *command) {
 
     setGameState(PLAYERSADDED);
     command->saveEffect("Player " + playerName + " was added successfully. State changed to PLAYERSADDED"); 
-    displayPlayerList();   
+
+    // Already now the players if its a test game
+    if (realGame) {
+        displayPlayerList();
+    }
+       
 }
 
 /**
@@ -373,7 +380,10 @@ void GameEngine::gameStart(Command *command) {
         x->addCardToDeck(new Card());
     }
 
-    assignPlayersOrder(&playerList);
+    // Don't care about shuffling players if its a test game
+    if (realGame) {
+        assignPlayersOrder(&playerList);
+    }    
 
     distributeTerritories();
 
@@ -399,7 +409,7 @@ void GameEngine::assignPlayersOrder(vector<Player*>* playerList)
         cout << player->getName() << endl;
     }
 
-    //std::random_shuffle(playerList->begin(),playerList->end());
+    std::random_shuffle(playerList->begin(),playerList->end());
 
     cout << "Randomize player order: " << endl;
     for(auto& player : *playerList){
@@ -439,6 +449,7 @@ void GameEngine::distributeTerritories()
     int territoriesForPlayer = playerAllotedTerritories.at(currentPlayerTerritories);
 
     for (auto &kv : worldMap->continents) {
+        // 6c is first in list for Cube
         for (auto &kv2 : kv.second->nodes) {
             Territory *currentTerritory = kv2.second;
 
@@ -459,7 +470,10 @@ void GameEngine::distributeTerritories()
         }
     }
 
-    displayMapTerritories();    
+    // Don't care about displaying territories in a test
+    if (realGame) {
+        displayMapTerritories(); 
+    }       
 }
 
 /**
@@ -639,7 +653,7 @@ void GameEngine::issueOrdersPhase() {
     finishedPlayers = 0;
 
     for(Player* player : playerList){
-        player->setTurn(false);
+        player->setTurnCompleted(false);
         player->numAttacks = 0;
         player->numDefense = 0;
     }
@@ -653,7 +667,7 @@ void GameEngine::issueOrdersPhase() {
 
         for (Player * temp: playerList)
         {
-            if (temp->getTurn()) {
+            if (temp->isTurnCompleted()) {
                 continue; //Player has ended turn so we done
             }
 
@@ -666,7 +680,7 @@ void GameEngine::issueOrdersPhase() {
                     vector<Card*> cards = temp->getHand()->getHand();
                     cards[0]->play(temp->getHand());
                 }
-                temp->setTurn(true);
+                temp->setTurnCompleted(true);
                 finishedPlayers++;
                 cout << "Player " << temp->getName() << " has ended their turn" << endl;
 
@@ -687,9 +701,12 @@ void GameEngine::executeOrdersPhase()
 {
     cout << "Execute Order Phase";
     for (Player* i : playerList) {
-        for (Order* p : (* i->getOrdersList()).order_list) {
-            p->execute();
-        }
+        // for (Order* p : (* i->getOrdersList()).order_list) {
+        //     p->execute();
+        // }
+        cout << "Order execution for player " << i->getName() << endl;
+        delete i->getOrdersList();
+        i->setOrdersList(new OrdersList ());
     }
 
     setGameState(ASSIGNREINFORCEMENTS);

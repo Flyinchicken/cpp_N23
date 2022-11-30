@@ -11,9 +11,9 @@
 #include <unordered_map>
 #include <set>
 #include <stack>
-#include "Player.h"
 
 using namespace std;
+
 class Player;
 
 class Territory
