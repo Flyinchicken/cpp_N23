@@ -1,5 +1,6 @@
 loadmap test.map
 loadmap test
+addplayer player1
 validatemap
 addplayer player1
 gamestart

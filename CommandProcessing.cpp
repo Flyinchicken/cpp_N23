@@ -21,6 +21,8 @@ const string CommandStrings::addPlayer = "addplayer";
 const string CommandStrings::gameStart = "gamestart";
 const string CommandStrings::replay = "replay";
 const string CommandStrings::quit = "quit";
+const string CommandStrings::issueOrder = "issueorder";
+const string CommandStrings::issueOrdersEnd = "issueordersend";
 
 /**
  * Checks if input string matches any of the valid command strings.
@@ -391,7 +393,6 @@ string CommandProcessor::stringToLog()
 */
 FileCommandProcessorAdapter::FileCommandProcessorAdapter()
 {
-    CommandProcessor();
     this->fileReader = new FileLineReader();
 }
 
@@ -402,7 +403,6 @@ FileCommandProcessorAdapter::FileCommandProcessorAdapter()
 */
 FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileLineReader* file)
 {
-    CommandProcessor();
     this->fileReader = file;
 }
 
@@ -412,7 +412,6 @@ FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileLineReader* file)
  * @param adapter FileCommandProcessorAdapter to copy
 */
 FileCommandProcessorAdapter::FileCommandProcessorAdapter(const FileCommandProcessorAdapter& adapter) {
-    CommandProcessor();
     this->fileReader = adapter.fileReader;
 }
 
