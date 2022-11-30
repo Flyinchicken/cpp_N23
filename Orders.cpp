@@ -108,8 +108,7 @@ std::ostream &operator<<(std::ostream &strm, const Order &order)
 
 string Order::stringToLog()
 {
-  string playername = this->get_player()->getName();
-  return playername + ": " + this->getOrderEffect() + "\n";
+  return "Order executed: " + this->getOrderEffect() + "\n";
 }
 
 // implement of OrdersList class
@@ -217,7 +216,7 @@ Order *OrdersList::getAddedOrder()
 // Return the added Order's name
 string OrdersList::stringToLog()
 {
-  return this->addedOrder->getType() + " Order added \n";
+  return "Order issued: " +this->addedOrder->getType() + "\n";
 }
 
 // implement of Deploy class
