@@ -186,8 +186,29 @@ bool Player::isTurnCompleted()
     return this->turnCompleted;
 }
 
+/**
+ * Adds a new order to the Player's order list
+ * 
+ * @param newOrder The order to add
+*/
 void Player::addOrderToList(Order* newOrder) {
     this->orderslist->addOrder(newOrder);
+}
+
+/**
+ * Gets and returns a card of a certain type from the Player's hand.
+ * 
+ * @param cardType String type of card to look for
+ * @return The card if the play has one, NULL otherwise
+*/
+Card* Player::getCardFromHandIfExists(string cardType) {
+    for (Card* card : hand->getHand()) {
+        if (card->getType() == cardType) {
+            return card;
+        }
+    }
+
+    return NULL;
 }
 
 // orders created adding to the player's orderslist
@@ -291,7 +312,7 @@ void Player::issueOrder()
 }
 
 // helper method to get a specific order which adds to the player's orderslist
-void Player::cardOrder(int orderNumber)
+void Player::cardOrder(int orderNumber, CardParameters params)
 {
     cout << "card order being executed " << orderNumber << endl;
     vector<Territory*> outposts = this->toDefend();
@@ -312,8 +333,8 @@ void Player::cardOrder(int orderNumber)
         }
     case 3:
         {
-        newOrder = new Bomb(this, enemies.at(rand() % enemies.size()));
-        break;
+            newOrder = new Bomb(this, params.targetTerritory);
+            break;
         }
     case 4:
         {

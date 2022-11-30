@@ -78,7 +78,6 @@ void testPlayerStrategies() {
     strategyEngine = new GameEngine();
     strategyEngine->loadMap(new Command("loadmap ./MapFiles/3D.map"));  // Known valid map so won't validate
     strategyEngine->addPlayer(new Command("addplayer HumanPlayer1"));
-    strategyEngine->addPlayer(new Command("addplayer HumanPlayer2"));
     strategyEngine->gameStart(new Command("gamestart"));
 
     cout << "Today's participants: " << endl;
@@ -88,9 +87,15 @@ void testPlayerStrategies() {
         cout << p->getName() << " (" << *(p->getPlayerStrategy()) << ")" << endl;
     }
 
-    cout << endl << "Mock issue order phase (each player issues two orders)" << endl;
+    cout << endl << "Mock issue order phase" << endl;
+    // Testing, will be removed
+    playerList.at(0)->getHand()->addCardToHand(new Card("default", 1, "Card 6999"));
     playerList.at(0)->issueOrder();
-    playerList.at(1)->issueOrder();
+
+    cout << endl << "Display order list" << endl;
+    for (Order* o : playerList.at(0)->getOrdersList()->order_list) {
+        cout << *o << endl;
+    }
 
     cout << endl << "Conclusion: Nothing is implemented" << endl;
     cout << "-------END HUMAN PLAYER DEMO-----------" << endl;

@@ -678,7 +678,9 @@ void GameEngine::issueOrdersPhase() {
             if (numOrders > 4) {
                 if (!temp->getHand()->getHand().empty()) {
                     vector<Card*> cards = temp->getHand()->getHand();
-                    cards[0]->play(temp->getHand());
+                    // This is no bueno, will need to come up with something better in the future
+                    CardParameters params;
+                    cards[0]->play(temp->getHand(), params);
                 }
                 temp->setTurnCompleted(true);
                 finishedPlayers++;

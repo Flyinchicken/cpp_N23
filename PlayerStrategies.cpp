@@ -230,6 +230,21 @@ void HumanPlayerStrategy::issueOrder() {
         }
         // issueorder bomb <target_territory>
         else if (commandType == "bomb") {
+            Card* toPlay = player->getCardFromHandIfExists("bomb");            
+            if (toPlay == NULL) {
+                cout << "No card of type 'bomb' found in current hand!" << endl;
+                continue;
+            }
+
+            Territory* targetTerritory = worldMap->getNode(splitCommand.at(2));
+            if (targetTerritory == NULL) {
+                cout << "Could not find territory with name " << splitCommand.at(2) << " in world map" << endl;
+                continue;
+            }
+
+            CardParameters params(targetTerritory);
+            toPlay->play(player->getHand(), params);
+
             cout << "BOMBD" << endl;
         }
         // issueorder blockade <target_territory>
