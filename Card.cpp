@@ -309,8 +309,8 @@ int generateOrderNumber(string type) {
  * Default constructor
 */
 CardParameters::CardParameters() {
-    targetTerritory = NULL;
-    sourceTerritory = NULL;
+    targetTerritory = nullptr;
+    sourceTerritory = nullptr;
     armyUnits = 0;
 }
 
@@ -319,6 +319,50 @@ CardParameters::CardParameters() {
 */
 CardParameters::CardParameters(Territory* target) {
     targetTerritory = target;
-    sourceTerritory = NULL;
+    sourceTerritory = nullptr;
     armyUnits = 0;
+}
+
+/**
+ * Copy Constructor
+*/
+CardParameters::CardParameters(const CardParameters& cp) {
+    targetTerritory = cp.targetTerritory;
+    sourceTerritory = cp.sourceTerritory;
+    armyUnits = cp.armyUnits;
+}
+
+/**
+ * Assignment operator
+*/
+CardParameters& CardParameters::operator=(const CardParameters& cp) {
+    if (&cp != this) {
+        targetTerritory = cp.targetTerritory;
+        sourceTerritory = cp.sourceTerritory;
+        armyUnits = cp.armyUnits;
+    }
+
+    return *this;
+}
+
+/**
+ * Destructor. CardParameters' pointers point to sensitive Map data that should be managed
+ * elsewhere.
+*/
+CardParameters::~CardParameters() {
+}
+
+/**
+ * Stream insertion operator
+*/
+ostream& operator << (ostream& out, CardParameters& cp) {
+    if (cp.targetTerritory != nullptr) {
+        out << "Target territory: " << endl << "\t" << *(cp.targetTerritory);
+    }
+    if (cp.sourceTerritory != nullptr) {
+        out << "Source territory: " << endl << "\t" << *(cp.sourceTerritory);
+    }  
+    out << "Army units: " << cp.armyUnits;
+
+    return out;
 }

@@ -34,6 +34,11 @@ struct CardParameters {
 
     CardParameters();
     CardParameters(Territory*);
+    CardParameters(const CardParameters&);
+    CardParameters& operator = (const CardParameters&);
+    ~CardParameters();
+
+    friend ostream& operator << (ostream&, CardParameters&);
 };
 
 /*
