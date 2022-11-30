@@ -34,9 +34,9 @@ int main(int argc, char** argv)
     // x = new Deck();
     // testLoggingObserver();
     // vector<Territory*> neighbors = worldMap->getNeighboursPtr();
-    testStartupPhase();
+    //testStartupPhase();
 
-    testMainGameLoop();
+    //testMainGameLoop();
 
     //testStartupPhase();
     //testMainGameLoop();

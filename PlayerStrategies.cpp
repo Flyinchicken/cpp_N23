@@ -130,6 +130,18 @@ void HumanPlayerStrategy::issueOrder() {
     // getTurn = isTurnCompleted?
     while (!player->isTurnCompleted()) {
         cout << "Beep boop I am a human that is issueing an order" << endl;
+        cout << endl << "\t Valid commands:" << endl
+            << "\t issueorder deploy <num_armyunits> <target_territory>" << endl
+            << "\t issueorder advance <source_territory> <target_territory> <num_armyunits>" << endl
+            << "\t issueorder bomb" << endl
+            << "\t issueorder blockade" << endl
+            << "\t issueorder airlift" << endl
+            << "\t issueorder negotiate" << endl << endl;
+        vector<Territory*> playerTerritories = player->getTerritories();
+        cout << "\t Player territories:"  << endl;
+        for (Territory* t : playerTerritories) {
+            cout << "\t" << *t->getTerritoryName() << endl;
+        }
         /*
         1. Territories of toAttack
         2. Territories of toDefend
@@ -197,6 +209,22 @@ void HumanPlayerStrategy::issueOrder() {
                 continue;
             }
 
+            //check if input territory is a player's territory
+            bool isOwnedTerritory = false;
+            for (Territory* t : playerTerritories) {
+                string *territory = t->getTerritoryName();
+                if (*territory == *targetTerritory->getTerritoryName()) {
+                    isOwnedTerritory = true;
+                    break;
+                }
+            }
+
+            if (!isOwnedTerritory) {
+                cout << "Target territory " << splitCommand.at(3) << " is not owned by player " << player->getName() << endl;
+                continue;
+            }
+
+
             player->addOrderToList(new Deploy(player, numArmyToDeploy, targetTerritory));
             cout << "DEPLOYED" << endl;
         }
@@ -252,10 +280,12 @@ void HumanPlayerStrategy::issueOrder() {
 
 vector<Territory*> HumanPlayerStrategy::toAttack() {
     // TODO: Sort by what? Lowest army score?
+    return {};
 }
 
 vector<Territory*> HumanPlayerStrategy::toDefend() {
     // TODO: Sort by lowest army score?
+    return {};
 }
 
 string HumanPlayerStrategy::getStrategyAsString() const {
@@ -400,11 +430,11 @@ void BenevolentPlayerStrategy::issueOrder() {
 }
 
 vector<Territory*> BenevolentPlayerStrategy::toAttack() {
-
+    return {};
 }
 
 vector<Territory*> BenevolentPlayerStrategy::toDefend() {
-
+    return {};
 }
 
 string BenevolentPlayerStrategy::getStrategyAsString() const {

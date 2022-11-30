@@ -409,7 +409,7 @@ void GameEngine::assignPlayersOrder(vector<Player*>* playerList)
         cout << player->getName() << endl;
     }
 
-    std::random_shuffle(playerList->begin(),playerList->end());
+    //std::random_shuffle(playerList->begin(),playerList->end());
 
     cout << "Randomize player order: " << endl;
     for(auto& player : *playerList){

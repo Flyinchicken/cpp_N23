@@ -89,6 +89,7 @@ void testPlayerStrategies() {
     }
 
     cout << endl << "Mock issue order phase (each player issues two orders)" << endl;
+        
     playerList.at(0)->issueOrder();
     playerList.at(1)->issueOrder();
 
