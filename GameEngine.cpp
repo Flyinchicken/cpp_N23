@@ -709,7 +709,7 @@ void GameEngine::startNewGame() {
 //Return game state
 string GameEngine::stringToLog()
 {
-    return "New game state is: " + getGameStateAsString() + "\n";
+    return "Game Engine new state: " + getGameStateAsString() + "\n";
 }
 
 //Getter and Setter for playerList

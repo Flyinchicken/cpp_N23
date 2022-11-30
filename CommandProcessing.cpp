@@ -149,7 +149,7 @@ string Command::getEffect()
 //Return the Command's effect
 string Command::stringToLog()
 {
-    return this->effect + "\n";
+    return "Command's effect: " + this->effect + "\n";
 }
 
 //
@@ -379,7 +379,7 @@ vector<Command*> CommandProcessor::getCommandsList()
 //Return the Command saved
 string CommandProcessor::stringToLog()
 {
-    return "\n"+ this->savedCommand + "\n";
+    return "Command: "+ this->savedCommand + "\n";
 }
 
 ///
