@@ -44,6 +44,15 @@ class HumanPlayerStrategy : public PlayerStrategy {
         string getStrategyAsString() const;
     private:
         CommandProcessor* commandProcessor;
+
+        bool hasPlayerEndedTurn(string);
+        bool areKeywordAndSizeInvalid(string, int);
+        void processDeployInput(vector<string>);
+        void processAdvanceInput(vector<string>);
+        void processBombInput(vector<string>);
+        void processBlockadeInput(vector<string>);
+        void processAirliftInput(vector<string>);
+        void processNegotiateInput(vector<string>);
 };
 
 class AggressivePlayerStrategy : public PlayerStrategy {
