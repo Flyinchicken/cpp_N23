@@ -90,7 +90,8 @@ void testPlayerStrategies() {
     cout << endl << "Mock issue order phase" << endl;
     // Testing, will be removed
     playerList.at(0)->getHand()->addCardToHand(new Card("default", 1, "Card 6999"));
-    playerList.at(0)->getHand()->addCardToHand(new Card("default", 3, "Card 212121212121"));    
+    playerList.at(0)->getHand()->addCardToHand(new Card("default", 3, "Card 212121212121")); 
+    playerList.at(0)->getHand()->addCardToHand(new Card("default", 4, "Card 420"));    
     playerList.at(0)->issueOrder();
 
     cout << endl << "Display order list" << endl;

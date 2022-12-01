@@ -279,6 +279,38 @@ void HumanPlayerStrategy::issueOrder() {
         }
         // issueorder airlift <source_territory> <target_territory> <armyunits>
         else if (commandType == "airlift") {
+            if (splitCommand.size() != 5) {
+                cout << "Airlift order must be formatted as: issueorder airlift <source_territory> <target_territory> <armyunits>" << endl;
+                continue;
+            }            
+
+            Card* toPlay = player->getCardFromHandIfExists("airlift");            
+            if (toPlay == NULL) {
+                cout << "No card of type 'airlift' found in current hand!" << endl;
+                continue;
+            }
+
+            Territory* sourceTerritory = worldMap->getNode(splitCommand.at(2));
+            if (sourceTerritory == NULL) {
+                cout << "Could not find territory with name " << splitCommand.at(2) << " in world map" << endl;
+                continue;
+            }
+
+            Territory* targetTerritory = worldMap->getNode(splitCommand.at(3));
+            if (targetTerritory == NULL) {
+                cout << "Could not find territory with name " << splitCommand.at(3) << " in world map" << endl;
+                continue;
+            }
+
+            if (!isStringNumber(splitCommand.at(4))) {
+                cout << splitCommand.at(4) << " is not a valid number!" << endl;
+                continue;
+            }
+            int numArmyToDeploy = stoi(splitCommand.at(4));
+
+            CardParameters params(sourceTerritory, targetTerritory, numArmyToDeploy);
+            toPlay->play(player->getHand(), params);
+
             cout << "AIRLIFTED" << endl;
         }
         // issueorder negotiate <target_player>

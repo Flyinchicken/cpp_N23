@@ -34,6 +34,7 @@ struct CardParameters {
 
     CardParameters();
     CardParameters(Territory*);
+    CardParameters(Territory*, Territory*, int);
     CardParameters(const CardParameters&);
     CardParameters& operator = (const CardParameters&);
     ~CardParameters();

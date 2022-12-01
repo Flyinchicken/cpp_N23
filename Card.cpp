@@ -323,6 +323,12 @@ CardParameters::CardParameters(Territory* target) {
     armyUnits = 0;
 }
 
+CardParameters::CardParameters(Territory* source, Territory* target, int army) {
+    targetTerritory = target;
+    sourceTerritory = source;
+    armyUnits = army;
+}
+
 /**
  * Copy Constructor
 */

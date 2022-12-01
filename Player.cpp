@@ -343,19 +343,19 @@ void Player::cardOrder(int orderNumber, CardParameters params)
         }
     case 5:
         {
-            if(outposts.size() == 1){
-                cout << "Only one territory, can't airlift" << endl;
-                break;
-            }
+            // if(outposts.size() == 1){
+            //     cout << "Only one territory, can't airlift" << endl;
+            //     break;
+            // }
 
-            int index = rand() % outposts.size();
-            int index2 = rand() % outposts.size();
-            while (index == index2)
-            {
-                index2 = rand() % outposts.size();
-            }
+            // int index = rand() % outposts.size();
+            // int index2 = rand() % outposts.size();
+            // while (index == index2)
+            // {
+            //     index2 = rand() % outposts.size();
+            // }
         
-            newOrder = new Airlift(this, outposts.at(index), outposts.at(index2), outposts.at(index)->getArmyNumber() - 1);
+            newOrder = new Airlift(this, params.sourceTerritory, params.targetTerritory, params.armyUnits);
             break;
         }
     case 6:
