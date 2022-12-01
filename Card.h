@@ -31,10 +31,12 @@ struct CardParameters {
     Territory* sourceTerritory;
     Territory* targetTerritory;
     int armyUnits;
+    Player* targetPlayer;
 
     CardParameters();
     CardParameters(Territory*);
     CardParameters(Territory*, Territory*, int);
+    CardParameters(Player*);
     CardParameters(const CardParameters&);
     CardParameters& operator = (const CardParameters&);
     ~CardParameters();

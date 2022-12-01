@@ -315,18 +315,33 @@ CardParameters::CardParameters() {
 }
 
 /**
- * Constructor that sets target territory based on input
+ * Constructor that sets target territory based on input (bomb & blockade cards)
 */
 CardParameters::CardParameters(Territory* target) {
     targetTerritory = target;
     sourceTerritory = nullptr;
     armyUnits = 0;
+    targetPlayer = nullptr;
 }
 
+/**
+ * Constructor for all parameters save targetPlayer (airlift card)
+*/
 CardParameters::CardParameters(Territory* source, Territory* target, int army) {
     targetTerritory = target;
     sourceTerritory = source;
     armyUnits = army;
+    targetPlayer = nullptr;
+}
+
+/**
+ * Constructor that sets the targetPlayer (diplomacy card)
+*/
+CardParameters::CardParameters(Player* target) {
+    targetTerritory = nullptr;
+    sourceTerritory = nullptr;
+    armyUnits = 0;
+    targetPlayer = target;
 }
 
 /**
@@ -336,6 +351,7 @@ CardParameters::CardParameters(const CardParameters& cp) {
     targetTerritory = cp.targetTerritory;
     sourceTerritory = cp.sourceTerritory;
     armyUnits = cp.armyUnits;
+    targetPlayer = cp.targetPlayer;
 }
 
 /**
@@ -346,6 +362,7 @@ CardParameters& CardParameters::operator=(const CardParameters& cp) {
         targetTerritory = cp.targetTerritory;
         sourceTerritory = cp.sourceTerritory;
         armyUnits = cp.armyUnits;
+        targetPlayer = cp.targetPlayer;
     }
 
     return *this;
@@ -369,6 +386,10 @@ ostream& operator << (ostream& out, CardParameters& cp) {
         out << "Source territory: " << endl << "\t" << *(cp.sourceTerritory);
     }  
     out << "Army units: " << cp.armyUnits;
+    
+    if (cp.targetPlayer != nullptr) {
+        out << "Target Player: " << endl << "\t" << *(cp.targetPlayer);
+    }  
 
     return out;
 }

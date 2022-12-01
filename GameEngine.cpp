@@ -748,3 +748,19 @@ void GameEngine::setDeadPlayer(vector<Player*> deadPlayers)
 {
     this->deadPlayers = deadPlayers;
 }
+
+/**
+ * Checks and returns a player from its name from the current pl
+ * 
+ * @param playerName The name of the player to look for
+ * @returns The player, or nullptr, if he doesn't exist
+*/
+Player* GameEngine::getPlayerIfExists(string playerName) {
+    for (Player* p : playerList) {
+        if (p->getName() == playerName) {
+            return p;
+        }
+    }
+
+    return nullptr;
+}

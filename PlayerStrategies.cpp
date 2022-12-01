@@ -315,6 +315,27 @@ void HumanPlayerStrategy::issueOrder() {
         }
         // issueorder negotiate <target_player>
         else if (commandType == "negotiate") {
+            if (splitCommand.size() != 3) {
+                cout << "Negotiate order must be formatted as: issueorder negotiate <target_player>" << endl;
+                continue;
+            }            
+
+            Card* toPlay = player->getCardFromHandIfExists("diplomacy");            
+            if (toPlay == NULL) {
+                cout << "No card of type 'diplomacy' found in current hand!" << endl;
+                continue;
+            } 
+
+            string targetPlayerName = splitCommand.at(2);
+            Player* targetPlayer = ge->getPlayerIfExists(targetPlayerName);
+            if (targetPlayer == nullptr) {
+                cout << "No player with name " << targetPlayerName << " found in the current game instance!" << endl;
+                continue;
+            }        
+
+            CardParameters params(targetPlayer);
+            toPlay->play(player->getHand(), params);
+
             cout << "NEGOTIATED" << endl;
         }
         else {

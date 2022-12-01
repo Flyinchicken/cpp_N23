@@ -347,27 +347,12 @@ void Player::cardOrder(int orderNumber, CardParameters params)
             //     cout << "Only one territory, can't airlift" << endl;
             //     break;
             // }
-
-            // int index = rand() % outposts.size();
-            // int index2 = rand() % outposts.size();
-            // while (index == index2)
-            // {
-            //     index2 = rand() % outposts.size();
-            // }
-        
             newOrder = new Airlift(this, params.sourceTerritory, params.targetTerritory, params.armyUnits);
             break;
         }
     case 6:
         {
-            Player* temp = ge->getPlayerList().at(rand() % ge->getPlayerList().size());
-            while (this == temp)
-            {
-                temp = ge->getPlayerList().at(rand() % ge->getPlayerList().size());
-            }
-        
-            newOrder = new Negotiate(this, temp);
-        
+            newOrder = new Negotiate(this, params.targetPlayer);        
             break;
         }
     default:
