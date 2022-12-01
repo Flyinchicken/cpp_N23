@@ -156,6 +156,7 @@ void HumanPlayerStrategy::issueOrder() {
         vector<string> splitCommand = commandProcessor->splitStringByDelim(nextCommand->getCommand(), ' ');
         string commandKeyword = splitCommand.front();
 
+        cout << endl;
         if (commandKeyword == CommandStrings::issueOrdersEnd) {
             player->setTurnCompleted(true);
             cout << player->getName() << " has ended their turn" << endl;
@@ -230,6 +231,11 @@ void HumanPlayerStrategy::issueOrder() {
         }
         // issueorder bomb <target_territory>
         else if (commandType == "bomb") {
+            if (splitCommand.size() != 3) {
+                cout << "Bomb order must be formatted as: issueorder bomb <target_territory>" << endl;
+                continue;
+            }
+
             Card* toPlay = player->getCardFromHandIfExists("bomb");            
             if (toPlay == NULL) {
                 cout << "No card of type 'bomb' found in current hand!" << endl;
@@ -249,6 +255,26 @@ void HumanPlayerStrategy::issueOrder() {
         }
         // issueorder blockade <target_territory>
         else if (commandType == "blockade") {
+            if (splitCommand.size() != 3) {
+                cout << "Blockade order must be formatted as: issueorder blockade <target_territory>" << endl;
+                continue;
+            }
+
+            Card* toPlay = player->getCardFromHandIfExists("blockade");            
+            if (toPlay == NULL) {
+                cout << "No card of type 'blockade' found in current hand!" << endl;
+                continue;
+            }
+
+            Territory* targetTerritory = worldMap->getNode(splitCommand.at(2));
+            if (targetTerritory == NULL) {
+                cout << "Could not find territory with name " << splitCommand.at(2) << " in world map" << endl;
+                continue;
+            }
+            
+            CardParameters params(targetTerritory);
+            toPlay->play(player->getHand(), params);
+            
             cout << "BLOCKADED" << endl;
         }
         // issueorder airlift <source_territory> <target_territory> <armyunits>
@@ -267,10 +293,12 @@ void HumanPlayerStrategy::issueOrder() {
 
 vector<Territory*> HumanPlayerStrategy::toAttack() {
     // TODO: Sort by what? Lowest army score?
+    return {};
 }
 
 vector<Territory*> HumanPlayerStrategy::toDefend() {
     // TODO: Sort by lowest army score?
+    return {};
 }
 
 string HumanPlayerStrategy::getStrategyAsString() const {

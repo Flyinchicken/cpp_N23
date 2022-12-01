@@ -318,18 +318,18 @@ void Player::cardOrder(int orderNumber, CardParameters params)
     vector<Territory*> outposts = this->toDefend();
     vector<Territory*> enemies = this->toAttack();
 
-    Order* newOrder{};
+    Order* newOrder;
     switch (orderNumber)
     {
     case 1:
         {
-        newOrder = new Deploy(this, 10, outposts.at(rand() % outposts.size()));
-        break;
+            newOrder = new Deploy(this, 10, outposts.at(rand() % outposts.size()));
+            break;
         }
     case 2:
         {
-        newOrder = new Advance();
-        break;
+            newOrder = new Advance();
+            break;
         }
     case 3:
         {
@@ -338,8 +338,8 @@ void Player::cardOrder(int orderNumber, CardParameters params)
         }
     case 4:
         {
-        newOrder = new Blockade(this, outposts.at(rand() % outposts.size()));
-        break;
+            newOrder = new Blockade(this, params.targetTerritory);
+            break;
         }
     case 5:
         {
@@ -377,7 +377,6 @@ void Player::cardOrder(int orderNumber, CardParameters params)
     
     if (newOrder != nullptr)
     {
-        cout << (*newOrder) << endl;
         this->orderslist->addOrder(newOrder);
     }
 }
