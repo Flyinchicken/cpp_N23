@@ -356,10 +356,6 @@ void Player::cardOrder(int orderNumber, CardParameters params)
         }
     case 5:
         {
-            // if(outposts.size() == 1){
-            //     cout << "Only one territory, can't airlift" << endl;
-            //     break;
-            // }
             newOrder = new Airlift(this, params.sourceTerritory, params.targetTerritory, params.armyUnits);
             break;
         }
