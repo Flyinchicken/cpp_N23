@@ -6,6 +6,8 @@
     using std::cout;
 #include <vector>
     using std::vector;
+#include <set>
+    using std::set;
 
 void testPlayerStrategies() {
     // 1 - Different players can be assigned different strategies that lead to different behavior using the Strategy design pattern
@@ -111,8 +113,23 @@ void testPlayerStrategies() {
     playerList.at(0)->getHand()->addCardToHand(new Card("default", 1, "Card 6999"));
     playerList.at(0)->getHand()->addCardToHand(new Card("default", 3, "Card 212121212121")); 
     playerList.at(0)->getHand()->addCardToHand(new Card("default", 4, "Card 420"));    
-    playerList.at(0)->getHand()->addCardToHand(new Card("default", 5, "Card 123"));    
-    playerList.at(0)->issueOrder();
+    playerList.at(0)->getHand()->addCardToHand(new Card("default", 5, "Card 123"));  
+
+    set<string> playersFinished;
+    while (playersFinished.size() != playerList.size()) {
+        for (Player* p : playerList) {
+            if (p->isTurnCompleted()) {
+                playersFinished.insert(p->getName());
+                continue;
+            }
+
+            if (playerList.at(0)->isTurnCompleted() && playerList.at(1)->isTurnCompleted()) {
+                break;
+            }
+            
+            p->issueOrder();            
+        }
+    } 
 
     cout << endl << "Display order list" << endl;
     for (Order* o : playerList.at(0)->getOrdersList()->order_list) {

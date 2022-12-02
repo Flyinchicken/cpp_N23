@@ -50,12 +50,12 @@ class HumanPlayerStrategy : public PlayerStrategy {
         bool hasPlayerEndedTurn(string);
         bool areKeywordAndSizeInvalid(string, int);
 
-        void processDeployInput(vector<string>);
-        void processAdvanceInput(vector<string>);
-        void processBombInput(vector<string>);
-        void processBlockadeInput(vector<string>);
-        void processAirliftInput(vector<string>);
-        void processNegotiateInput(vector<string>);
+        bool processDeployInput(vector<string>);
+        bool processAdvanceInput(vector<string>);
+        bool processBombInput(vector<string>);
+        bool processBlockadeInput(vector<string>);
+        bool processAirliftInput(vector<string>);
+        bool processNegotiateInput(vector<string>);
 };
 
 class AggressivePlayerStrategy : public PlayerStrategy {

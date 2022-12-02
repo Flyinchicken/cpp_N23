@@ -179,6 +179,10 @@ void Player::setReinforcementPool(int pool)
 void Player::setTurnCompleted(bool turn)
 {
     this->turnCompleted = turn;
+
+    if (turnCompleted) {
+        cout << name << " has ended their turn" << endl;
+    }
 }
 
 bool Player::isTurnCompleted()

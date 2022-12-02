@@ -130,7 +130,6 @@ HumanPlayerStrategy& HumanPlayerStrategy::operator = (const HumanPlayerStrategy&
 bool HumanPlayerStrategy::hasPlayerEndedTurn(string commandString) {
     if (commandString == CommandStrings::issueOrdersEnd) {
         player->setTurnCompleted(true);
-        cout << player->getName() << " has ended their turn" << endl;
         return true;
     }
 
@@ -167,11 +166,12 @@ bool HumanPlayerStrategy::areKeywordAndSizeInvalid(string commandKeyword, int in
  * Adds a Deploy Order to the player's order list assuming all command parameters are valid.
  * 
  * @param splitCommand Vector containing each keyword the user input as a command (i.e. input split by whitespace)
+ * @returns If no Order was issued (i.e. true = no order issued, incorrect input)
 */
-void HumanPlayerStrategy::processDeployInput(vector<string> splitCommand) {
+bool HumanPlayerStrategy::processDeployInput(vector<string> splitCommand) {
     if (splitCommand.size() != 4) {
         cout << "Deploy order must be formatted as: issueorder deploy <num_armyunits> <target_territory>" << endl;
-        return;
+        return true;
     }
 
     string armyString = splitCommand.at(2);
@@ -179,180 +179,187 @@ void HumanPlayerStrategy::processDeployInput(vector<string> splitCommand) {
 
     if (!isStringNumber(armyString)) {
         cout << armyString << " is not a valid number!" << endl;
-        return;
+        return true;
     }
     int numArmyToDeploy = stoi(armyString);
 
     Territory* targetTerritory = worldMap->getNode(territoryString);
     if (targetTerritory == NULL) {
         cout << "Could not find territory with name " << territoryString << " in world map" << endl;
-        return;
+        return true;
     }
 
     player->addOrderToList(new Deploy(player, numArmyToDeploy, targetTerritory));
-    cout << "DEPLOYED" << endl;
+    
+    return false;
 }
 
 /**
  * Adds an Advance Order to the player's order list assuming all command parameters are valid.
  * 
  * @param splitCommand Vector containing each keyword the user input as a command (i.e. input split by whitespace)
+ * @returns If no Order was issued (i.e. true = no order issued, incorrect input)
 */
-void HumanPlayerStrategy::processAdvanceInput(vector<string> splitCommand) {
+bool HumanPlayerStrategy::processAdvanceInput(vector<string> splitCommand) {
     if (splitCommand.size() != 5) {
         cout << "Advance order must be formatted as: issueorder advance <source_territory> <target_territory> <num_armyunits>" << endl;
-        return;
+        return true;
     }
 
     Territory* sourceTerritory = worldMap->getNode(splitCommand.at(2));
     if (sourceTerritory == NULL) {
         cout << "Could not find territory with name " << splitCommand.at(2) << " in world map" << endl;
-        return;
+        return true;
     }
 
     Territory* targetTerritory = worldMap->getNode(splitCommand.at(3));
     if (targetTerritory == NULL) {
         cout << "Could not find territory with name " << splitCommand.at(3) << " in world map" << endl;
-        return;
+        return true;
     }
 
     if (!isStringNumber(splitCommand.at(4))) {
         cout << splitCommand.at(4) << " is not a valid number!" << endl;
-        return;
+        return true;
     }
     int numArmyToDeploy = stoi(splitCommand.at(4));
 
     player->addOrderToList(new Advance(player, sourceTerritory, targetTerritory, numArmyToDeploy));
-    cout << "ADVANCED" << endl;
+    
+    return false;
 }
 
 /**
  * Adds a Bomb Order to the player's order list assuming all command parameters are valid.
  * 
  * @param splitCommand Vector containing each keyword the user input as a command (i.e. input split by whitespace)
+ * @returns If no Order was issued (i.e. true = no order issued, incorrect input)
 */
-void HumanPlayerStrategy::processBombInput(vector<string> splitCommand) {
+bool HumanPlayerStrategy::processBombInput(vector<string> splitCommand) {
     if (splitCommand.size() != 3) {
         cout << "Bomb order must be formatted as: issueorder bomb <target_territory>" << endl;
-        return;
+        return true;
     }
 
     Card* toPlay = player->getCardFromHandIfExists("bomb");            
     if (toPlay == NULL) {
         cout << "No card of type 'bomb' found in current hand!" << endl;
-        return;
+        return true;
     }
 
     Territory* targetTerritory = worldMap->getNode(splitCommand.at(2));
     if (targetTerritory == NULL) {
         cout << "Could not find territory with name " << splitCommand.at(2) << " in world map" << endl;
-        return;
+        return true;
     }
 
     CardParameters params(targetTerritory);
     toPlay->play(player->getHand(), params);
 
-    cout << "BOMBD" << endl;
+    return false;
 }
 
 /**
  * Adds a Blockade Order to the player's order list assuming all command parameters are valid.
  * 
  * @param splitCommand Vector containing each keyword the user input as a command (i.e. input split by whitespace)
+ * @returns If no Order was issued (i.e. true = no order issued, incorrect input)
 */
-void HumanPlayerStrategy::processBlockadeInput(vector<string> splitCommand) {
+bool HumanPlayerStrategy::processBlockadeInput(vector<string> splitCommand) {
     if (splitCommand.size() != 3) {
         cout << "Blockade order must be formatted as: issueorder blockade <target_territory>" << endl;
-        return;
+        return true;
     }
 
     Card* toPlay = player->getCardFromHandIfExists("blockade");            
     if (toPlay == NULL) {
         cout << "No card of type 'blockade' found in current hand!" << endl;
-        return;
+        return true;
     }
 
     Territory* targetTerritory = worldMap->getNode(splitCommand.at(2));
     if (targetTerritory == NULL) {
         cout << "Could not find territory with name " << splitCommand.at(2) << " in world map" << endl;
-        return;
+        return true;
     }
     
     CardParameters params(targetTerritory);
     toPlay->play(player->getHand(), params);
     
-    cout << "BLOCKADED" << endl;
+    return false;
 }
 
 /**
  * Adds an Airlift Order to the player's order list assuming all command parameters are valid.
  * 
  * @param splitCommand Vector containing each keyword the user input as a command (i.e. input split by whitespace)
+ * @returns If no Order was issued (i.e. true = no order issued, incorrect input)
 */
-void HumanPlayerStrategy::processAirliftInput(vector<string> splitCommand) {
+bool HumanPlayerStrategy::processAirliftInput(vector<string> splitCommand) {
     if (splitCommand.size() != 5) {
         cout << "Airlift order must be formatted as: issueorder airlift <source_territory> <target_territory> <armyunits>" << endl;
-        return;
+        return true;
     }            
 
     Card* toPlay = player->getCardFromHandIfExists("airlift");            
     if (toPlay == NULL) {
         cout << "No card of type 'airlift' found in current hand!" << endl;
-        return;
+        return true;
     }
 
     Territory* sourceTerritory = worldMap->getNode(splitCommand.at(2));
     if (sourceTerritory == NULL) {
         cout << "Could not find territory with name " << splitCommand.at(2) << " in world map" << endl;
-        return;
+        return true;
     }
 
     Territory* targetTerritory = worldMap->getNode(splitCommand.at(3));
     if (targetTerritory == NULL) {
         cout << "Could not find territory with name " << splitCommand.at(3) << " in world map" << endl;
-        return;
+        return true;
     }
 
     if (!isStringNumber(splitCommand.at(4))) {
         cout << splitCommand.at(4) << " is not a valid number!" << endl;
-        return;
+        return true;
     }
     int numArmyToDeploy = stoi(splitCommand.at(4));
 
     CardParameters params(sourceTerritory, targetTerritory, numArmyToDeploy);
     toPlay->play(player->getHand(), params);
 
-    cout << "AIRLIFTED" << endl;
+    return false;
 }
 
 /**
  * Adds a Negotiate Order to the player's order list assuming all command parameters are valid.
  * 
  * @param splitCommand Vector containing each keyword the user input as a command (i.e. input split by whitespace)
+ * @returns If no Order was issued (i.e. true = no order issued, incorrect input)
 */
-void HumanPlayerStrategy::processNegotiateInput(vector<string> splitCommand) {
+bool HumanPlayerStrategy::processNegotiateInput(vector<string> splitCommand) {
     if (splitCommand.size() != 3) {
         cout << "Negotiate order must be formatted as: issueorder negotiate <target_player>" << endl;
-        return;
+        return true;
     }            
 
     Card* toPlay = player->getCardFromHandIfExists("diplomacy");            
     if (toPlay == NULL) {
         cout << "No card of type 'diplomacy' found in current hand!" << endl;
-        return;
+        return true;
     } 
 
     string targetPlayerName = splitCommand.at(2);
     Player* targetPlayer = ge->getPlayerIfExists(targetPlayerName);
     if (targetPlayer == nullptr) {
         cout << "No player with name " << targetPlayerName << " found in the current game instance!" << endl;
-        return;
+        return true;
     }        
 
     CardParameters params(targetPlayer);
     toPlay->play(player->getHand(), params);
 
-    cout << "NEGOTIATED" << endl;
+    return false;
 }
 
 /**
@@ -385,20 +392,16 @@ void HumanPlayerStrategy::showValidCommandList() {
         << "6: issueordersend = indicate you've finished issueing orders" << endl;
 }
 
+/**
+ * Console interface that allows a human player to issue an Order of any variety. Includes other additional commands
+ * to aid in the process.
+*/
 void HumanPlayerStrategy::issueOrder() {
-    // TODO: Options as seen below (attack and defend as priority)
-    /*
-        toattack = show list
-        todefend = show list
-        help = show this
-        info = show player info (territories, cards, reinforcement pool)
-    */
     // TODO: SaveEffect??
-    // TODO: issue one order at a time? If so, while(noOrderIssued), have process return boolean
     showValidCommandList();
 
     bool noOrderIssued = true;
-    while (!player->isTurnCompleted()) {
+    while (noOrderIssued) {
         Command* nextCommand = commandProcessor->getCommand();
         vector<string> splitCommand = commandProcessor->splitStringByDelim(nextCommand->getCommand(), ' ');
         string commandKeyword = splitCommand.front();
@@ -419,70 +422,38 @@ void HumanPlayerStrategy::issueOrder() {
         else if (commandKeyword == "help") {
             showValidCommandList();
         }
-        else if (hasPlayerEndedTurn(commandKeyword) || areKeywordAndSizeInvalid(commandKeyword, splitCommand.size())) {
+        else if (hasPlayerEndedTurn(commandKeyword)) {
+            noOrderIssued = false;
+            continue;
+        }
+        else if (areKeywordAndSizeInvalid(commandKeyword, splitCommand.size())) {
             continue;
         } 
         else {
             string commandType = splitCommand.at(1);
 
             if (commandType == "deploy") {
-                processDeployInput(splitCommand);
+                noOrderIssued = processDeployInput(splitCommand);
             }
             else if (commandType == "advance") {
-                processAdvanceInput(splitCommand);
+                noOrderIssued = processAdvanceInput(splitCommand);
             }
             else if (commandType == "bomb") {
-                processBombInput(splitCommand);
+                noOrderIssued = processBombInput(splitCommand);
             }
             else if (commandType == "blockade") {
-                processBlockadeInput(splitCommand);
+                noOrderIssued = processBlockadeInput(splitCommand);
             }
             else if (commandType == "airlift") {
-                processAirliftInput(splitCommand);
+                noOrderIssued = processAirliftInput(splitCommand);
             }
             else if (commandType == "negotiate") {
-                processNegotiateInput(splitCommand);
+                noOrderIssued = processNegotiateInput(splitCommand);
             }
             else {
                 cout << commandType << " is not a valid command type!" << endl;
             }
         }
-
-        // cout << endl;
-
-        // if (hasPlayerEndedTurn(commandKeyword) || areKeywordAndSizeInvalid(commandKeyword, splitCommand.size())) {
-        //     continue;
-        // }
-
-        // string commandType = splitCommand.at(1);
-
-        // // issueorder deploy <armyunits> <territory>
-        // if (commandType == "deploy") {
-        //     processDeployInput(splitCommand);
-        // }
-        // // issueorder advance <source_territory> <target_territory> <armyunits>
-        // else if (commandType == "advance") {
-        //     processAdvanceInput(splitCommand);
-        // }
-        // // issueorder bomb <target_territory>
-        // else if (commandType == "bomb") {
-        //     processBombInput(splitCommand);
-        // }
-        // // issueorder blockade <target_territory>
-        // else if (commandType == "blockade") {
-        //     processBlockadeInput(splitCommand);
-        // }
-        // // issueorder airlift <source_territory> <target_territory> <armyunits>
-        // else if (commandType == "airlift") {
-        //     processAirliftInput(splitCommand);
-        // }
-        // // issueorder negotiate <target_player>
-        // else if (commandType == "negotiate") {
-        //     processNegotiateInput(splitCommand);
-        // }
-        // else {
-        //     cout << commandType << " is not a valid command type!" << endl;
-        // }
     }
 }
 
