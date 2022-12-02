@@ -46,6 +46,7 @@ class HumanPlayerStrategy : public PlayerStrategy {
     private:
         CommandProcessor* commandProcessor;
         Command* nextCommand;
+        bool showCommandList;       // Bool so command list is only shown first time Human issues order
 
         void printTerritoryList(vector<Territory*>);
         void showValidCommandList();

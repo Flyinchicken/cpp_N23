@@ -93,13 +93,15 @@ bool PlayerStrategy::isStringNumber(string input) {
 
 HumanPlayerStrategy::HumanPlayerStrategy(Player *p) : PlayerStrategy(p) {
     commandProcessor = new CommandProcessor();
+    showCommandList = true;
  }
 
 /**
  * Copy constructor
 */
-HumanPlayerStrategy::HumanPlayerStrategy(const HumanPlayerStrategy& strat) : HumanPlayerStrategy(strat.player) {
-    cout << "Copy" << endl;
+HumanPlayerStrategy::HumanPlayerStrategy(const HumanPlayerStrategy& strat) : PlayerStrategy(strat.player) {
+    commandProcessor = new CommandProcessor();
+    showCommandList = strat.showCommandList;
 }
 
 HumanPlayerStrategy::~HumanPlayerStrategy() {
@@ -113,6 +115,7 @@ HumanPlayerStrategy::~HumanPlayerStrategy() {
 HumanPlayerStrategy& HumanPlayerStrategy::operator = (const HumanPlayerStrategy& toAssign) {
     if (this != &toAssign) {
         player = toAssign.player;
+        showCommandList = toAssign.showCommandList;
 
         delete commandProcessor;
         commandProcessor = toAssign.commandProcessor;
@@ -424,8 +427,9 @@ void HumanPlayerStrategy::showValidCommandList() {
  * to aid in the process.
 */
 void HumanPlayerStrategy::issueOrder() {
-    // TODO: SaveEffect??
-    showValidCommandList();
+    if (showCommandList) {
+        showValidCommandList();
+    }    
 
     bool noOrderIssued = true;
     while (noOrderIssued) {
@@ -489,6 +493,8 @@ void HumanPlayerStrategy::issueOrder() {
             }
         }
     }
+
+    showCommandList = false;
 }
 
 /**
