@@ -49,29 +49,8 @@ void testPlayerStrategies() {
 
     vector<Player*> playerList = strategyEngine->getPlayerList();
 
-
-    // "Conquers" 1t/1c (the bridge between the two players) for StratTester1
-    // to get more bang for your buck for toAttack territories
-    // vector<Territory*> testAttack = playerList.at(0)->toAttack();
-    // testAttack.at(0)->setOwner(playerList.at(0));
-    // testAttack = playerList.at(0)->toAttack();
-    // cout << "TO ATTACK: " << endl;
-    // for (auto ter : testAttack) {
-    //     cout << *ter << endl;
-    // }
-
     cout << "--------------" << endl;
 
-    // playerList.at(0)->setPlayerStrategy(new CheaterPlayerStrategy(playerList.at(0)));
-    // testAttack = playerList.at(0)->getPlayerStrategy()->toAttack();
-    // cout << "TO ATTACK2: " << endl;
-    // for (auto ter : testAttack) {
-    //     cout << *ter << endl;
-    // }
-    // cout << *(playerList.at(0)->getPlayerStrategy()) << *(playerList.at(1)->getPlayerStrategy()) << endl;
-
-    // delete ps;
-    // cout << *p;
     int turnCount;
 
     // Human Player demo that demonstrates humans can create orders or play cards via console input
@@ -81,11 +60,6 @@ void testPlayerStrategies() {
     ge->loadMap(new Command("loadmap ./MapFiles/3D.map"));  // Known valid map so won't validate
     ge->addPlayer(new Command("addplayer HumanPlayer1"));
     ge->addPlayer(new Command("addplayer NeutralPlayer1"));
-    // TODO: Add another player (Neutral to show will turn into Aggressive). 
-    // TODO: Give Human player territories some reinforcements on them for toAttack and toDefend
-    // TODO: Give human player reinforcement pool
-    // TODO: Add boolean (?) to Neutral player that will check if have been attacked?
-    // TODO: Store # of neutral player territories. Since have no reinforcements on them, if number changes, change strategy
     ge->gameStart(new Command("gamestart"));
     playerList = ge->getPlayerList();
 
