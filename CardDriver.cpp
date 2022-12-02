@@ -31,7 +31,8 @@ void testCards() {
         if (t.size() == 0) { //if the hand is empty
             break;
         }
-        t.at(0)->play(myHand);
+        CardParameters params;
+        t.at(0)->play(myHand, params);
     }
 
     cout << "Printing the Hand and the Deck to see where the Cards are" << endl;

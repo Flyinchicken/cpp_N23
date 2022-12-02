@@ -6,6 +6,8 @@
     using std::cout;
 #include <vector>
     using std::vector;
+#include <set>
+    using std::set;
 
 void testPlayerStrategies() {
     // 1 - Different players can be assigned different strategies that lead to different behavior using the Strategy design pattern
@@ -47,53 +49,68 @@ void testPlayerStrategies() {
 
     vector<Player*> playerList = strategyEngine->getPlayerList();
 
-
-    // "Conquers" 1t/1c (the bridge between the two players) for StratTester1
-    // to get more bang for your buck for toAttack territories
-    // vector<Territory*> testAttack = playerList.at(0)->toAttack();
-    // testAttack.at(0)->setOwner(playerList.at(0));
-    // testAttack = playerList.at(0)->toAttack();
-    // cout << "TO ATTACK: " << endl;
-    // for (auto ter : testAttack) {
-    //     cout << *ter << endl;
-    // }
-
     cout << "--------------" << endl;
 
-    // playerList.at(0)->setPlayerStrategy(new CheaterPlayerStrategy(playerList.at(0)));
-    // testAttack = playerList.at(0)->getPlayerStrategy()->toAttack();
-    // cout << "TO ATTACK2: " << endl;
-    // for (auto ter : testAttack) {
-    //     cout << *ter << endl;
-    // }
-    // cout << *(playerList.at(0)->getPlayerStrategy()) << *(playerList.at(1)->getPlayerStrategy()) << endl;
-
-    // delete ps;
-    // cout << *p;
     int turnCount;
 
     // Human Player demo that demonstrates humans can create orders or play cards via console input
     cout << "-------HUMAN PLAYER DEMO-----------" << endl;
     delete strategyEngine;
-    strategyEngine = new GameEngine();
-    strategyEngine->loadMap(new Command("loadmap ./MapFiles/3D.map"));  // Known valid map so won't validate
-    strategyEngine->addPlayer(new Command("addplayer HumanPlayer1"));
-    strategyEngine->addPlayer(new Command("addplayer HumanPlayer2"));
-    strategyEngine->gameStart(new Command("gamestart"));
+    ge = new GameEngine();
+    ge->loadMap(new Command("loadmap ./MapFiles/3D.map"));  // Known valid map so won't validate
+    ge->addPlayer(new Command("addplayer HumanPlayer1"));
+    ge->addPlayer(new Command("addplayer NeutralPlayer1"));
+    ge->gameStart(new Command("gamestart"));
+    playerList = ge->getPlayerList();
 
-    cout << "Today's participants: " << endl;
-    playerList = strategyEngine->getPlayerList();
-    for (Player* p : playerList) {
-        p->setPlayerStrategy(new HumanPlayerStrategy(p));
-        cout << p->getName() << " (" << *(p->getPlayerStrategy()) << ")" << endl;
+    // Give some of Human player's territories reinforcements
+    int army = 1;
+    for (Territory* t : playerList.back()->getTerritories()) {
+        t->addArmy(army);
+        ++army;
+    }
+    int count = 1;
+    for (Territory* t : playerList.front()->toAttack()) {
+        cout << count << ": " << *t << endl;
+        ++count;
     }
 
-    cout << endl << "Mock issue order phase (each player issues two orders)" << endl;
-        
-    playerList.at(0)->issueOrder();
-    playerList.at(1)->issueOrder();
+    cout << "Today's participants: " << endl;
+    playerList.at(0)->setPlayerStrategy(new HumanPlayerStrategy(playerList.at(0)));
+    playerList.at(1)->setPlayerStrategy(new NeutralPlayerStrategy(playerList.at(1)));
+    for (Player* p : playerList) {
+        cout << *p << endl;
+    }
 
-    cout << endl << "Conclusion: Nothing is implemented" << endl;
+    cout << endl << "Mock issue order phase" << endl;
+    // Give human all cards to mess around with
+    playerList.at(0)->getHand()->addCardToHand(new Card("default", 1, "Card 6999"));
+    playerList.at(0)->getHand()->addCardToHand(new Card("default", 3, "Card 212121212121")); 
+    playerList.at(0)->getHand()->addCardToHand(new Card("default", 4, "Card 420"));    
+    playerList.at(0)->getHand()->addCardToHand(new Card("default", 5, "Card 123"));  
+
+    set<string> playersFinished;
+    while (playersFinished.size() != playerList.size()) {
+        for (Player* p : playerList) {
+            if (p->isTurnCompleted()) {
+                playersFinished.insert(p->getName());
+                continue;
+            }
+
+            if (playerList.at(0)->isTurnCompleted() && playerList.at(1)->isTurnCompleted()) {
+                break;
+            }
+            
+            p->issueOrder();            
+        }
+    } 
+
+    cout << endl << "Display order list" << endl;
+    for (Order* o : playerList.at(0)->getOrdersList()->order_list) {
+        cout << *o << endl;
+    }
+
+    cout << endl << "Conclusion: Things are implemented" << endl;
     cout << "-------END HUMAN PLAYER DEMO-----------" << endl;
 
     // Basic Neutral player demo that demonstrates their natural affinity for warfare

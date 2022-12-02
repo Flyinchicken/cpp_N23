@@ -14,6 +14,36 @@ class Player; //Hand uses Player*, but it only needs a declaration
 extern Deck* x; //Since the game is in practice only supposed to have 1 deck, some members use the global variable (externally defined)
                 // x of type Deck*
 
+
+/**
+ * Struct defining all possible parameters a Card may need to be properly execute.
+ * 
+ * For instance, a Bomb card requires a target Territory to be executed correctly given a player
+ * order.
+ * 
+ * When it comes to creating an Order via Player's cardOrder, all properties that are not needed for
+ * an Order are assumed to be NULL/not defined.
+ * 
+ * For instance, when create an Order of type Bomb, sourceTerritory and armyUnits are not used, so they 
+ * be left as default.
+*/
+struct CardParameters {
+    Territory* sourceTerritory;
+    Territory* targetTerritory;
+    int armyUnits;
+    Player* targetPlayer;
+
+    CardParameters();
+    CardParameters(Territory*);
+    CardParameters(Territory*, Territory*, int);
+    CardParameters(Player*);
+    CardParameters(const CardParameters&);
+    CardParameters& operator = (const CardParameters&);
+    ~CardParameters();
+
+    friend ostream& operator << (ostream&, CardParameters&);
+};
+
 /*
 Class for the Cards used in the warzone game
 */
@@ -39,7 +69,7 @@ public:
     string getType(); //Returns the type of the Card
     string getName(); //Returns the name of the Card
 
-    void play(Hand* hand); //Plays a Card from a hand, removing it and placing it back in the deck. Issues an order to the order list of the owner of the Hand
+    void play(Hand* hand, CardParameters); //Plays a Card from a hand, removing it and placing it back in the deck. Issues an order to the order list of the owner of the Hand
 };
 
 //Stream Operator for Card
@@ -109,7 +139,6 @@ ostream& operator<<(std::ostream& stream, Hand& e);
 //Free Functions
 int generateOrderNumber(string type); //Transform string type into a number from 1-6
 string generateType(int type); //Transform number type into a string
-
 
 
 

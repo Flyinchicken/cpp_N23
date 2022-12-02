@@ -11,6 +11,7 @@ using std::string;
 class Territory;
 class Player;
 class CommandProcessor;
+class Command;
 
 // Abstract strategy class
 class PlayerStrategy {
@@ -44,6 +45,20 @@ class HumanPlayerStrategy : public PlayerStrategy {
         string getStrategyAsString() const;
     private:
         CommandProcessor* commandProcessor;
+        Command* nextCommand;
+        bool showCommandList;       // Bool so command list is only shown first time Human issues order
+
+        void printTerritoryList(vector<Territory*>);
+        void showValidCommandList();
+        bool hasPlayerEndedTurn(string);
+        bool areKeywordAndSizeInvalid(string, int);
+
+        bool processDeployInput(vector<string>);
+        bool processAdvanceInput(vector<string>);
+        bool processBombInput(vector<string>);
+        bool processBlockadeInput(vector<string>);
+        bool processAirliftInput(vector<string>);
+        bool processNegotiateInput(vector<string>);
 };
 
 class AggressivePlayerStrategy : public PlayerStrategy {

@@ -18,6 +18,8 @@ class OrdersList;
 class Hand;
 class PlayerStrategy;
 class Order;
+class Card;
+struct CardParameters;
 
 extern int finishedPlayers;
 extern GameEngine* ge;
@@ -63,7 +65,7 @@ public:
 	void removeTerritory(Territory* territory);
 
 	//helper method
-	void cardOrder(int);
+	void cardOrder(int, CardParameters);
 	int getContinentsBonus();
 
 	//getters
@@ -85,5 +87,6 @@ public:
 	void setPlayerStrategy(PlayerStrategy*);
 
 	void addOrderToList(Order*);
+	Card* getCardFromHandIfExists(string);
 };
 #endif

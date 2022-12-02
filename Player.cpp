@@ -179,6 +179,10 @@ void Player::setReinforcementPool(int pool)
 void Player::setTurnCompleted(bool turn)
 {
     this->turnCompleted = turn;
+
+    if (turnCompleted) {
+        cout << name << " has ended their turn" << endl;
+    }
 }
 
 bool Player::isTurnCompleted()
@@ -186,8 +190,29 @@ bool Player::isTurnCompleted()
     return this->turnCompleted;
 }
 
+/**
+ * Adds a new order to the Player's order list
+ * 
+ * @param newOrder The order to add
+*/
 void Player::addOrderToList(Order* newOrder) {
     this->orderslist->addOrder(newOrder);
+}
+
+/**
+ * Gets and returns a card of a certain type from the Player's hand.
+ * 
+ * @param cardType String type of card to look for
+ * @return The card if the play has one, NULL otherwise
+*/
+Card* Player::getCardFromHandIfExists(string cardType) {
+    for (Card* card : hand->getHand()) {
+        if (card->getType() == cardType) {
+            return card;
+        }
+    }
+
+    return NULL;
 }
 
 // orders created adding to the player's orderslist
@@ -291,62 +316,52 @@ void Player::issueOrder()
 }
 
 // helper method to get a specific order which adds to the player's orderslist
-void Player::cardOrder(int orderNumber)
+void Player::cardOrder(int orderNumber, CardParameters params)
 {
     cout << "card order being executed " << orderNumber << endl;
     vector<Territory*> outposts = this->toDefend();
     vector<Territory*> enemies = this->toAttack();
 
-    Order* newOrder{};
+    // If nothing is set assumes it is a test and gives all random values (should not get to this point without having been validated
+    // for values otherwise)
+    if (params.armyUnits == 0 && params.sourceTerritory == nullptr && params.targetTerritory == nullptr && params.targetPlayer == nullptr) {
+        params.targetTerritory = enemies.at(rand() % outposts.size());
+        params.sourceTerritory = outposts.at(rand() % outposts.size());
+        params.armyUnits = rand() % reinforcementPool;
+        params.targetPlayer = ge->getPlayerList().at(rand() % ge->getPlayerList().size());
+    }
+
+    Order* newOrder;
     switch (orderNumber)
     {
     case 1:
         {
-        newOrder = new Deploy(this, 10, outposts.at(rand() % outposts.size()));
-        break;
+            newOrder = new Deploy(this, 10, outposts.at(rand() % outposts.size()));
+            break;
         }
     case 2:
         {
-        newOrder = new Advance();
-        break;
+            newOrder = new Advance();
+            break;
         }
     case 3:
         {
-        newOrder = new Bomb(this, enemies.at(rand() % enemies.size()));
-        break;
+            newOrder = new Bomb(this, params.targetTerritory);
+            break;
         }
     case 4:
         {
-        newOrder = new Blockade(this, outposts.at(rand() % outposts.size()));
-        break;
+            newOrder = new Blockade(this, params.targetTerritory);
+            break;
         }
     case 5:
         {
-            if(outposts.size() == 1){
-                cout << "Only one territory, can't airlift" << endl;
-                break;
-            }
-
-            int index = rand() % outposts.size();
-            int index2 = rand() % outposts.size();
-            while (index == index2)
-            {
-                index2 = rand() % outposts.size();
-            }
-        
-            newOrder = new Airlift(this, outposts.at(index), outposts.at(index2), outposts.at(index)->getArmyNumber() - 1);
+            newOrder = new Airlift(this, params.sourceTerritory, params.targetTerritory, params.armyUnits);
             break;
         }
     case 6:
         {
-            Player* temp = ge->getPlayerList().at(rand() % ge->getPlayerList().size());
-            while (this == temp)
-            {
-                temp = ge->getPlayerList().at(rand() % ge->getPlayerList().size());
-            }
-        
-            newOrder = new Negotiate(this, temp);
-        
+            newOrder = new Negotiate(this, params.targetPlayer);        
             break;
         }
     default:
@@ -356,7 +371,6 @@ void Player::cardOrder(int orderNumber)
     
     if (newOrder != nullptr)
     {
-        cout << (*newOrder) << endl;
         this->orderslist->addOrder(newOrder);
     }
 }
@@ -446,7 +460,6 @@ vector<Territory*> Player::toAttack()
 // stream operator that prints the player's owned countries
 ostream& operator<<(ostream& outs, Player& player)
 {
-    // TODO: Add Strategy
     outs << player.getName() 
         << " ("
         << player.playerStrategy->getStrategyAsString()
@@ -455,6 +468,19 @@ ostream& operator<<(ostream& outs, Player& player)
     for (int i = 0; i < player.territories.size(); i++)
     {
         outs << (*player.territories.at(i)->getTerritoryName()) << endl;
+    }
+
+    outs << "Reinforcement pool: " << player.getReinforcementPool() << endl;
+
+    outs << "Current Hand: " << endl;
+
+    vector<Card*> playerHand = player.getHand()->getHand();
+    if (playerHand.size() == 0) {
+        outs << "No cards in hand!" << endl;
+    } else {
+        for (int i = 0; i < playerHand.size(); i++) {
+            outs << *(playerHand.at(i)) << endl;
+        }
     }
 
     return outs;
