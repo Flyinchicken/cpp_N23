@@ -11,6 +11,7 @@ using std::string;
 class Territory;
 class Player;
 class CommandProcessor;
+class Command;
 
 // Abstract strategy class
 class PlayerStrategy {
@@ -44,6 +45,7 @@ class HumanPlayerStrategy : public PlayerStrategy {
         string getStrategyAsString() const;
     private:
         CommandProcessor* commandProcessor;
+        Command* nextCommand;
 
         void printTerritoryList(vector<Territory*>);
         void showValidCommandList();

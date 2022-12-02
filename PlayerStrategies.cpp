@@ -171,6 +171,7 @@ bool HumanPlayerStrategy::areKeywordAndSizeInvalid(string commandKeyword, int in
 bool HumanPlayerStrategy::processDeployInput(vector<string> splitCommand) {
     if (splitCommand.size() != 4) {
         cout << "Deploy order must be formatted as: issueorder deploy <num_armyunits> <target_territory>" << endl;
+        nextCommand->saveEffect("Command not properly formatted");
         return true;
     }
 
@@ -179,6 +180,7 @@ bool HumanPlayerStrategy::processDeployInput(vector<string> splitCommand) {
 
     if (!isStringNumber(armyString)) {
         cout << armyString << " is not a valid number!" << endl;
+        nextCommand->saveEffect("Army size not a number");
         return true;
     }
     int numArmyToDeploy = stoi(armyString);
@@ -186,10 +188,12 @@ bool HumanPlayerStrategy::processDeployInput(vector<string> splitCommand) {
     Territory* targetTerritory = worldMap->getNode(territoryString);
     if (targetTerritory == NULL) {
         cout << "Could not find territory with name " << territoryString << " in world map" << endl;
+        nextCommand->saveEffect("Target territory not found");
         return true;
     }
 
     player->addOrderToList(new Deploy(player, numArmyToDeploy, targetTerritory));
+    nextCommand->saveEffect("Created new Deploy order");
     
     return false;
 }
@@ -203,28 +207,33 @@ bool HumanPlayerStrategy::processDeployInput(vector<string> splitCommand) {
 bool HumanPlayerStrategy::processAdvanceInput(vector<string> splitCommand) {
     if (splitCommand.size() != 5) {
         cout << "Advance order must be formatted as: issueorder advance <source_territory> <target_territory> <num_armyunits>" << endl;
+        nextCommand->saveEffect("Command not properly formatted");
         return true;
     }
 
     Territory* sourceTerritory = worldMap->getNode(splitCommand.at(2));
     if (sourceTerritory == NULL) {
         cout << "Could not find territory with name " << splitCommand.at(2) << " in world map" << endl;
+        nextCommand->saveEffect("Source territory not found");
         return true;
     }
 
     Territory* targetTerritory = worldMap->getNode(splitCommand.at(3));
     if (targetTerritory == NULL) {
         cout << "Could not find territory with name " << splitCommand.at(3) << " in world map" << endl;
+        nextCommand->saveEffect("Target territory not found");
         return true;
     }
 
     if (!isStringNumber(splitCommand.at(4))) {
         cout << splitCommand.at(4) << " is not a valid number!" << endl;
+        nextCommand->saveEffect("Army size not a number");
         return true;
     }
     int numArmyToDeploy = stoi(splitCommand.at(4));
 
     player->addOrderToList(new Advance(player, sourceTerritory, targetTerritory, numArmyToDeploy));
+    nextCommand->saveEffect("Created new Advance order");
     
     return false;
 }
@@ -238,23 +247,27 @@ bool HumanPlayerStrategy::processAdvanceInput(vector<string> splitCommand) {
 bool HumanPlayerStrategy::processBombInput(vector<string> splitCommand) {
     if (splitCommand.size() != 3) {
         cout << "Bomb order must be formatted as: issueorder bomb <target_territory>" << endl;
+        nextCommand->saveEffect("Comman not properly formatted");
         return true;
     }
 
     Card* toPlay = player->getCardFromHandIfExists("bomb");            
     if (toPlay == NULL) {
         cout << "No card of type 'bomb' found in current hand!" << endl;
+        nextCommand->saveEffect(player->getName() + " has not bomb card");
         return true;
     }
 
     Territory* targetTerritory = worldMap->getNode(splitCommand.at(2));
     if (targetTerritory == NULL) {
         cout << "Could not find territory with name " << splitCommand.at(2) << " in world map" << endl;
+        nextCommand->saveEffect("Could not find target territory");
         return true;
     }
 
     CardParameters params(targetTerritory);
     toPlay->play(player->getHand(), params);
+    nextCommand->saveEffect("Played Bomb card");
 
     return false;
 }
@@ -268,23 +281,27 @@ bool HumanPlayerStrategy::processBombInput(vector<string> splitCommand) {
 bool HumanPlayerStrategy::processBlockadeInput(vector<string> splitCommand) {
     if (splitCommand.size() != 3) {
         cout << "Blockade order must be formatted as: issueorder blockade <target_territory>" << endl;
+        nextCommand->saveEffect("Command not properly formatted");
         return true;
     }
 
     Card* toPlay = player->getCardFromHandIfExists("blockade");            
     if (toPlay == NULL) {
         cout << "No card of type 'blockade' found in current hand!" << endl;
+        nextCommand->saveEffect(player->getName() + " has no bloackde card");
         return true;
     }
 
     Territory* targetTerritory = worldMap->getNode(splitCommand.at(2));
     if (targetTerritory == NULL) {
         cout << "Could not find territory with name " << splitCommand.at(2) << " in world map" << endl;
+        nextCommand->saveEffect("Target territory not found");
         return true;
     }
     
     CardParameters params(targetTerritory);
     toPlay->play(player->getHand(), params);
+    nextCommand->saveEffect("Played blockade card");
     
     return false;
 }
@@ -298,35 +315,41 @@ bool HumanPlayerStrategy::processBlockadeInput(vector<string> splitCommand) {
 bool HumanPlayerStrategy::processAirliftInput(vector<string> splitCommand) {
     if (splitCommand.size() != 5) {
         cout << "Airlift order must be formatted as: issueorder airlift <source_territory> <target_territory> <armyunits>" << endl;
+        nextCommand->saveEffect("Command not properly formatted");
         return true;
     }            
 
     Card* toPlay = player->getCardFromHandIfExists("airlift");            
     if (toPlay == NULL) {
         cout << "No card of type 'airlift' found in current hand!" << endl;
+        nextCommand->saveEffect(player->getName() + " has no airlift card");
         return true;
     }
 
     Territory* sourceTerritory = worldMap->getNode(splitCommand.at(2));
     if (sourceTerritory == NULL) {
         cout << "Could not find territory with name " << splitCommand.at(2) << " in world map" << endl;
+        nextCommand->saveEffect("Source territory not found");
         return true;
     }
 
     Territory* targetTerritory = worldMap->getNode(splitCommand.at(3));
     if (targetTerritory == NULL) {
         cout << "Could not find territory with name " << splitCommand.at(3) << " in world map" << endl;
+        nextCommand->saveEffect("Target territory not found");
         return true;
     }
 
     if (!isStringNumber(splitCommand.at(4))) {
         cout << splitCommand.at(4) << " is not a valid number!" << endl;
+        nextCommand->saveEffect("Army size not a number");
         return true;
     }
     int numArmyToDeploy = stoi(splitCommand.at(4));
 
     CardParameters params(sourceTerritory, targetTerritory, numArmyToDeploy);
     toPlay->play(player->getHand(), params);
+    nextCommand->saveEffect("Played airlift card");
 
     return false;
 }
@@ -340,12 +363,14 @@ bool HumanPlayerStrategy::processAirliftInput(vector<string> splitCommand) {
 bool HumanPlayerStrategy::processNegotiateInput(vector<string> splitCommand) {
     if (splitCommand.size() != 3) {
         cout << "Negotiate order must be formatted as: issueorder negotiate <target_player>" << endl;
+        nextCommand->saveEffect("Command not formatted correctly");
         return true;
     }            
 
     Card* toPlay = player->getCardFromHandIfExists("diplomacy");            
     if (toPlay == NULL) {
         cout << "No card of type 'diplomacy' found in current hand!" << endl;
+        nextCommand->saveEffect(player->getName() + " has no diplomacy card");
         return true;
     } 
 
@@ -353,11 +378,13 @@ bool HumanPlayerStrategy::processNegotiateInput(vector<string> splitCommand) {
     Player* targetPlayer = ge->getPlayerIfExists(targetPlayerName);
     if (targetPlayer == nullptr) {
         cout << "No player with name " << targetPlayerName << " found in the current game instance!" << endl;
+        nextCommand->saveEffect("Target player not found");
         return true;
     }        
 
     CardParameters params(targetPlayer);
     toPlay->play(player->getHand(), params);
+    nextCommand->saveEffect("Played diplomacy card");
 
     return false;
 }
@@ -402,7 +429,7 @@ void HumanPlayerStrategy::issueOrder() {
 
     bool noOrderIssued = true;
     while (noOrderIssued) {
-        Command* nextCommand = commandProcessor->getCommand();
+        nextCommand = commandProcessor->getCommand();
         vector<string> splitCommand = commandProcessor->splitStringByDelim(nextCommand->getCommand(), ' ');
         string commandKeyword = splitCommand.front();
 
@@ -411,22 +438,28 @@ void HumanPlayerStrategy::issueOrder() {
         if (commandKeyword == "toattack") {
             cout << "You can attack the following territories: " << endl;
             printTerritoryList(this->toAttack());
+            nextCommand->saveEffect("Displayed list of toAttack Territories");
         } 
         else if (commandKeyword == "todefend") {
             cout << "The following are the territories you must defend: " << endl;
             printTerritoryList(this->toDefend());
+            nextCommand->saveEffect("Displayed list of toDefend Territories");
         } 
         else if (commandKeyword == "info") {
             cout << *player << endl;
+            nextCommand->saveEffect("Displayed player info for " + player->getName());
         } 
         else if (commandKeyword == "help") {
             showValidCommandList();
+            nextCommand->saveEffect("Displayed list of commands for a Human player");
         }
         else if (hasPlayerEndedTurn(commandKeyword)) {
             noOrderIssued = false;
+            nextCommand->saveEffect(player->getName() + " indicated they have no more orders to issue");
             continue;
         }
         else if (areKeywordAndSizeInvalid(commandKeyword, splitCommand.size())) {
+            nextCommand->saveEffect("Not a valid command for a Human player");
             continue;
         } 
         else {
@@ -452,6 +485,7 @@ void HumanPlayerStrategy::issueOrder() {
             }
             else {
                 cout << commandType << " is not a valid command type!" << endl;
+            nextCommand->saveEffect("Not a valid command type");
             }
         }
     }
