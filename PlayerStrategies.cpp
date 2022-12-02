@@ -356,17 +356,16 @@ void HumanPlayerStrategy::processNegotiateInput(vector<string> splitCommand) {
 }
 
 void HumanPlayerStrategy::issueOrder() {
-    // TODO: Use command processor??
-    // TODO: Make basic input system
+    // TODO: Break out of loop after issueing order?
+    // TODO: Options as seen below
+    // TODO: SaveEffect??
+
     // Create order or play card
     // loop until set turn
     // set turn = setTurnCompleted
     // getTurn = isTurnCompleted?
     while (!player->isTurnCompleted()) {
         cout << "Beep boop I am a human that is issueing an order" << endl;
-        // TODO: Break up code
-        // TODO: Options as seen below
-        // TODO: SaveEffect??
         /*
         1. Territories of toAttack
         2. Territories of toDefend
@@ -385,16 +384,13 @@ void HumanPlayerStrategy::issueOrder() {
         //     cout << displayOption << " is not a valid input. Please input a nummber between 1 and 7." << endl;
         //     continue;
         // }
-        
-        // 1 get issueing orders working
-        // 2 dispay options
 
         Command* nextCommand = commandProcessor->getCommand();
         vector<string> splitCommand = commandProcessor->splitStringByDelim(nextCommand->getCommand(), ' ');
         string commandKeyword = splitCommand.front();
 
         cout << endl;
-        
+
         if (hasPlayerEndedTurn(commandKeyword) || areKeywordAndSizeInvalid(commandKeyword, splitCommand.size())) {
             continue;
         }
@@ -431,20 +427,56 @@ void HumanPlayerStrategy::issueOrder() {
     }
 }
 
+/**
+ * @returns All territories the player can attack, ordered by biggest army number first.
+*/
 vector<Territory*> HumanPlayerStrategy::toAttack() {
-    // TODO: Sort by what? Lowest army score?
-    return {};
+    vector<Territory*> a_territories;
+    set<Territory*> a_set;
+    
+    for (int i = 0; i < player->getTerritories().size(); i++)
+    {
+        vector<Territory*> temp = worldMap->getNeighboursPtr(*(player->getTerritories().at(i)->getTerritoryName()));
+        for(auto& neighbor : temp){
+            if(neighbor->getOwner() != player){
+                a_set.insert(neighbor);
+            }
+        }
+    }
+
+    for(auto& neighbor : a_set){
+        a_territories.push_back(neighbor);
+    }
+
+    sort(a_territories.begin(),a_territories.end(), compareArmyNumberIncrease);
+
+    return a_territories;
 }
 
+/**
+ * @returns All player owned territories, ordered by lowest army number first.
+*/
 vector<Territory*> HumanPlayerStrategy::toDefend() {
-    // TODO: Sort by lowest army score?
-    return {};
+    vector<Territory*> d_territories;
+    for (int i = 0; i < player->getTerritories().size(); i++)
+    {
+        d_territories.push_back(player->getTerritories().at(i));
+    }
+
+    sort(d_territories.begin(),d_territories.end(), compareArmyNumberDecrease);
+    return d_territories;
 }
 
+/**
+ * @returns The type of strategy as a string
+*/
 string HumanPlayerStrategy::getStrategyAsString() const {
     return "Human Player";
 }
 
+/**
+ * Outputs the type of strategy this instance is.
+*/
 ostream& operator << (ostream& out, const HumanPlayerStrategy &strategy) {
     out << strategy.getStrategyAsString();
 
