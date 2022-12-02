@@ -678,7 +678,9 @@ void GameEngine::issueOrdersPhase() {
             if (numOrders > 4) {
                 if (!temp->getHand()->getHand().empty()) {
                     vector<Card*> cards = temp->getHand()->getHand();
-                    cards[0]->play(temp->getHand());
+                    // This is no bueno, will need to come up with something better in the future
+                    CardParameters params;
+                    cards[0]->play(temp->getHand(), params);
                 }
                 temp->setTurnCompleted(true);
                 finishedPlayers++;
@@ -748,4 +750,20 @@ vector<Player*> GameEngine::getDeadPlayers()
 void GameEngine::setDeadPlayer(vector<Player*> deadPlayers)
 {
     this->deadPlayers = deadPlayers;
+}
+
+/**
+ * Checks and returns a player from its name from the current pl
+ * 
+ * @param playerName The name of the player to look for
+ * @returns The player, or nullptr, if he doesn't exist
+*/
+Player* GameEngine::getPlayerIfExists(string playerName) {
+    for (Player* p : playerList) {
+        if (p->getName() == playerName) {
+            return p;
+        }
+    }
+
+    return nullptr;
 }

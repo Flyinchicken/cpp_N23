@@ -77,6 +77,8 @@ class GameEngine : public Subject, public ILoggable
         void addPlayer(Command* command);
         void gameStart(Command* command);
 
+        Player* getPlayerIfExists(string);
+
         void displayFarewellMessage();
 
         string stringToLog();

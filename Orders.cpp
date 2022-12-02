@@ -21,6 +21,8 @@ Order::Order() : player()
 
 Order::Order(Player *player)
 {
+  order_id++;
+  this->id = order_id;
   this->player = player;
 }
 
