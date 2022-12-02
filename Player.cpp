@@ -322,6 +322,15 @@ void Player::cardOrder(int orderNumber, CardParameters params)
     vector<Territory*> outposts = this->toDefend();
     vector<Territory*> enemies = this->toAttack();
 
+    // If nothing is set assumes it is a test and gives all random values (should not get to this point without having been validated
+    // for values otherwise)
+    if (params.armyUnits == 0 && params.sourceTerritory == nullptr && params.targetTerritory == nullptr && params.targetPlayer == nullptr) {
+        params.targetTerritory = enemies.at(rand() % outposts.size());
+        params.sourceTerritory = outposts.at(rand() % outposts.size());
+        params.armyUnits = rand() % reinforcementPool;
+        params.targetPlayer = ge->getPlayerList().at(rand() % ge->getPlayerList().size());
+    }
+
     Order* newOrder;
     switch (orderNumber)
     {
