@@ -1,0 +1,36 @@
+
+loadmap ./MapFiles/3D.map
+Successfully loaded map file ./MapFiles/3D.map. State changed to MAPLOADED 
+New game state is: Map Loaded
+
+validatemap
+New game state is: Map Validated
+Map was successfully validated. State changed to MAPVALIDATED 
+
+addplayer tester1
+New game state is: Players Added
+Player tester1 was added successfully. State changed to PLAYERSADDED
+
+addplayer tester2
+New game state is: Players Added
+Player tester2 was added successfully. State changed to PLAYERSADDED
+
+gamestart
+New game state is: Assign Reinforcements
+Map added and validated successfully. All players added. Transitioned from start up phase into main game loop! State changed to ASSIGNREINFORCEMENTS
+New game state is: Issue Orders
+Bomb Order added 
+Blockade Order added 
+Bomb Order added 
+Blockade Order added 
+New game state is: Execute Orders
+tester1: Bomb is valid. Bomb order execute:  
+Previous army in target territory: 0
+Current army in target territory: 0
+
+tester1: Invalid Blockade order. Cannot execute this Blockade order.
+tester2: Bomb is valid. Bomb order execute:  
+Previous army in target territory: 0
+Current army in target territory: 0
+
+tester2: Invalid Blockade order. Cannot execute this Blockade order.

@@ -703,9 +703,12 @@ void GameEngine::executeOrdersPhase()
 {
     cout << "Execute Order Phase";
     for (Player* i : playerList) {
-        for (Order* p : (* i->getOrdersList()).order_list) {
-            p->execute();
-        }
+        // for (Order* p : (* i->getOrdersList()).order_list) {
+        //     p->execute();
+        // }
+        cout << "Order execution for player " << i->getName() << endl;
+        delete i->getOrdersList();
+        i->setOrdersList(new OrdersList ());
     }
 
     setGameState(ASSIGNREINFORCEMENTS);
@@ -725,7 +728,7 @@ void GameEngine::startNewGame() {
 //Return game state
 string GameEngine::stringToLog()
 {
-    return "New game state is: " + getGameStateAsString() + "\n";
+    return "Game Engine new state: " + getGameStateAsString() + "\n";
 }
 
 //Getter and Setter for playerList

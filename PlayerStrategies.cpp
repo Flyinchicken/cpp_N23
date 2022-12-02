@@ -685,11 +685,11 @@ void BenevolentPlayerStrategy::issueOrder() {
 }
 
 vector<Territory*> BenevolentPlayerStrategy::toAttack() {
-
+    return {};
 }
 
 vector<Territory*> BenevolentPlayerStrategy::toDefend() {
-
+    return {};
 }
 
 string BenevolentPlayerStrategy::getStrategyAsString() const {
