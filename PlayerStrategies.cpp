@@ -803,10 +803,8 @@ CheaterPlayerStrategy& CheaterPlayerStrategy::operator = (const CheaterPlayerStr
     return *this;
 }
 
-// TODO: The Cheater player should not issue orders. 
-// The code in its issueOrder() function should just change the ownership of all its neighboring territories to themself. 
 /**
- * Changes ownership for all neighbouring territories and ends turn.
+ * Changes ownership for all neighbouring territories and ends turn. Does not issue orders according to prof.
 */
 void CheaterPlayerStrategy::issueOrder() {
     vector<Territory*> territoriesToConquer = this->toAttack();
