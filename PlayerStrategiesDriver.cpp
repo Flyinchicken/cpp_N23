@@ -78,17 +78,36 @@ void testPlayerStrategies() {
     ge = new GameEngine();
     ge->loadMap(new Command("loadmap ./MapFiles/3D.map"));  // Known valid map so won't validate
     ge->addPlayer(new Command("addplayer HumanPlayer1"));
+    ge->addPlayer(new Command("addplayer NeutralPlayer1"));
+    // TODO: Add another player (Neutral to show will turn into Aggressive). 
+    // TODO: Give Human player territories some reinforcements on them for toAttack and toDefend
+    // TODO: Give human player reinforcement pool
+    // TODO: Add boolean (?) to Neutral player that will check if have been attacked?
+    // TODO: Store # of neutral player territories. Since have no reinforcements on them, if number changes, change strategy
     ge->gameStart(new Command("gamestart"));
+    playerList = ge->getPlayerList();
+
+    // Give some of Human player's territories reinforcements
+    int army = 1;
+    for (Territory* t : playerList.back()->getTerritories()) {
+        t->addArmy(army);
+        ++army;
+    }
+    int count = 1;
+    for (Territory* t : playerList.front()->toAttack()) {
+        cout << count << ": " << *t << endl;
+        ++count;
+    }
 
     cout << "Today's participants: " << endl;
-    playerList = ge->getPlayerList();
+    playerList.at(0)->setPlayerStrategy(new HumanPlayerStrategy(playerList.at(0)));
+    playerList.at(1)->setPlayerStrategy(new NeutralPlayerStrategy(playerList.at(1)));
     for (Player* p : playerList) {
-        p->setPlayerStrategy(new HumanPlayerStrategy(p));
-        cout << p->getName() << " (" << *(p->getPlayerStrategy()) << ")" << endl;
+        cout << *p << endl;
     }
 
     cout << endl << "Mock issue order phase" << endl;
-    // Testing, will be removed
+    // Give human all cards to mess around with
     playerList.at(0)->getHand()->addCardToHand(new Card("default", 1, "Card 6999"));
     playerList.at(0)->getHand()->addCardToHand(new Card("default", 3, "Card 212121212121")); 
     playerList.at(0)->getHand()->addCardToHand(new Card("default", 4, "Card 420"));    
@@ -100,7 +119,7 @@ void testPlayerStrategies() {
         cout << *o << endl;
     }
 
-    cout << endl << "Conclusion: Nothing is implemented" << endl;
+    cout << endl << "Conclusion: Things are implemented" << endl;
     cout << "-------END HUMAN PLAYER DEMO-----------" << endl;
 
     // Basic Neutral player demo that demonstrates their natural affinity for warfare

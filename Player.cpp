@@ -451,7 +451,6 @@ vector<Territory*> Player::toAttack()
 // stream operator that prints the player's owned countries
 ostream& operator<<(ostream& outs, Player& player)
 {
-    // TODO: Add Strategy
     outs << player.getName() 
         << " ("
         << player.playerStrategy->getStrategyAsString()
@@ -460,6 +459,19 @@ ostream& operator<<(ostream& outs, Player& player)
     for (int i = 0; i < player.territories.size(); i++)
     {
         outs << (*player.territories.at(i)->getTerritoryName()) << endl;
+    }
+
+    outs << "Reinforcement pool: " << player.getReinforcementPool() << endl;
+
+    outs << "Current Hand: " << endl;
+
+    vector<Card*> playerHand = player.getHand()->getHand();
+    if (playerHand.size() == 0) {
+        outs << "No cards in hand!" << endl;
+    } else {
+        for (int i = 0; i < playerHand.size(); i++) {
+            outs << *(playerHand.at(i)) << endl;
+        }
     }
 
     return outs;

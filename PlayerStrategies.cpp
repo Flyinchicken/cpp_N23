@@ -355,75 +355,134 @@ void HumanPlayerStrategy::processNegotiateInput(vector<string> splitCommand) {
     cout << "NEGOTIATED" << endl;
 }
 
+/**
+ * Prints a list of Territories
+ * 
+ * @param list The list to print
+*/
+void HumanPlayerStrategy::printTerritoryList(vector<Territory*> list) {
+    for (int i = 0; i < list.size(); i++) {
+        cout << (i + 1) << ": " << *(list.at(i)) << endl;
+    }
+}
+
+/**
+ * Lists all accepted commands
+*/
+void HumanPlayerStrategy::showValidCommandList() {
+    cout << "List of valid commands: " << endl
+        << "1: toattack = show list of Territories to attack" << endl
+        << "2: todefend = show list of Territories to defend" << endl
+        << "3: info = show your player info, including your Territories, Hand, and reinforcement pool" << endl
+        << "4: help = show this list again" << endl
+        << "5: issueorder = issue an order. The following are valid order formats:" << endl
+        << "\t I: issueorder deploy <armyunits> <territory>" << endl
+        << "\t II: issueorder advance <source_territory> <target_territory> <armyunits>" << endl
+        << "\t III: issueorder bomb <target_territory>" << endl
+        << "\t IV: issueorder blockade <target_territory>" << endl
+        << "\t V: issueorder airlift <source_territory> <target_territory> <armyunits>" << endl
+        << "\t VI: issueorder negotiate <target_player>" << endl
+        << "6: issueordersend = indicate you've finished issueing orders" << endl;
+}
+
 void HumanPlayerStrategy::issueOrder() {
-    // TODO: Break out of loop after issueing order?
-    // TODO: Options as seen below
+    // TODO: Options as seen below (attack and defend as priority)
+    /*
+        toattack = show list
+        todefend = show list
+        help = show this
+        info = show player info (territories, cards, reinforcement pool)
+    */
     // TODO: SaveEffect??
+    // TODO: issue one order at a time? If so, while(noOrderIssued), have process return boolean
+    showValidCommandList();
 
-    // Create order or play card
-    // loop until set turn
-    // set turn = setTurnCompleted
-    // getTurn = isTurnCompleted?
+    bool noOrderIssued = true;
     while (!player->isTurnCompleted()) {
-        cout << "Beep boop I am a human that is issueing an order" << endl;
-        /*
-        1. Territories of toAttack
-        2. Territories of toDefend
-        3. World map
-        4. See deck
-        5. See reinforcement pool
-        6. See current territories
-        7. issue an order
-        */
-        // int displayOption;
-        // cin >> displayOption;
-        // if (displayOption >= 1 && displayOption <= 7) {
-        //     processInputOption(displayOption);
-        // }
-        // else {
-        //     cout << displayOption << " is not a valid input. Please input a nummber between 1 and 7." << endl;
-        //     continue;
-        // }
-
         Command* nextCommand = commandProcessor->getCommand();
         vector<string> splitCommand = commandProcessor->splitStringByDelim(nextCommand->getCommand(), ' ');
         string commandKeyword = splitCommand.front();
 
         cout << endl;
 
-        if (hasPlayerEndedTurn(commandKeyword) || areKeywordAndSizeInvalid(commandKeyword, splitCommand.size())) {
+        if (commandKeyword == "toattack") {
+            cout << "You can attack the following territories: " << endl;
+            printTerritoryList(this->toAttack());
+        } 
+        else if (commandKeyword == "todefend") {
+            cout << "The following are the territories you must defend: " << endl;
+            printTerritoryList(this->toDefend());
+        } 
+        else if (commandKeyword == "info") {
+            cout << *player << endl;
+        } 
+        else if (commandKeyword == "help") {
+            showValidCommandList();
+        }
+        else if (hasPlayerEndedTurn(commandKeyword) || areKeywordAndSizeInvalid(commandKeyword, splitCommand.size())) {
             continue;
-        }
-
-        string commandType = splitCommand.at(1);
-
-        // issueorder deploy <armyunits> <territory>
-        if (commandType == "deploy") {
-            processDeployInput(splitCommand);
-        }
-        // issueorder advance <source_territory> <target_territory> <armyunits>
-        else if (commandType == "advance") {
-            processAdvanceInput(splitCommand);
-        }
-        // issueorder bomb <target_territory>
-        else if (commandType == "bomb") {
-            processBombInput(splitCommand);
-        }
-        // issueorder blockade <target_territory>
-        else if (commandType == "blockade") {
-            processBlockadeInput(splitCommand);
-        }
-        // issueorder airlift <source_territory> <target_territory> <armyunits>
-        else if (commandType == "airlift") {
-            processAirliftInput(splitCommand);
-        }
-        // issueorder negotiate <target_player>
-        else if (commandType == "negotiate") {
-            processNegotiateInput(splitCommand);
-        }
+        } 
         else {
-            cout << commandType << " is not a valid command type!" << endl;
+            string commandType = splitCommand.at(1);
+
+            if (commandType == "deploy") {
+                processDeployInput(splitCommand);
+            }
+            else if (commandType == "advance") {
+                processAdvanceInput(splitCommand);
+            }
+            else if (commandType == "bomb") {
+                processBombInput(splitCommand);
+            }
+            else if (commandType == "blockade") {
+                processBlockadeInput(splitCommand);
+            }
+            else if (commandType == "airlift") {
+                processAirliftInput(splitCommand);
+            }
+            else if (commandType == "negotiate") {
+                processNegotiateInput(splitCommand);
+            }
+            else {
+                cout << commandType << " is not a valid command type!" << endl;
+            }
         }
+
+        // cout << endl;
+
+        // if (hasPlayerEndedTurn(commandKeyword) || areKeywordAndSizeInvalid(commandKeyword, splitCommand.size())) {
+        //     continue;
+        // }
+
+        // string commandType = splitCommand.at(1);
+
+        // // issueorder deploy <armyunits> <territory>
+        // if (commandType == "deploy") {
+        //     processDeployInput(splitCommand);
+        // }
+        // // issueorder advance <source_territory> <target_territory> <armyunits>
+        // else if (commandType == "advance") {
+        //     processAdvanceInput(splitCommand);
+        // }
+        // // issueorder bomb <target_territory>
+        // else if (commandType == "bomb") {
+        //     processBombInput(splitCommand);
+        // }
+        // // issueorder blockade <target_territory>
+        // else if (commandType == "blockade") {
+        //     processBlockadeInput(splitCommand);
+        // }
+        // // issueorder airlift <source_territory> <target_territory> <armyunits>
+        // else if (commandType == "airlift") {
+        //     processAirliftInput(splitCommand);
+        // }
+        // // issueorder negotiate <target_player>
+        // else if (commandType == "negotiate") {
+        //     processNegotiateInput(splitCommand);
+        // }
+        // else {
+        //     cout << commandType << " is not a valid command type!" << endl;
+        // }
     }
 }
 

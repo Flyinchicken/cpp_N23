@@ -45,8 +45,11 @@ class HumanPlayerStrategy : public PlayerStrategy {
     private:
         CommandProcessor* commandProcessor;
 
+        void printTerritoryList(vector<Territory*>);
+        void showValidCommandList();
         bool hasPlayerEndedTurn(string);
         bool areKeywordAndSizeInvalid(string, int);
+
         void processDeployInput(vector<string>);
         void processAdvanceInput(vector<string>);
         void processBombInput(vector<string>);
