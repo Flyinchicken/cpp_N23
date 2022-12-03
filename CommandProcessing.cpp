@@ -23,6 +23,7 @@ const string CommandStrings::replay = "replay";
 const string CommandStrings::quit = "quit";
 const string CommandStrings::issueOrder = "issueorder";
 const string CommandStrings::issueOrdersEnd = "issueordersend";
+const string CommandStrings::tournament = "tournament";
 
 /**
  * Checks if input string matches any of the valid command strings.
@@ -52,6 +53,72 @@ ostream& operator<<(ostream& out, const CommandStrings& strings)
     out << "4: " << strings.gameStart << endl;
     out << "5: " << strings.replay << endl;
     out << "6: " << strings.quit << endl;
+
+    return out;
+}
+
+///
+/// TOURNAMENT PARAMETERS
+///
+
+/**
+ * Default constructor
+*/
+TournamentParams::TournamentParams() {
+    maps = {};
+    players = {};
+    numGames = 0;
+    numTurns = 0;
+}
+
+/**
+ * Destructor.
+*/
+TournamentParams::~TournamentParams() {
+    maps.clear();
+    players.clear();
+}
+
+/**
+ * Copy constructor
+*/
+TournamentParams::TournamentParams(const TournamentParams& toCopy) {
+    maps = toCopy.maps;
+    players = toCopy.players;
+    numGames = toCopy.numGames;
+    numTurns = toCopy.numTurns;
+}
+
+/**
+ * Assignment operator
+*/
+TournamentParams& TournamentParams::operator=(const TournamentParams& toCopy) {
+    if (&toCopy != this) {
+        maps = toCopy.maps;
+        players = toCopy.players;
+        numGames = toCopy.numGames;
+        numTurns = toCopy.numTurns;
+    }
+
+    return *this;
+}
+
+/**
+ * Stream insertion operator
+*/
+ostream& operator << (ostream& out, TournamentParams& params) {
+    out << "Maps: " << endl;
+    for (string map : params.maps) {
+        out << "\t" << map << endl;
+    }
+
+    out << "Players: " << endl;
+    for (string player : params.players) {
+        out << "\t" << player << endl;
+    }
+
+    out << "Number of turns per game: " << params.numTurns << endl;
+    out << "Numer of total games: " << params.numGames << endl;
 
     return out;
 }
@@ -228,6 +295,44 @@ bool CommandProcessor::isStringNumber(string input) {
 }
 
 /**
+ * Iterates over tournament command and sets various parameters for a tournament. Assumes command has
+ * already been validated.
+ * 
+ * @param command The tournament Command
+ * @returns TournamentParams containing all information
+*/
+TournamentParams CommandProcessor::processTournamentCommand(Command* command) {
+    vector<string> commandList = splitStringByDelim(command->getCommand(), ' ');
+
+    int currentProcessing = 1;
+    TournamentParams params;
+    for (int i = 2; i < commandList.size(); i++) {
+        if (commandList.at(i) == "-P") {
+            currentProcessing = 2;
+            continue;
+        } else if (commandList.at(i) == "-G") {
+            currentProcessing = 3;
+            continue;
+        } else if (commandList.at(i) == "-D") {
+            currentProcessing = 4;
+        }
+        else {
+            if (currentProcessing == 1) {
+                params.maps.push_back(commandList.at(i));
+            } else if (currentProcessing == 2) {
+                params.players.push_back(commandList.at(i));
+            } else if (currentProcessing == 3) {
+                params.numGames = stoi(commandList.at(i));
+            } else if (currentProcessing == 4) {
+                params.numTurns = stoi(commandList.at(i));
+            } 
+        }        
+    }
+
+    return params;
+}
+
+/**
  * Validates that a tournament command string is valid
  * 
  * @param commandList The command broken up by whitespace
@@ -361,10 +466,8 @@ bool CommandProcessor::validate(Command* command, GameStates currentGameState)
         segmentList.push_back(commandSegment);
     }
 
-    // TODO: is tournament command w/ correct params and shiz?
     string commandString = segmentList.front();
 
-    // IF tounament && is valid return true else false
     if (commandString == "tournament") {
         return validateTournamentCommand(segmentList, command);
     }

@@ -27,6 +27,23 @@ enum GameStates
     WIN
 };
 
+/**
+ * Struct containing all information acquired from a tournament console command
+*/
+struct TournamentParams {
+    vector<string> maps;  // Make worldMap = current playing map
+    vector<string> players;
+    int numGames;
+    int numTurns;
+
+    TournamentParams();
+    TournamentParams(const TournamentParams&);
+    TournamentParams& operator = (const TournamentParams&);
+    ~TournamentParams();
+
+    friend ostream& operator << (ostream&, TournamentParams&);
+};
+
 class Command : public Subject, public ILoggable
 {
 public:
@@ -84,6 +101,7 @@ public:
 
     string stringToLog();
     bool validateTournamentCommand(vector<string>, Command*);
+    TournamentParams processTournamentCommand(Command*);
     /*
         Validate tournament command
             Is command string = tournament
@@ -138,6 +156,7 @@ struct CommandStrings
     static const string quit;
     static const string issueOrder;
     static const string issueOrdersEnd;
+    static const string tournament;
 
     static bool isStringCommandString(string input);
 
