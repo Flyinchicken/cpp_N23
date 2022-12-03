@@ -211,6 +211,131 @@ bool has_suffix(const std::string& str, const std::string& suffix)
 }
 
 /**
+ * Determines if a string is an int/number.
+ * 
+ * From: https://stackoverflow.com/questions/4654636/how-to-determine-if-a-string-is-a-number-with-c
+ * 
+ * @returns bool indicating if string is a number
+*/
+bool CommandProcessor::isStringNumber(string input) {
+    std::string::const_iterator iterator = input.begin();
+
+    while (iterator != input.end() && isdigit(*iterator)) {
+        ++iterator;
+    }
+
+    return !input.empty() && iterator == input.end();
+}
+
+/**
+ * Validates that a tournament command string is valid
+ * 
+ * @param commandList The command broken up by whitespace
+ * @param Command The command object the command came from. Used here to saveEffect
+ * @returns If it is valid or not
+*/
+bool CommandProcessor::validateTournamentCommand(vector<string> commandList, Command* command) {
+    // Min 10, max 16 commands in sequence
+    if (commandList.size() < 10 || commandList.size() > 16) {
+        command->saveEffect("Tournament command contains too few or too many parameters");
+        return false;
+    }
+
+    if (commandList.at(1) != "-M") {
+        command->saveEffect("Tournament command improperly formatted (map number must come first)");
+        return false;
+    }
+
+    int maxMapCounter = 7;
+    int mapCounter = 2;
+    bool nextIsPlayer = false;
+    // Min 1, max 5 maps
+    while (mapCounter < maxMapCounter) {
+        if (mapCounter == 2 && (commandList.at(mapCounter) == "-P" || commandList.at(mapCounter) == "-G" || commandList.at(mapCounter) == "-D" || commandList.at(mapCounter) == "-M")) {
+            command->saveEffect("Tournament command contains no map files");
+            return false;
+        }
+        else if (commandList.at(mapCounter) == "-G" || commandList.at(mapCounter) == "-D" || commandList.at(mapCounter) == "-M") {
+            command->saveEffect("Tournament command improperly formatted (players must come after maps)");
+            return false;
+        }
+
+        if (commandList.at(mapCounter) == "-P") {
+            nextIsPlayer = true;
+            break;
+        }
+        ++mapCounter;
+    }  
+    if (!nextIsPlayer && commandList.at(mapCounter) != "-P") {
+        command->saveEffect("Tournament command contains too many map files or player count does not follow maps");
+        return false;
+    }
+
+    // Into players, counter is now on first strat
+    int playerCounter = mapCounter + 1;
+    int maxPlayerCounter = playerCounter + 4;
+    bool nextIsGameNumber = false;
+    // Max 4 players
+    while (playerCounter < maxPlayerCounter) {
+        if ((playerCounter == mapCounter + 2) && (commandList.at(playerCounter) == "-P" || commandList.at(playerCounter) == "-G" || commandList.at(playerCounter) == "-D" || commandList.at(playerCounter) == "-M")) {
+            command->saveEffect("Tournament command contains no players");
+            return false;
+        }
+        else if (commandList.at(playerCounter) == "-P" || commandList.at(playerCounter) == "-D" || commandList.at(playerCounter) == "-M") {
+            command->saveEffect("Tournament command improperly formatted (number of games must come after players)");
+            return false;
+        }
+
+        if (commandList.at(playerCounter) == "-G") {
+            nextIsGameNumber = true;
+            break;
+        }
+
+        if (!nextIsGameNumber && commandList.at(playerCounter) != "Aggressive" && commandList.at(playerCounter) != "Benevolent" && commandList.at(playerCounter) != "Neutral" && commandList.at(playerCounter) != "Cheater") {
+            command->saveEffect("Tournament command contains improper player strategy (" + commandList.at(playerCounter) + ")");
+            return false;
+        }
+
+        ++playerCounter;
+    }
+    if (!nextIsGameNumber && commandList.at(playerCounter) != "-G") {
+        command->saveEffect("Tournament command contains too many players or number of games does not follow players");
+        return false;
+    }
+
+    // Where game number is specified
+    int gameCounter = playerCounter  + 1;
+    if (!isStringNumber(commandList.at(gameCounter))) {
+        command->saveEffect("Number of games not a valid number");
+        return false;
+    }
+    int numGames = stoi(commandList.at(gameCounter));
+    if (numGames < 1 || numGames > 5) {
+        command->saveEffect("Can only have between 1-5 games");
+        return false;
+    }
+
+    // Where -D is specified
+    int turnCounter = gameCounter + 1;
+    if (commandList.at(turnCounter) != "-D") {
+        command->saveEffect("Tournament command improperly formatted (Turn counter not where should be)");
+        return false;
+    }
+    ++turnCounter;      // Where num is specified
+    if (!isStringNumber(commandList.at(turnCounter))) {
+        command->saveEffect("Number of turns not a valid number");
+        return false;
+    }
+    int numTurns = stoi(commandList.at(turnCounter));
+    if (numTurns < 10 || numTurns > 50) {
+        command->saveEffect("Must specify between 10 and 50 turns per game");
+        return false;
+    }
+
+    return true;
+}
+
+/**
  * Check command is valid in current game state.
  * Doesn't check if map in "loadmap <map>" is valid, as logic for validating a map file should handle that.
  * Saves effect rather than cout'ing as logic in most game loops involves printing the effect of a command.
@@ -236,6 +361,14 @@ bool CommandProcessor::validate(Command* command, GameStates currentGameState)
         segmentList.push_back(commandSegment);
     }
 
+    // TODO: is tournament command w/ correct params and shiz?
+    string commandString = segmentList.front();
+
+    // IF tounament && is valid return true else false
+    if (commandString == "tournament") {
+        return validateTournamentCommand(segmentList, command);
+    }
+
     // There can only be two params
     if (segmentList.size() > 2)
     {
@@ -243,8 +376,6 @@ bool CommandProcessor::validate(Command* command, GameStates currentGameState)
 
         return false;
     }
-
-    string commandString = segmentList.front();
 
     // Check to make sure 1st param is a valid command
     if (!CommandStrings::isStringCommandString(commandString))
