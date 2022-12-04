@@ -88,5 +88,6 @@ public:
 
 	void addOrderToList(Order*);
 	Card* getCardFromHandIfExists(string);
+
 };
 #endif

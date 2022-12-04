@@ -331,7 +331,7 @@ void Player::cardOrder(int orderNumber, CardParameters params)
         params.targetPlayer = ge->getPlayerList().at(rand() % ge->getPlayerList().size());
     }
 
-    Order* newOrder;
+    Order* newOrder{};
     switch (orderNumber)
     {
     case 1:
