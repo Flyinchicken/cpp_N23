@@ -6,3 +6,4 @@ extern Map* worldMap;
 void testGameStates();
 void testMainGameLoop();
 void testStartupPhase();
+void testTournament();

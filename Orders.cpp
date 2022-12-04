@@ -12,6 +12,8 @@ using std::endl;
 
 GameEngine *Order::game = new GameEngine();
 
+extern Map *worldMap;
+
 int Order::order_id = -1;
 Order::Order() : player()
 {
@@ -288,9 +290,9 @@ void Deploy::execute()
   {
     cout << " Current Armies of  " << *targetTerritory->getTerritoryName() << " : " << targetTerritory->getArmyNumber() << endl;
     int previousArmyInReinforcementPool = player->getReinforcementPool();
-    //Duplicate removal of armies
-    //int currentArmyInReinforcementPool = previousArmyInReinforcementPool - numberOfArmyUnits;
-    //player->setReinforcementPool(currentArmyInReinforcementPool);
+    // Duplicate removal of armies
+    // int currentArmyInReinforcementPool = previousArmyInReinforcementPool - numberOfArmyUnits;
+    // player->setReinforcementPool(currentArmyInReinforcementPool);
     targetTerritory->addArmy(numberOfArmyUnits);
     cout << " Deploying " << numberOfArmyUnits << " armies to " << *targetTerritory->getTerritoryName() << "." << endl;
 
@@ -384,23 +386,25 @@ string Advance::getAdvanceType()
 
 bool Advance::validate()
 {
-    bool isAdjacent = false;
-    for (auto it : player->toAttack())
-    {
-        if (it == targetTerritory)
-        {
-            isAdjacent = true;
-            break;
-        }
-    }
-  if (get_player() == sourceTerritory->getOwner())
+  bool isAdjacent = false;
+  vector<Territory *> adj = worldMap->getNeighboursPtr(*sourceTerritory->getTerritoryName());
+  for (auto it : adj)
   {
-    cout << "Source territory is not owned by the player." << endl;
-    return false;
+    if (it == targetTerritory)
+    {
+      isAdjacent = true;
+      break;
+    }
   }
-  else if (!isAdjacent) {
-      cout << "Target territory is not adjacent to the source territory." << endl;
-        return false;
+  // if (get_player() == sourceTerritory->getOwner())
+  // {
+  //   cout << "Source territory is not owned by the player." << endl;
+  //   return false;
+  // }else
+  if (!isAdjacent)
+  {
+    cout << "Target territory is not adjacent to the source territory." << endl;
+    return false;
   }
   else if (game->isAllied(sourceTerritory->getOwner(), targetTerritory->getOwner()))
   {
@@ -426,18 +430,19 @@ void Advance::execute()
   {
     if (getAdvanceType() == "Move")
     {
-      cout << "Moving " << numberOfArmies << " armies from " << sourceTerritory->getTerritoryName() << " to " << targetTerritory->getTerritoryName() << "." << endl;
+      cout << "Moving " << numberOfArmies << " armies from " << *sourceTerritory->getTerritoryName() << " to " << *targetTerritory->getTerritoryName() << "." << endl;
       sourceTerritory->removeArmy(numberOfArmies);
       targetTerritory->addArmy(numberOfArmies);
       ostringstream oss;
-      oss << "Moving " << numberOfArmies << " armies from " << sourceTerritory->getTerritoryName() << " to " << targetTerritory->getTerritoryName() << "." << endl;
+      oss << "Moving " << numberOfArmies << " armies from " << *sourceTerritory->getTerritoryName() << " to " << *targetTerritory->getTerritoryName() << "." << endl;
       string effect = oss.str();
       cout << effect << endl;
       setOrderEffect(this->getType() + " is valid. " + effect);
     }
     else
     {
-      cout << "Attacking " << numberOfArmies << " armies from " << sourceTerritory->getTerritoryName() << " to " << targetTerritory->getTerritoryName() << "." << endl;
+      numberOfArmies = (numberOfArmies <= 0) ? 0 : numberOfArmies;
+      cout << "Attacking " << numberOfArmies << " armies from " << *sourceTerritory->getTerritoryName() << " to " << *targetTerritory->getTerritoryName() << "." << endl;
 
       // implement the battle simulation logic
       int attck_alive = numberOfArmies;
@@ -475,7 +480,7 @@ void Advance::execute()
         get_player()->getHand()->addCardToHand(card);
         ostringstream oss;
         oss << "Attack successful. " << endl
-            << "Player " << get_player() << " has conquered " << targetTerritory->getTerritoryName() << " from " << sourceTerritory->getTerritoryName() << "." << endl
+            << "Player " << get_player() << " has conquered " << *targetTerritory->getTerritoryName() << " from " << *sourceTerritory->getTerritoryName() << "." << endl
             << "Player " << get_player() << " has received a card." << endl;
 
         string effect = oss.str();
@@ -548,7 +553,7 @@ bool Bomb::validate()
 {
 
   bool isAdjacent = false;
-  for (auto iter : player->toAttack()) 
+  for (auto iter : player->toAttack())
   {
     if (targetTerritory == iter)
     {
@@ -735,6 +740,7 @@ void Airlift::execute()
     cout << "Airlift order execute:" << endl;
     cout << "Previous armies of " << *sourceTerritory->getTerritoryName() << ": " << sourceTerritory->getArmyNumber() << endl;
     cout << "Previous armies of " << *targetTerritory->getTerritoryName() << ": " << targetTerritory->getArmyNumber() << endl;
+    numberOfArmies = (numberOfArmies <= 0) ? 0 : numberOfArmies;
     int actualMoveArmies = min(numberOfArmies, sourceTerritory->getArmyNumber());
     sourceTerritory->removeArmy(actualMoveArmies);
     targetTerritory->addArmy(actualMoveArmies);
