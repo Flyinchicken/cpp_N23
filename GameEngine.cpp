@@ -16,6 +16,7 @@ using std::endl;
 
 int finishedPlayers;
 int turnNumber = 0;
+int numberOfTurns = 10;
 
 /**
  * Default constructor sets current game state to Start
@@ -577,11 +578,13 @@ void GameEngine::mainGameLoop()
         if(this->playerList.size() == 1){
             cout << "Player " << playerList.at(0)->getName() << " has won the game " << endl;
             setGameState(WIN);
+            // Tell that game is won by x
             continue;
         }
 
-        if(turnNumber == 3){
+        if(turnNumber == numberOfTurns){
             setGameState(WIN);
+            // Tell that game is a draw
             continue;
         }
 
@@ -675,13 +678,13 @@ void GameEngine::issueOrdersPhase() {
 
             int numOrders = temp->getOrdersList()->order_list.size();
             
-            if (numOrders > 4) {
-                if (!temp->getHand()->getHand().empty()) {
-                    vector<Card*> cards = temp->getHand()->getHand();
-                    // This is no bueno, will need to come up with something better in the future
-                    CardParameters params;
-                    cards[0]->play(temp->getHand(), params);
-                }
+            if (numOrders > 8) {
+                // if (!temp->getHand()->getHand().empty()) {
+                //     vector<Card*> cards = temp->getHand()->getHand();
+                //     // This is no bueno, will need to come up with something better in the future
+                //     CardParameters params;
+                //     cards[0]->play(temp->getHand(), params);
+                // }
                 temp->setTurnCompleted(true);
                 finishedPlayers++;
                 cout << "Player " << temp->getName() << " has ended their turn" << endl;
