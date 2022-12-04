@@ -14,6 +14,7 @@ class Deck;
 class Command;
 class Map;
 class CommandProcessor;
+struct TournamentParams;
 
 /**
  * Represents the principle game engine of Warzone that allows a user to start a new game with a console-driven
@@ -28,6 +29,9 @@ class GameEngine : public Subject, public ILoggable
         GameStates currentGameState; // Not a pointer type as per prof. Paquet's permission
 
         CommandProcessor* commandProcessor;
+
+        bool isTournament;
+        TournamentParams* tournamentParams;
 
         vector<Player*> playerList;
         vector<Player*> deadPlayers;
@@ -67,6 +71,18 @@ class GameEngine : public Subject, public ILoggable
         void reinforcementPhase();
         void issueOrdersPhase();
         void executeOrdersPhase();
+
+        /*
+            Tournament methods:
+                loadMap - Need to load maps into vector
+                validatemaps - validate all maps in vector
+                addPlayer - Can probably be mostly the same
+                gamestart - Can be mostly the same
+                mainGameLoop - Copy that doesn't have any user interaction & can have set # of turns. If +1 alive player at end = draw.
+                outputResultsToFile - Output results of tournament to a file
+        */
+       void tournamentSetup(Command*);
+       void tournamentGameLoop();
 
         GameStates getCurrentGameState();
         void setGameState(GameStates newState);

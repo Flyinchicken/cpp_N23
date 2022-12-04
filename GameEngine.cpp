@@ -25,6 +25,9 @@ GameEngine::GameEngine()
     setGameState(START);
     worldMap = nullptr;
 
+    isTournament = false;
+    tournamentParams = nullptr;
+
     if (filePath.empty())
     {
         this->commandProcessor = new CommandProcessor();
@@ -46,6 +49,9 @@ GameEngine::~GameEngine()
     {
         delete worldMap;
     }
+    if (tournamentParams != nullptr) {
+        delete tournamentParams;
+    }
 }
 
 /**
@@ -55,6 +61,8 @@ GameEngine::GameEngine(const GameEngine &engine)
 {
     this->currentGameState = engine.currentGameState;
     this->commandProcessor = engine.commandProcessor;
+    this->isTournament = engine.isTournament;
+    this->tournamentParams = engine.tournamentParams;
 }
 
 /**
@@ -64,6 +72,8 @@ GameEngine &GameEngine::operator=(const GameEngine &engine)
 {
     this->currentGameState = engine.currentGameState;
     this->commandProcessor = engine.commandProcessor;
+    this->isTournament = engine.isTournament;
+    this->tournamentParams = engine.tournamentParams;
 
     return *this;
 }
@@ -268,6 +278,10 @@ bool GameEngine::processCommand(Command *command)
 {
     string commandString = commandProcessor->splitStringByDelim(command->getCommand(), ' ').front();
 
+    if (commandString == CommandStrings::tournament) {
+        tournamentSetup(command);
+        return false;
+    }
     if (commandString == CommandStrings::loadMap)
     {
         loadMap(command);
@@ -291,6 +305,19 @@ bool GameEngine::processCommand(Command *command)
     }
 
     return true;
+}
+
+/**
+ * Acquires all necessary info for a tournament to be played
+ * 
+ * @param command The command containing all the juicy tournament info
+*/
+void GameEngine::tournamentSetup(Command* command) {
+    isTournament = true;
+
+    tournamentParams = new TournamentParams(commandProcessor->processTournamentCommand(command));
+
+    command->saveEffect("Tournament command validated. Starting new tournament!");
 }
 
 /**
@@ -714,6 +741,10 @@ void GameEngine::executeOrdersPhase()
     setGameState(ASSIGNREINFORCEMENTS);
 }
 
+void GameEngine::tournamentGameLoop() {
+
+}
+
 /**
  * Starts a new instance of Warzone
 */
@@ -722,7 +753,9 @@ void GameEngine::startNewGame() {
 
     startupPhase();
 
-    mainGameLoop();
+    isTournament ? 
+        tournamentGameLoop() :
+        mainGameLoop();
 }
 
 //Return game state
