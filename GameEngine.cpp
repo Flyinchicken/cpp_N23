@@ -634,8 +634,11 @@ void GameEngine::mainGameLoop()
             }
         }
 
-        string temp;
-        cin >> temp;
+        if (!isTournament) {
+            string temp;
+            cin >> temp;
+        }
+        
 
         if (this->playerList.size() == 1)
         {
@@ -649,9 +652,10 @@ void GameEngine::mainGameLoop()
             continue;
         }
 
-        if (turnNumber == 3)
+        if (turnNumber == tournamentParams->numTurns)
         {
             setGameState(WIN);
+            tournamentWinners.at(tournamentMapNumber).at(tournamentGameNumber) = "DRAW";
             continue;
         }
 
@@ -686,8 +690,11 @@ void GameEngine::reinforcementPhase()
         cout << "Reinforcing player " << i->getName() << " with " << total_bonus << " troops" << endl
              << "Type anything to continue ";
 
-        string temp;
-        cin >> temp;
+        if (!isTournament) {
+            string temp;
+            cin >> temp;
+        }
+        
 
         i->setReinforcementPool(total_bonus);
     }
@@ -712,8 +719,10 @@ void GameEngine::reinforcementPhaseForLogObserverDriver()
         cout << "Reinforcing player " << i->getName() << " with " << total_bonus << " troops" << endl
              << "Type anything to continue ";
 
-        string temp;
-        cin >> temp;
+        if (!isTournament) {
+            string temp;
+            cin >> temp;
+        }        
 
         i->setReinforcementPool(total_bonus);
     }
@@ -739,7 +748,11 @@ void GameEngine::issueOrdersPhase()
     cout << "Issue Order Phase for turn " << turnNumber << endl
          << "There are currently " << playerList.size() << " players in the game" << endl
          << "Type anything to continue:";
-    cin >> temporary;
+    
+    if (!isTournament) {
+        cout << "Type anything to continue:";
+        cin >> temporary;
+    }
 
     while (finishedPlayers != currentPlayers)
     {
@@ -775,8 +788,10 @@ void GameEngine::issueOrdersPhase()
                 temp->issueOrder();
             }
 
-            cout << "Type anything to continue: ";
-            cin >> temporary;
+            if (!isTournament) {
+                cout << "Type anything to continue: ";
+                cin >> temporary;
+            }            
         }
     }
 
@@ -834,10 +849,10 @@ void GameEngine::addTournamentPlayers() {
         deadPlayers.clear();
     }
 
-    int aggressiveCount = 0;
-    int benevolentCount = 0;
-    int neutralCount = 0;
-    int cheaterCount = 0;
+    int aggressiveCount = 1;
+    int benevolentCount = 1;
+    int neutralCount = 1;
+    int cheaterCount = 1;
 
     for (string playerStrat : tournamentParams->players) {
         Player* player = new Player();
@@ -846,22 +861,22 @@ void GameEngine::addTournamentPlayers() {
 
         if (playerStrat == "Aggressive") {   
             player->setPlayerStrategy(new AggressivePlayerStrategy(player));         
-            player->setName("AggressivePlayer" + aggressiveCount);
+            player->setName("AggressivePlayer" + to_string(aggressiveCount));
             aggressiveCount++;
         }
         else if (playerStrat == "Benevolent") {
             player->setPlayerStrategy(new BenevolentPlayerStrategy(player));         
-            player->setName("BenevolentPlayer" + benevolentCount);
+            player->setName("BenevolentPlayer" + to_string(benevolentCount));
             benevolentCount++;
         }
         else if (playerStrat == "Neutral") {
-            player->setPlayerStrategy(new NeutralPlayerStrategy(player));         
-            player->setName("NeutralPlayer" + neutralCount);
+            player->setPlayerStrategy(new NeutralPlayerStrategy(player));   
+            player->setName("NeutralPlayer_" + to_string(neutralCount));
             neutralCount++;
         }
         else if (playerStrat == "Cheater") {
             player->setPlayerStrategy(new CheaterPlayerStrategy(player));         
-            player->setName("CheaterPlayer" + cheaterCount);
+            player->setName("CheaterPlayer" + to_string(cheaterCount));
             cheaterCount++;
         }
         else {
@@ -935,6 +950,7 @@ void GameEngine::tournamentGameLoop() {
             addTournamentPlayers();
 
             // Play the game
+            mainGameLoop();
         }
         tournamentGameNumber++;
     }
