@@ -32,6 +32,10 @@ class GameEngine : public Subject, public ILoggable
 
         bool isTournament;
         TournamentParams* tournamentParams;
+        // 2D vector of winners. 1st dimension is map$, second is game$
+        vector<vector<string>> tournamentWinners;
+        int tournamentGameNumber;
+        int tournamentMapNumber;
 
         vector<Player*> playerList;
         vector<Player*> deadPlayers;
@@ -85,6 +89,7 @@ class GameEngine : public Subject, public ILoggable
        void tournamentGameLoop();
        bool loadTournamentMap(string);
        void addTournamentPlayers();
+       void outputTournamentResults();
 
         GameStates getCurrentGameState();
         void setGameState(GameStates newState);

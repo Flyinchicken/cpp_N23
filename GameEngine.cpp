@@ -10,10 +10,12 @@
 #include <stdlib.h>
 #include <string>
 #include <sstream>
+#include <fstream>
 
 using std::cin;
 using std::cout;
 using std::endl;
+using std::ofstream;
 
 int finishedPlayers;
 int turnNumber = 0;
@@ -605,6 +607,11 @@ void GameEngine::mainGameLoop()
         if(this->playerList.size() == 1){
             cout << "Player " << playerList.at(0)->getName() << " has won the game " << endl;
             setGameState(WIN);
+
+            if (isTournament) {
+                tournamentWinners.at(tournamentMapNumber).at(tournamentGameNumber) = playerList.at(0)->getName();
+            }
+
             continue;
         }
 
@@ -815,10 +822,54 @@ void GameEngine::addTournamentPlayers() {
     setGameState(PLAYERSADDED);
 }
 
+/**
+ * Outputs results of the tournament to output file named "TournamentResults.txt"
+*/
+void GameEngine::outputTournamentResults() {
+    ofstream outfile("TournamentResults.txt", std::ios_base::app);
+    outfile << "Tournament mode: " << endl;
+    outfile << "M: ";
+    for (string map : tournamentParams->maps) {
+        outfile << map << " ";
+    }
+    outfile << endl;
+
+    outfile << "P: ";
+    for (string player : tournamentParams->players) {
+        outfile << player << " ";
+    }
+    outfile << endl;
+
+    outfile << "G: " << tournamentParams->numGames << endl;
+    outfile << "D: " << tournamentParams->numTurns << endl;
+    outfile << endl;
+
+    outfile << "Results: " << endl;
+    outfile << "\t";
+    for (int i = 0; i < tournamentParams->numGames; i++) {
+        outfile << "Game " << i << "\t";
+    }
+    outfile << endl;
+
+    int mapCounter = 1;
+    for (int i = 0; i < tournamentParams->maps.size(); i++) {
+        outfile << tournamentParams->maps.at(i) << "\t";
+        for (int j = 0; j < tournamentParams->numGames; j++) {
+            outfile << "Game " << j << ": "  << tournamentWinners.at(i).at(j) << "; \t";
+        }
+        outfile << endl;
+    }
+}
+
+/**
+ * Where the game is setup when a tournament is being run
+*/
 void GameEngine::tournamentGameLoop() {
-    int gamesPlayed = 0;
-    while (gamesPlayed != tournamentParams->numGames) {
-        for (string map : tournamentParams->maps) {
+    for (tournamentMapNumber = 0; tournamentMapNumber < tournamentParams->maps.size(); tournamentMapNumber++) {
+        string map = tournamentParams->maps.at(tournamentMapNumber);
+
+        tournamentGameNumber = 0;
+        while (tournamentGameNumber != (tournamentParams->numGames - 1)) {
             if (!loadTournamentMap(map)) {
                 continue;
             }
@@ -831,12 +882,12 @@ void GameEngine::tournamentGameLoop() {
 
             addTournamentPlayers();
 
-            // Run the game
-
-            // Output results
+            // Play the game
         }
-        gamesPlayed++;
+        tournamentGameNumber++;
     }
+
+    outputTournamentResults();
 }
 
 /**
