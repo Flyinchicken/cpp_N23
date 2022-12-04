@@ -468,8 +468,12 @@ bool CommandProcessor::validate(Command* command, GameStates currentGameState)
 
     string commandString = segmentList.front();
 
-    if (commandString == "tournament") {
+    if (currentGameState == START && commandString == "tournament") {
         return validateTournamentCommand(segmentList, command);
+    } else if (commandString == "tournament") {
+        command->saveEffect("Tournament can only be started in the START game state");
+
+        return false;
     }
 
     // There can only be two params
