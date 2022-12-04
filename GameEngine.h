@@ -83,6 +83,8 @@ class GameEngine : public Subject, public ILoggable
         */
        void tournamentSetup(Command*);
        void tournamentGameLoop();
+       bool loadTournamentMap(string);
+       void addTournamentPlayers();
 
         GameStates getCurrentGameState();
         void setGameState(GameStates newState);

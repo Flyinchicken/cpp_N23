@@ -2,6 +2,7 @@
 #include "MapLoader.h"
 #include "LoggingObserver.h"
 #include "Player.h"
+#include "PlayerStrategies.h"
 
 #include <iostream>
 #include <algorithm>
@@ -741,8 +742,101 @@ void GameEngine::executeOrdersPhase()
     setGameState(ASSIGNREINFORCEMENTS);
 }
 
-void GameEngine::tournamentGameLoop() {
+/**
+ * Loads a map for a tournament.
+ * 
+ * @param mapName The name of the map to load
+ * @returns If the map was successfully loaded or not
+*/
+bool GameEngine::loadTournamentMap(string mapName) {
+    MapLoader mapLoader;
 
+    worldMap = mapLoader.LoadMap(mapName);
+
+    if (worldMap == nullptr) {
+        // command->saveEffect("Map " + mapName + " does not exist. State has not been changed");
+        return false;
+    } else {
+        // command->saveEffect("Successfully loaded map file " + mapName + ". State changed to MAPLOADED ");        
+        setGameState(MAPLOADED);
+        return true;
+    } 
+}
+
+/**
+ * Adds players to the game with the appropriate strategy based on tournament command input.
+*/
+void GameEngine::addTournamentPlayers() {
+    if (playerList.size() > 0) {
+        playerList.clear();
+    }
+
+    if (deadPlayers.size() > 0) {
+        deadPlayers.clear();
+    }
+
+    int aggressiveCount = 0;
+    int benevolentCount = 0;
+    int neutralCount = 0;
+    int cheaterCount = 0;
+
+    for (string playerStrat : tournamentParams->players) {
+        Player* player = new Player();
+        Hand* tempHand = new Hand(player);
+        player->setHand(tempHand);
+
+        if (playerStrat == "Aggressive") {   
+            player->setPlayerStrategy(new AggressivePlayerStrategy(player));         
+            player->setName("AggressivePlayer" + aggressiveCount);
+            aggressiveCount++;
+        }
+        else if (playerStrat == "Benevolent") {
+            player->setPlayerStrategy(new BenevolentPlayerStrategy(player));         
+            player->setName("BenevolentPlayer" + benevolentCount);
+            benevolentCount++;
+        }
+        else if (playerStrat == "Neutral") {
+            player->setPlayerStrategy(new NeutralPlayerStrategy(player));         
+            player->setName("NeutralPlayer" + neutralCount);
+            neutralCount++;
+        }
+        else if (playerStrat == "Cheater") {
+            player->setPlayerStrategy(new CheaterPlayerStrategy(player));         
+            player->setName("CheaterPlayer" + cheaterCount);
+            cheaterCount++;
+        }
+        else {
+            cout << "Error! Player type invalid after being validated!" << endl;
+        }
+
+        playerList.push_back(player);
+    }
+    
+    setGameState(PLAYERSADDED);
+}
+
+void GameEngine::tournamentGameLoop() {
+    int gamesPlayed = 0;
+    while (gamesPlayed != tournamentParams->numGames) {
+        for (string map : tournamentParams->maps) {
+            if (!loadTournamentMap(map)) {
+                continue;
+            }
+
+            if (!worldMap->validate()) {
+                continue;
+            } else {
+                setGameState(MAPVALIDATED);
+            }
+
+            addTournamentPlayers();
+
+            // Run the game
+
+            // Output results
+        }
+        gamesPlayed++;
+    }
 }
 
 /**
