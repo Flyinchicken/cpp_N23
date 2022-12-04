@@ -28,5 +28,5 @@ void testStartupPhase() {
  * Demonstrates tournament works (or doesn't)
 */
 void testTournament() {
-    ge->startupPhase();
+    ge->startNewGame();
 }
