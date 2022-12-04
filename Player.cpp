@@ -80,7 +80,7 @@ Player& Player::operator=(const Player& player)
         this->playerStrategy = player.playerStrategy;
         this->territories = vector<Territory*>(player.territories);
     }
-    
+
     return *this;
 }
 
@@ -146,10 +146,10 @@ void Player::setTerritories(vector<Territory*> newTerritories)
 
 /**
  * Sets current player strategy
- * 
+ *
  * @param newStrategy The new type of strategy this player should follow
 */
-void Player::setPlayerStrategy(PlayerStrategy *newStrategy) {
+void Player::setPlayerStrategy(PlayerStrategy* newStrategy) {
     this->playerStrategy = newStrategy;
 }
 
@@ -192,7 +192,7 @@ bool Player::isTurnCompleted()
 
 /**
  * Adds a new order to the Player's order list
- * 
+ *
  * @param newOrder The order to add
 */
 void Player::addOrderToList(Order* newOrder) {
@@ -201,7 +201,7 @@ void Player::addOrderToList(Order* newOrder) {
 
 /**
  * Gets and returns a card of a certain type from the Player's hand.
- * 
+ *
  * @param cardType String type of card to look for
  * @return The card if the play has one, NULL otherwise
 */
@@ -255,7 +255,7 @@ void Player::issueOrder()
     //             vector<Territory*> adj = worldMap->getNeighboursPtr(*p->getTerritoryName()); 
 
     //             vector<Territory*>::iterator it = find(adj.begin(), adj.end(), target); // Tries to find which territory should be the source
-                
+
     //             if (it != adj.end())
     //             {
     //                 Territory* source = p; // Source territory
@@ -268,7 +268,7 @@ void Player::issueOrder()
     //         }
     //         numAttacks++;
     //     }
-        
+
     //     else
     //     { // If it can't attack it will try to defend
 
@@ -283,7 +283,7 @@ void Player::issueOrder()
     //             }
 
     //             Territory* target = outposts.at(i);
-            
+
     //             for (Territory* tempRe : reinforcers)
     //             {
     //                 vector<Territory*> adj = worldMap->getNeighboursPtr(*tempRe->getTerritoryName()); //VERIFY WORLD
@@ -301,7 +301,7 @@ void Player::issueOrder()
     //                 }
     //             }
     //         }
-            
+
     //         cout << "No targets to defend. So we play a card and end turn" << endl;
     //         if (!this->getHand()->getHand().empty())
     //         {
@@ -331,44 +331,44 @@ void Player::cardOrder(int orderNumber, CardParameters params)
         params.targetPlayer = ge->getPlayerList().at(rand() % ge->getPlayerList().size());
     }
 
-    Order* newOrder;
+    Order* newOrder{};
     switch (orderNumber)
     {
     case 1:
-        {
-            newOrder = new Deploy(this, 10, outposts.at(rand() % outposts.size()));
-            break;
-        }
+    {
+        newOrder = new Deploy(this, 10, outposts.at(rand() % outposts.size()));
+        break;
+    }
     case 2:
-        {
-            newOrder = new Advance();
-            break;
-        }
+    {
+        newOrder = new Advance();
+        break;
+    }
     case 3:
-        {
-            newOrder = new Bomb(this, params.targetTerritory);
-            break;
-        }
+    {
+        newOrder = new Bomb(this, params.targetTerritory);
+        break;
+    }
     case 4:
-        {
-            newOrder = new Blockade(this, params.targetTerritory);
-            break;
-        }
+    {
+        newOrder = new Blockade(this, params.targetTerritory);
+        break;
+    }
     case 5:
-        {
-            newOrder = new Airlift(this, params.sourceTerritory, params.targetTerritory, params.armyUnits);
-            break;
-        }
+    {
+        newOrder = new Airlift(this, params.sourceTerritory, params.targetTerritory, params.armyUnits);
+        break;
+    }
     case 6:
-        {
-            newOrder = new Negotiate(this, params.targetPlayer);        
-            break;
-        }
+    {
+        newOrder = new Negotiate(this, params.targetPlayer);
+        break;
+    }
     default:
         cout << "Invalid card type" << endl;
         break;
     }
-    
+
     if (newOrder != nullptr)
     {
         this->orderslist->addOrder(newOrder);
@@ -414,7 +414,7 @@ int Player::getContinentsBonus()
     return bonus;
 }
 
-bool compareArmyNumber(Territory* t1, Territory* t2){
+bool compareArmyNumber(Territory* t1, Territory* t2) {
     return (t1->getArmyNumber() < t2->getArmyNumber());
 }
 // return a list of arbitrary territories to defend
@@ -437,7 +437,7 @@ vector<Territory*> Player::toAttack()
     return playerStrategy->toAttack();
     // vector<Territory*> a_territories;
     // set<Territory*> a_set;
-    
+
     // for (int i = 0; i < territories.size(); i++)
     // {
     //     vector<Territory*> temp = worldMap->getNeighboursPtr(*(territories.at(i)->getTerritoryName()));
@@ -460,7 +460,7 @@ vector<Territory*> Player::toAttack()
 // stream operator that prints the player's owned countries
 ostream& operator<<(ostream& outs, Player& player)
 {
-    outs << player.getName() 
+    outs << player.getName()
         << " ("
         << player.playerStrategy->getStrategyAsString()
         << ")'s owned territories: " << endl;
@@ -477,7 +477,8 @@ ostream& operator<<(ostream& outs, Player& player)
     vector<Card*> playerHand = player.getHand()->getHand();
     if (playerHand.size() == 0) {
         outs << "No cards in hand!" << endl;
-    } else {
+    }
+    else {
         for (int i = 0; i < playerHand.size(); i++) {
             outs << *(playerHand.at(i)) << endl;
         }

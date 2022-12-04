@@ -37,16 +37,16 @@ private:
 	Hand* hand;
 	int reinforcementPool = 0;
 	bool turnCompleted = false;
-    bool canBeAttacked = true;
-    bool canAttack = true;
+	bool canBeAttacked = true;
+	bool canAttack = true;
 
 	// Strategy for how issueOrder, toAttack, and toDefend will behave
-	PlayerStrategy *playerStrategy;
+	PlayerStrategy* playerStrategy;
 public:
 
 	int numAttacks = 0;
 	int numDefense = 0;
-	
+
 	// TODO: How init Strategy?
 	Player();
 	~Player();
@@ -88,5 +88,6 @@ public:
 
 	void addOrderToList(Order*);
 	Card* getCardFromHandIfExists(string);
+
 };
 #endif
