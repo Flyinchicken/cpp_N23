@@ -646,7 +646,7 @@ void GameEngine::mainGameLoop()
             setGameState(WIN);
 
             if (isTournament) {
-                tournamentWinners.at(tournamentMapNumber).at(tournamentGameNumber) = playerList.at(0)->getName();
+                tournamentWinners.at(tournamentMapNumber).push_back(playerList.at(0)->getName());
             }
 
             continue;
@@ -655,7 +655,7 @@ void GameEngine::mainGameLoop()
         if (turnNumber == tournamentParams->numTurns)
         {
             setGameState(WIN);
-            tournamentWinners.at(tournamentMapNumber).at(tournamentGameNumber) = "DRAW";
+            tournamentWinners.at(tournamentMapNumber).push_back("DRAW");
             continue;
         }
 
@@ -912,11 +912,6 @@ void GameEngine::outputTournamentResults() {
     outfile << endl;
 
     outfile << "Results: " << endl;
-    outfile << "\t";
-    for (int i = 0; i < tournamentParams->numGames; i++) {
-        outfile << "Game " << i << "\t";
-    }
-    outfile << endl;
 
     int mapCounter = 1;
     for (int i = 0; i < tournamentParams->maps.size(); i++) {
@@ -932,11 +927,15 @@ void GameEngine::outputTournamentResults() {
  * Where the game is setup when a tournament is being run
 */
 void GameEngine::tournamentGameLoop() {
-    for (tournamentMapNumber = 0; tournamentMapNumber < tournamentParams->maps.size(); tournamentMapNumber++) {
+    vector<vector<string>> vec(tournamentParams->maps.size());
+    tournamentWinners = vec;
+
+    tournamentMapNumber = 0;
+    while (tournamentMapNumber < tournamentParams->maps.size()) {
         string map = tournamentParams->maps.at(tournamentMapNumber);
 
         tournamentGameNumber = 0;
-        while (tournamentGameNumber != (tournamentParams->numGames - 1)) {
+        while (tournamentGameNumber < tournamentParams->numGames) {
             if (!loadTournamentMap(map)) {
                 continue;
             }
@@ -951,8 +950,10 @@ void GameEngine::tournamentGameLoop() {
 
             // Play the game
             mainGameLoop();
+
+            ++tournamentGameNumber;
         }
-        tournamentGameNumber++;
+        ++tournamentMapNumber;
     }
 
     outputTournamentResults();
