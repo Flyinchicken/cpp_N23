@@ -23,3 +23,10 @@ void testMainGameLoop(){
 void testStartupPhase() {
     ge->startupPhase();
 }
+
+/**
+ * Demonstrates tournament works (or doesn't)
+*/
+void testTournament() {
+    ge->startNewGame();
+}

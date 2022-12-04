@@ -2,6 +2,7 @@
 #include "MapLoader.h"
 #include "LoggingObserver.h"
 #include "Player.h"
+#include "PlayerStrategies.h"
 
 #include <iostream>
 #include <algorithm>
@@ -9,10 +10,12 @@
 #include <stdlib.h>
 #include <string>
 #include <sstream>
+#include <fstream>
 
 using std::cin;
 using std::cout;
 using std::endl;
+using std::ofstream;
 
 int finishedPlayers;
 int turnNumber = 0;
@@ -24,6 +27,9 @@ GameEngine::GameEngine()
 {
     setGameState(START);
     worldMap = nullptr;
+
+    isTournament = false;
+    tournamentParams = nullptr;
 
     if (filePath.empty())
     {
@@ -46,6 +52,9 @@ GameEngine::~GameEngine()
     {
         delete worldMap;
     }
+    if (tournamentParams != nullptr) {
+        delete tournamentParams;
+    }
 }
 
 /**
@@ -55,6 +64,8 @@ GameEngine::GameEngine(const GameEngine &engine)
 {
     this->currentGameState = engine.currentGameState;
     this->commandProcessor = engine.commandProcessor;
+    this->isTournament = engine.isTournament;
+    this->tournamentParams = engine.tournamentParams;
 }
 
 /**
@@ -64,6 +75,8 @@ GameEngine &GameEngine::operator=(const GameEngine &engine)
 {
     this->currentGameState = engine.currentGameState;
     this->commandProcessor = engine.commandProcessor;
+    this->isTournament = engine.isTournament;
+    this->tournamentParams = engine.tournamentParams;
 
     return *this;
 }
@@ -269,6 +282,10 @@ bool GameEngine::processCommand(Command *command)
 {
     string commandString = commandProcessor->splitStringByDelim(command->getCommand(), ' ').front();
 
+    if (commandString == CommandStrings::tournament) {
+        tournamentSetup(command);
+        return false;
+    }
     if (commandString == CommandStrings::loadMap)
     {
         loadMap(command);
@@ -295,6 +312,19 @@ bool GameEngine::processCommand(Command *command)
     }
 
     return true;
+}
+
+/**
+ * Acquires all necessary info for a tournament to be played
+ * 
+ * @param command The command containing all the juicy tournament info
+*/
+void GameEngine::tournamentSetup(Command* command) {
+    isTournament = true;
+
+    tournamentParams = new TournamentParams(commandProcessor->processTournamentCommand(command));
+
+    command->saveEffect("Tournament command validated. Starting new tournament!");
 }
 
 /**
@@ -611,6 +641,11 @@ void GameEngine::mainGameLoop()
         {
             cout << "Player " << playerList.at(0)->getName() << " has won the game " << endl;
             setGameState(WIN);
+
+            if (isTournament) {
+                tournamentWinners.at(tournamentMapNumber).at(tournamentGameNumber) = playerList.at(0)->getName();
+            }
+
             continue;
         }
 
@@ -767,6 +802,147 @@ void GameEngine::executeOrdersPhase()
 }
 
 /**
+ * Loads a map for a tournament.
+ * 
+ * @param mapName The name of the map to load
+ * @returns If the map was successfully loaded or not
+*/
+bool GameEngine::loadTournamentMap(string mapName) {
+    MapLoader mapLoader;
+
+    worldMap = mapLoader.LoadMap(mapName);
+
+    if (worldMap == nullptr) {
+        // command->saveEffect("Map " + mapName + " does not exist. State has not been changed");
+        return false;
+    } else {
+        // command->saveEffect("Successfully loaded map file " + mapName + ". State changed to MAPLOADED ");        
+        setGameState(MAPLOADED);
+        return true;
+    } 
+}
+
+/**
+ * Adds players to the game with the appropriate strategy based on tournament command input.
+*/
+void GameEngine::addTournamentPlayers() {
+    if (playerList.size() > 0) {
+        playerList.clear();
+    }
+
+    if (deadPlayers.size() > 0) {
+        deadPlayers.clear();
+    }
+
+    int aggressiveCount = 0;
+    int benevolentCount = 0;
+    int neutralCount = 0;
+    int cheaterCount = 0;
+
+    for (string playerStrat : tournamentParams->players) {
+        Player* player = new Player();
+        Hand* tempHand = new Hand(player);
+        player->setHand(tempHand);
+
+        if (playerStrat == "Aggressive") {   
+            player->setPlayerStrategy(new AggressivePlayerStrategy(player));         
+            player->setName("AggressivePlayer" + aggressiveCount);
+            aggressiveCount++;
+        }
+        else if (playerStrat == "Benevolent") {
+            player->setPlayerStrategy(new BenevolentPlayerStrategy(player));         
+            player->setName("BenevolentPlayer" + benevolentCount);
+            benevolentCount++;
+        }
+        else if (playerStrat == "Neutral") {
+            player->setPlayerStrategy(new NeutralPlayerStrategy(player));         
+            player->setName("NeutralPlayer" + neutralCount);
+            neutralCount++;
+        }
+        else if (playerStrat == "Cheater") {
+            player->setPlayerStrategy(new CheaterPlayerStrategy(player));         
+            player->setName("CheaterPlayer" + cheaterCount);
+            cheaterCount++;
+        }
+        else {
+            cout << "Error! Player type invalid after being validated!" << endl;
+        }
+
+        playerList.push_back(player);
+    }
+    
+    setGameState(PLAYERSADDED);
+}
+
+/**
+ * Outputs results of the tournament to output file named "TournamentResults.txt"
+*/
+void GameEngine::outputTournamentResults() {
+    ofstream outfile("TournamentResults.txt", std::ios_base::app);
+    outfile << "Tournament mode: " << endl;
+    outfile << "M: ";
+    for (string map : tournamentParams->maps) {
+        outfile << map << " ";
+    }
+    outfile << endl;
+
+    outfile << "P: ";
+    for (string player : tournamentParams->players) {
+        outfile << player << " ";
+    }
+    outfile << endl;
+
+    outfile << "G: " << tournamentParams->numGames << endl;
+    outfile << "D: " << tournamentParams->numTurns << endl;
+    outfile << endl;
+
+    outfile << "Results: " << endl;
+    outfile << "\t";
+    for (int i = 0; i < tournamentParams->numGames; i++) {
+        outfile << "Game " << i << "\t";
+    }
+    outfile << endl;
+
+    int mapCounter = 1;
+    for (int i = 0; i < tournamentParams->maps.size(); i++) {
+        outfile << tournamentParams->maps.at(i) << "\t";
+        for (int j = 0; j < tournamentParams->numGames; j++) {
+            outfile << "Game " << j << ": "  << tournamentWinners.at(i).at(j) << "; \t";
+        }
+        outfile << endl;
+    }
+}
+
+/**
+ * Where the game is setup when a tournament is being run
+*/
+void GameEngine::tournamentGameLoop() {
+    for (tournamentMapNumber = 0; tournamentMapNumber < tournamentParams->maps.size(); tournamentMapNumber++) {
+        string map = tournamentParams->maps.at(tournamentMapNumber);
+
+        tournamentGameNumber = 0;
+        while (tournamentGameNumber != (tournamentParams->numGames - 1)) {
+            if (!loadTournamentMap(map)) {
+                continue;
+            }
+
+            if (!worldMap->validate()) {
+                continue;
+            } else {
+                setGameState(MAPVALIDATED);
+            }
+
+            addTournamentPlayers();
+
+            // Play the game
+        }
+        tournamentGameNumber++;
+    }
+
+    outputTournamentResults();
+}
+
+/**
  * Starts a new instance of Warzone
  */
 void GameEngine::startNewGame()
@@ -775,7 +951,9 @@ void GameEngine::startNewGame()
 
     startupPhase();
 
-    mainGameLoop();
+    isTournament ? 
+        tournamentGameLoop() :
+        mainGameLoop();
 }
 
 // Return game state
