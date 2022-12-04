@@ -16,6 +16,10 @@ using namespace std;
 class Territory;
 class OrdersList;
 class Hand;
+class PlayerStrategy;
+class Order;
+class Card;
+struct CardParameters;
 
 extern int finishedPlayers;
 extern GameEngine* ge;
@@ -33,14 +37,17 @@ private:
 	Hand* hand;
 	int reinforcementPool = 0;
 	bool turnCompleted = false;
-    bool canBeAttacked = true;
-    bool canAttack = true;
+	bool canBeAttacked = true;
+	bool canAttack = true;
 
+	// Strategy for how issueOrder, toAttack, and toDefend will behave
+	PlayerStrategy* playerStrategy;
 public:
 
 	int numAttacks = 0;
 	int numDefense = 0;
-	
+
+	// TODO: How init Strategy?
 	Player();
 	~Player();
 	//copy constructor
@@ -58,7 +65,7 @@ public:
 	void removeTerritory(Territory* territory);
 
 	//helper method
-	void cardOrder(int);
+	void cardOrder(int, CardParameters);
 	int getContinentsBonus();
 
 	//getters
@@ -67,7 +74,8 @@ public:
 	Hand* getHand();
 	vector<Territory*> getTerritories() const;
 	int getReinforcementPool();
-	bool getTurn();
+	bool isTurnCompleted();
+	PlayerStrategy* getPlayerStrategy();
 
 	//setters
 	void setName(string name);
@@ -75,6 +83,11 @@ public:
 	void setHand(Hand* hand);
 	void setTerritories(vector<Territory*> territories);
 	void setReinforcementPool(int pool);
-	void setTurn(bool turn);
+	void setTurnCompleted(bool turn);
+	void setPlayerStrategy(PlayerStrategy*);
+
+	void addOrderToList(Order*);
+	Card* getCardFromHandIfExists(string);
+
 };
 #endif

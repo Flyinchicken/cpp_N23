@@ -50,13 +50,13 @@ Card::~Card() {
 };
 
 //Plays a card, issues and order, removes it from the hand and puts it in the deck
-void Card::play(Hand* hand) {
+void Card::play(Hand* hand, CardParameters params) {
     cout << "Playing card " << _name << " from hand " << hand->getName() << endl;
     bool isRemoved;
     isRemoved = hand->removeCardFromHand(this); //Attemps to remove the Card from the Hand
     if (isRemoved) { //If the Card was removed
         x->addCardToDeck(this); //Adds to the deck
-        hand->getPlayer()->cardOrder(generateOrderNumber(_type)); //Calls member of the Player class which issues an order based on the type of the card and adds it to its list
+        hand->getPlayer()->cardOrder(generateOrderNumber(_type), params); //Calls member of the Player class which issues an order based on the type of the card and adds it to its list
     }
     else { //If the card wasn't succesfully removed the card is not played. Most likely the card is not in the hand
         cout << "Card could not be played" << endl;
@@ -299,4 +299,97 @@ int generateOrderNumber(string type) {
     else {
         return 7;
     }
+}
+
+///
+/// CARD PARAMETERS
+///
+
+/**
+ * Default constructor
+*/
+CardParameters::CardParameters() {
+    targetTerritory = nullptr;
+    sourceTerritory = nullptr;
+    armyUnits = 0;
+}
+
+/**
+ * Constructor that sets target territory based on input (bomb & blockade cards)
+*/
+CardParameters::CardParameters(Territory* target) {
+    targetTerritory = target;
+    sourceTerritory = nullptr;
+    armyUnits = 0;
+    targetPlayer = nullptr;
+}
+
+/**
+ * Constructor for all parameters save targetPlayer (airlift card)
+*/
+CardParameters::CardParameters(Territory* source, Territory* target, int army) {
+    targetTerritory = target;
+    sourceTerritory = source;
+    armyUnits = army;
+    targetPlayer = nullptr;
+}
+
+/**
+ * Constructor that sets the targetPlayer (diplomacy card)
+*/
+CardParameters::CardParameters(Player* target) {
+    targetTerritory = nullptr;
+    sourceTerritory = nullptr;
+    armyUnits = 0;
+    targetPlayer = target;
+}
+
+/**
+ * Copy Constructor
+*/
+CardParameters::CardParameters(const CardParameters& cp) {
+    targetTerritory = cp.targetTerritory;
+    sourceTerritory = cp.sourceTerritory;
+    armyUnits = cp.armyUnits;
+    targetPlayer = cp.targetPlayer;
+}
+
+/**
+ * Assignment operator
+*/
+CardParameters& CardParameters::operator=(const CardParameters& cp) {
+    if (&cp != this) {
+        targetTerritory = cp.targetTerritory;
+        sourceTerritory = cp.sourceTerritory;
+        armyUnits = cp.armyUnits;
+        targetPlayer = cp.targetPlayer;
+    }
+
+    return *this;
+}
+
+/**
+ * Destructor. CardParameters' pointers point to sensitive Map data that should be managed
+ * elsewhere.
+*/
+CardParameters::~CardParameters() {
+}
+
+/**
+ * Stream insertion operator
+*/
+ostream& operator << (ostream& out, CardParameters& cp) {
+    if (cp.targetTerritory != nullptr) {
+        out << "Target territory: " << endl << "\t" << *(cp.targetTerritory);
+    }
+    if (cp.sourceTerritory != nullptr) {
+        out << "Source territory: " << endl << "\t" << *(cp.sourceTerritory);
+    }  
+    out << "Army units: " << cp.armyUnits;
+    
+    if (cp.targetPlayer != nullptr) {
+        out << "Target Player: " << endl << "\t" << *(cp.targetPlayer);
+    }  
+
+    return out;
 }

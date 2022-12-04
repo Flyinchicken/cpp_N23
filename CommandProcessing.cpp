@@ -21,6 +21,8 @@ const string CommandStrings::addPlayer = "addplayer";
 const string CommandStrings::gameStart = "gamestart";
 const string CommandStrings::replay = "replay";
 const string CommandStrings::quit = "quit";
+const string CommandStrings::issueOrder = "issueorder";
+const string CommandStrings::issueOrdersEnd = "issueordersend";
 
 /**
  * Checks if input string matches any of the valid command strings.
@@ -149,7 +151,7 @@ string Command::getEffect()
 //Return the Command's effect
 string Command::stringToLog()
 {
-    return this->effect + "\n";
+    return "Command's effect: " + this->effect + "\n";
 }
 
 //
@@ -379,7 +381,7 @@ vector<Command*> CommandProcessor::getCommandsList()
 //Return the Command saved
 string CommandProcessor::stringToLog()
 {
-    return "\n"+ this->savedCommand + "\n";
+    return "Command: "+ this->savedCommand + "\n";
 }
 
 ///
@@ -389,9 +391,8 @@ string CommandProcessor::stringToLog()
 /**
  * Default constructor.
 */
-FileCommandProcessorAdapter::FileCommandProcessorAdapter()
+FileCommandProcessorAdapter::FileCommandProcessorAdapter() 
 {
-    CommandProcessor();
     this->fileReader = new FileLineReader();
 }
 
@@ -400,9 +401,8 @@ FileCommandProcessorAdapter::FileCommandProcessorAdapter()
  *
  * @param file FileLineReader to set current fileReade to
 */
-FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileLineReader* file)
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileLineReader* file) 
 {
-    CommandProcessor();
     this->fileReader = file;
 }
 
@@ -412,7 +412,6 @@ FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileLineReader* file)
  * @param adapter FileCommandProcessorAdapter to copy
 */
 FileCommandProcessorAdapter::FileCommandProcessorAdapter(const FileCommandProcessorAdapter& adapter) {
-    CommandProcessor();
     this->fileReader = adapter.fileReader;
 }
 
