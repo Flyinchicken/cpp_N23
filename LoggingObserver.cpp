@@ -20,8 +20,7 @@ void Subject::detach(Observer* observer){
     }
 }
 
-void Subject::notify(Subject *subject){
-    vector<Observer*>* observers = subject->observers;
+void Subject::notify(ILoggable *subject){
     for (auto& observer : *observers) {
         observer->update(dynamic_cast<ILoggable*>(subject));
     }
