@@ -203,7 +203,7 @@ void Player::issueOrder()
                     break;
                 }
             }
-            numAttacks++;
+            
         }
         
         else
