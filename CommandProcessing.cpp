@@ -333,7 +333,13 @@ TournamentParams CommandProcessor::processTournamentCommand(Command* command) {
 }
 
 /**
- * Validates that a tournament command string is valid
+ * Validates that a tournament command string is valid. This is really messy but it works and I don't
+ * have time/patience to come up with something better.
+ * 
+ * It makes sure it is in the correct format:
+ *      tournament -M <listofmapfiles> -P <listofplayerstrategies> -G <numberofgames> -D <maxnumberofturns>
+ * It also checks that there are between 1-5 maps, 2-4 players, games are between 1-5 and turn count is between
+ * 10-50
  * 
  * @param commandList The command broken up by whitespace
  * @param Command The command object the command came from. Used here to saveEffect
