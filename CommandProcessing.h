@@ -102,18 +102,6 @@ public:
     string stringToLog();
     bool validateTournamentCommand(vector<string>, Command*);
     TournamentParams processTournamentCommand(Command*);
-    /*
-        Validate tournament command
-            Is command string = tournament
-            Are there 1-5 commands after -M
-            Are there 2-4 commands after -P
-            Is number after -G between 1 and 5
-            Is number after -D between 10 and 50
-        Process tournament command
-            Use global GameEngine
-            Assume has already been validated
-            Call appropriate *ge commands to get it started
-    */
 
 protected:
     vector<Command *> commandsList;
