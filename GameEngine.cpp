@@ -731,12 +731,16 @@ void GameEngine::reinforcementPhaseForLogObserverDriver()
 
 void GameEngine::issueOrdersPhase()
 {
-
+    vector<string> activePlayers;
+    for (int i = 0; i < playerList.size(); i++) {
+        activePlayers.push_back(playerList.at(i)->getName());
+    }
     int currentPlayers = playerList.size();
 
     string temporary;
 
     finishedPlayers = 0;
+    vector<string> donePlayers;
 
     for (Player *player : playerList)
     {
@@ -754,15 +758,18 @@ void GameEngine::issueOrdersPhase()
         cin >> temporary;
     }
 
-    while (finishedPlayers != currentPlayers)
+    while (donePlayers.size() != currentPlayers)
     {
 
-        cout << "Round Robin. There are " << finishedPlayers << " who have ended their turn" << endl;
+        cout << "Round Robin. There are " << donePlayers.size() << " who have ended their turn" << endl;
 
         for (Player *temp : playerList)
         {
             if (temp->isTurnCompleted())
             {
+                if(find(donePlayers.begin(), donePlayers.end(), temp->getName()) == donePlayers.end()) {
+                    donePlayers.push_back(temp->getName());
+                } 
                 continue; // Player has ended turn so we done
             }
 
@@ -890,6 +897,31 @@ void GameEngine::addTournamentPlayers() {
 }
 
 /**
+ * Sets up all remaining info for a tournament game
+*/
+void GameEngine::tournamentGamestart() {
+    for (int i = 0; i < 50; i++)
+    {
+        x->addCardToDeck(new Card());
+    }
+
+    assignPlayersOrder(&playerList);
+
+    distributeTerritories();
+
+    for (Player *i : playerList)
+    {
+        i->setReinforcementPool(50);
+        x->draw(i->getHand());
+        x->draw(i->getHand());
+    }
+
+    turnNumber = 0;
+
+    setGameState(ASSIGNREINFORCEMENTS);
+}
+
+/**
  * Outputs results of the tournament to output file named "TournamentResults.txt"
 */
 void GameEngine::outputTournamentResults() {
@@ -909,7 +941,6 @@ void GameEngine::outputTournamentResults() {
 
     outfile << "G: " << tournamentParams->numGames << endl;
     outfile << "D: " << tournamentParams->numTurns << endl;
-    outfile << endl;
 
     outfile << "Results: " << endl;
 
@@ -921,6 +952,8 @@ void GameEngine::outputTournamentResults() {
         }
         outfile << endl;
     }
+
+    outfile << endl;
 }
 
 /**
@@ -948,6 +981,8 @@ void GameEngine::tournamentGameLoop() {
 
             addTournamentPlayers();
 
+            tournamentGamestart();
+
             // Play the game
             mainGameLoop();
 
@@ -959,6 +994,29 @@ void GameEngine::tournamentGameLoop() {
     outputTournamentResults();
 }
 
+bool GameEngine::endingSegment() {
+    cout << endl << "Would you like to play again or quit?" << endl;
+    
+    while (true) {
+        Command* response = commandProcessor->getCommand();
+
+        if (commandProcessor->validate(response, currentGameState)) {
+            if (response->getCommand() == CommandStrings::replay) {
+                response->saveEffect("Starting new Game!");
+                setGameState(START);
+                cout << response->getEffect() << endl;
+                return true;
+            } else {
+                response->saveEffect("Quitting");
+                cout << response->getEffect() << endl;
+                return false;
+            }
+        }
+
+        cout << response->getEffect() << endl;
+    }    
+}
+
 /**
  * Starts a new instance of Warzone
  */
@@ -966,11 +1024,18 @@ void GameEngine::startNewGame()
 {
     displayWelcomeMessage();
 
-    startupPhase();
+    bool playingDaGame = true;
+    while (playingDaGame) {
+        startupPhase();
 
-    isTournament ? 
-        tournamentGameLoop() :
-        mainGameLoop();
+        isTournament ? 
+            tournamentGameLoop() :
+            mainGameLoop();
+
+        playingDaGame = endingSegment();
+    }
+    
+    displayFarewellMessage();
 }
 
 // Return game state
