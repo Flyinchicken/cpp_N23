@@ -619,17 +619,15 @@ bool advanceDefend(Player* player, vector<Territory*> d_territories) {
 		}
 	}
 }
+
 void playCard(Player* player, vector<Territory*> d_territories, vector<Territory*> potentialAttacks) {
-	cout << "No targets to defend. So we play a card and end turn" << endl;
+	cout << "Nothing left to do. So we play a card and end turn" << endl;
 	if (!player->getHand()->getHand().empty())
 	{
 		vector<Card*> cards = player->getHand()->getHand();
-		CardParameters params(d_territories.at(player->numDefense), potentialAttacks.at(player->numDefense), d_territories.at(player->numDefense)->getArmyNumber() / 2);
+		CardParameters params(nullptr, nullptr, 0);
 		cards[0]->play(player->getHand(), params);
 	}
-	//this->setTurn(true);
-	finishedPlayers++;
-	cout << "Player " << player->getName() << " has ended their turn" << endl;
 }
 /// 
 /// AGGRESSIVE PLAYER

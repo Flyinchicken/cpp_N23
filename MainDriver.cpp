@@ -39,6 +39,6 @@ int main(int argc, char** argv)
     ge = new GameEngine();
     // This is a test since a test is being run
     realGame = false;
-    testPlayerStrategies();
+    //testPlayerStrategies();
     testTournament();
 }

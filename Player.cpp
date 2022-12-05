@@ -322,14 +322,17 @@ void Player::cardOrder(int orderNumber, CardParameters params)
     vector<Territory*> outposts = this->toDefend();
     vector<Territory*> enemies = this->toAttack();
 
+    PlayerStrategy* temp = this->getPlayerStrategy();
+    string name = temp->getStrategyAsString();
+
     // If nothing is set assumes it is a test and gives all random values (should not get to this point without having been validated
     // for values otherwise)
-    if (params.armyUnits == 0 && params.sourceTerritory == nullptr && params.targetTerritory == nullptr && params.targetPlayer == nullptr) {
-        params.targetTerritory = enemies.at(rand() % outposts.size());
-        params.sourceTerritory = outposts.at(rand() % outposts.size());
-        params.armyUnits = rand() % reinforcementPool;
-        params.targetPlayer = ge->getPlayerList().at(rand() % ge->getPlayerList().size());
-    }
+    // if (params.armyUnits == 0 && params.sourceTerritory == nullptr && params.targetTerritory == nullptr && params.targetPlayer == nullptr) {
+    //     params.targetTerritory = enemies.at(rand() % outposts.size());
+    //     params.sourceTerritory = outposts.at(rand() % outposts.size());
+    //     params.armyUnits = rand() % reinforcementPool;
+    //     params.targetPlayer = ge->getPlayerList().at(rand() % ge->getPlayerList().size());
+    // }
 
     Order* newOrder{};
     switch (orderNumber)
@@ -346,22 +349,59 @@ void Player::cardOrder(int orderNumber, CardParameters params)
     }
     case 3:
     {
-        newOrder = new Bomb(this, params.targetTerritory);
+        if(name.find("Benevolent") != std::string::npos){
+            cout << "A benevolent player wouldn't bomb another player" << endl;
+            break;
+        }
+        newOrder = new Bomb(this, enemies.at(rand() % enemies.size()));
         break;
     }
     case 4:
     {
-        newOrder = new Blockade(this, params.targetTerritory);
+        newOrder = new Blockade(this, outposts.at(rand() % outposts.size()));
         break;
     }
     case 5:
     {
-        newOrder = new Airlift(this, params.sourceTerritory, params.targetTerritory, params.armyUnits);
+        if(name.find("Aggressive") != std::string::npos){
+            cout << "An aggressive player wouldn't do this" << endl;
+            break;
+        }
+
+        if(outposts.size() == 1){
+            break;
+        }
+
+        Territory* source = outposts.at(rand() % outposts.size());
+        Territory* target = outposts.at(rand() % outposts.size());
+
+        while(source == target){
+            Territory* target = outposts.at(rand() % outposts.size());
+        }
+
+        newOrder = new Airlift(this, source, target, source->getArmyNumber() / 2);
         break;
     }
     case 6:
     {
-        newOrder = new Negotiate(this, params.targetPlayer);
+        if (ge->getPlayerList().size() == 1)
+        {
+            break;
+        }
+        
+        if(name.find("Aggressive") != std::string::npos){
+            cout << "An aggressive doesn't negotiate" << endl;
+            break;
+        }
+
+        Player* other = ge->getPlayerList().at(rand() % ge->getPlayerList().size());
+
+        while (this->getName() == other->getName())
+        {
+            other = ge->getPlayerList().at(rand() % ge->getPlayerList().size());
+        }
+        
+        newOrder = new Negotiate(this, other);
         break;
     }
     default:
