@@ -635,8 +635,11 @@ void GameEngine::mainGameLoop()
             }
         }
 
-        string temp;
-        cin >> temp;
+        if (!isTournament) {
+            string temp;
+            cin >> temp;
+        }
+        
 
         if (this->playerList.size() == 1)
         {
@@ -644,15 +647,16 @@ void GameEngine::mainGameLoop()
             setGameState(WIN);
 
             if (isTournament) {
-                tournamentWinners.at(tournamentMapNumber).at(tournamentGameNumber) = playerList.at(0)->getName();
+                tournamentWinners.at(tournamentMapNumber).push_back(playerList.at(0)->getName());
             }
 
             continue;
         }
 
-        if(turnNumber == numberOfTurns){
+        if (turnNumber == tournamentParams->numTurns)
+        {
             setGameState(WIN);
-            // Tell that game is a draw
+            tournamentWinners.at(tournamentMapNumber).push_back("DRAW");
             continue;
         }
 
@@ -687,8 +691,11 @@ void GameEngine::reinforcementPhase()
         cout << "Reinforcing player " << i->getName() << " with " << total_bonus << " troops" << endl
              << "Type anything to continue ";
 
-        string temp;
-        cin >> temp;
+        if (!isTournament) {
+            string temp;
+            cin >> temp;
+        }
+        
 
         i->setReinforcementPool(total_bonus);
     }
@@ -713,8 +720,10 @@ void GameEngine::reinforcementPhaseForLogObserverDriver()
         cout << "Reinforcing player " << i->getName() << " with " << total_bonus << " troops" << endl
              << "Type anything to continue ";
 
-        string temp;
-        cin >> temp;
+        if (!isTournament) {
+            string temp;
+            cin >> temp;
+        }        
 
         i->setReinforcementPool(total_bonus);
     }
@@ -723,12 +732,16 @@ void GameEngine::reinforcementPhaseForLogObserverDriver()
 
 void GameEngine::issueOrdersPhase()
 {
-
+    vector<string> activePlayers;
+    for (int i = 0; i < playerList.size(); i++) {
+        activePlayers.push_back(playerList.at(i)->getName());
+    }
     int currentPlayers = playerList.size();
 
     string temporary;
 
     finishedPlayers = 0;
+    vector<string> donePlayers;
 
     for (Player *player : playerList)
     {
@@ -738,19 +751,25 @@ void GameEngine::issueOrdersPhase()
     }
 
     cout << "Issue Order Phase for turn " << turnNumber << endl
-         << "There are currently " << playerList.size() << " players in the game" << endl
-         << "Type anything to continue:";
-    cin >> temporary;
+         << "There are currently " << playerList.size() << " players in the game" << endl;
+    
+    if (!isTournament) {
+        cout << "Type anything to continue:";
+        cin >> temporary;
+    }
 
-    while (finishedPlayers != currentPlayers)
+    while (donePlayers.size() != currentPlayers)
     {
 
-        cout << "Round Robin. There are " << finishedPlayers << " who have ended their turn" << endl;
+        cout << "Round Robin. There are " << donePlayers.size() << " who have ended their turn" << endl;
 
         for (Player *temp : playerList)
         {
             if (temp->isTurnCompleted())
             {
+                if(find(donePlayers.begin(), donePlayers.end(), temp->getName()) == donePlayers.end()) {
+                    donePlayers.push_back(temp->getName());
+                } 
                 continue; // Player has ended turn so we done
             }
 
@@ -759,14 +778,9 @@ void GameEngine::issueOrdersPhase()
             int numOrders = temp->getOrdersList()->order_list.size();
             
             if (numOrders > 8) {
-                // if (!temp->getHand()->getHand().empty()) {
-                //     vector<Card*> cards = temp->getHand()->getHand();
-                //     // This is no bueno, will need to come up with something better in the future
-                //     CardParameters params;
-                //     cards[0]->play(temp->getHand(), params);
-                // }
                 temp->setTurnCompleted(true);
                 finishedPlayers++;
+                donePlayers.push_back(temp->getName());
                 cout << "Player " << temp->getName() << " has ended their turn" << endl;
             }
             else
@@ -774,8 +788,10 @@ void GameEngine::issueOrdersPhase()
                 temp->issueOrder();
             }
 
-            cout << "Type anything to continue: ";
-            cin >> temporary;
+            if (!isTournament) {
+                cout << "Type anything to continue: ";
+                cin >> temporary;
+            }            
         }
     }
 
@@ -833,10 +849,10 @@ void GameEngine::addTournamentPlayers() {
         deadPlayers.clear();
     }
 
-    int aggressiveCount = 0;
-    int benevolentCount = 0;
-    int neutralCount = 0;
-    int cheaterCount = 0;
+    int aggressiveCount = 1;
+    int benevolentCount = 1;
+    int neutralCount = 1;
+    int cheaterCount = 1;
 
     for (string playerStrat : tournamentParams->players) {
         Player* player = new Player();
@@ -845,22 +861,22 @@ void GameEngine::addTournamentPlayers() {
 
         if (playerStrat == "Aggressive") {   
             player->setPlayerStrategy(new AggressivePlayerStrategy(player));         
-            player->setName("AggressivePlayer" + aggressiveCount);
+            player->setName("AggressivePlayer" + to_string(aggressiveCount));
             aggressiveCount++;
         }
         else if (playerStrat == "Benevolent") {
             player->setPlayerStrategy(new BenevolentPlayerStrategy(player));         
-            player->setName("BenevolentPlayer" + benevolentCount);
+            player->setName("BenevolentPlayer" + to_string(benevolentCount));
             benevolentCount++;
         }
         else if (playerStrat == "Neutral") {
-            player->setPlayerStrategy(new NeutralPlayerStrategy(player));         
-            player->setName("NeutralPlayer" + neutralCount);
+            player->setPlayerStrategy(new NeutralPlayerStrategy(player));   
+            player->setName("NeutralPlayer_" + to_string(neutralCount));
             neutralCount++;
         }
         else if (playerStrat == "Cheater") {
             player->setPlayerStrategy(new CheaterPlayerStrategy(player));         
-            player->setName("CheaterPlayer" + cheaterCount);
+            player->setName("CheaterPlayer" + to_string(cheaterCount));
             cheaterCount++;
         }
         else {
@@ -871,6 +887,31 @@ void GameEngine::addTournamentPlayers() {
     }
     
     setGameState(PLAYERSADDED);
+}
+
+/**
+ * Sets up all remaining info for a tournament game
+*/
+void GameEngine::tournamentGamestart() {
+    for (int i = 0; i < 50; i++)
+    {
+        x->addCardToDeck(new Card());
+    }
+
+    assignPlayersOrder(&playerList);
+
+    distributeTerritories();
+
+    for (Player *i : playerList)
+    {
+        i->setReinforcementPool(50);
+        x->draw(i->getHand());
+        x->draw(i->getHand());
+    }
+
+    turnNumber = 0;
+
+    setGameState(ASSIGNREINFORCEMENTS);
 }
 
 /**
@@ -893,14 +934,8 @@ void GameEngine::outputTournamentResults() {
 
     outfile << "G: " << tournamentParams->numGames << endl;
     outfile << "D: " << tournamentParams->numTurns << endl;
-    outfile << endl;
 
     outfile << "Results: " << endl;
-    outfile << "\t";
-    for (int i = 0; i < tournamentParams->numGames; i++) {
-        outfile << "Game " << i << "\t";
-    }
-    outfile << endl;
 
     int mapCounter = 1;
     for (int i = 0; i < tournamentParams->maps.size(); i++) {
@@ -910,17 +945,23 @@ void GameEngine::outputTournamentResults() {
         }
         outfile << endl;
     }
+
+    outfile << endl;
 }
 
 /**
  * Where the game is setup when a tournament is being run
 */
 void GameEngine::tournamentGameLoop() {
-    for (tournamentMapNumber = 0; tournamentMapNumber < tournamentParams->maps.size(); tournamentMapNumber++) {
+    vector<vector<string>> vec(tournamentParams->maps.size());
+    tournamentWinners = vec;
+
+    tournamentMapNumber = 0;
+    while (tournamentMapNumber < tournamentParams->maps.size()) {
         string map = tournamentParams->maps.at(tournamentMapNumber);
 
         tournamentGameNumber = 0;
-        while (tournamentGameNumber != (tournamentParams->numGames - 1)) {
+        while (tournamentGameNumber < tournamentParams->numGames) {
             if (!loadTournamentMap(map)) {
                 continue;
             }
@@ -933,12 +974,45 @@ void GameEngine::tournamentGameLoop() {
 
             addTournamentPlayers();
 
+            tournamentGamestart();
+
             // Play the game
+            mainGameLoop();
+
+            ++tournamentGameNumber;
         }
-        tournamentGameNumber++;
+        ++tournamentMapNumber;
     }
 
     outputTournamentResults();
+}
+
+/**
+ * Asks user if they want to replay or quit
+ * 
+ * @returns If they want to replay
+*/
+bool GameEngine::endingSegment() {
+    cout << endl << "Would you like to play again or quit?" << endl;
+    
+    while (true) {
+        Command* response = commandProcessor->getCommand();
+
+        if (commandProcessor->validate(response, currentGameState)) {
+            if (response->getCommand() == CommandStrings::replay) {
+                response->saveEffect("Starting new Game!");
+                setGameState(START);
+                cout << response->getEffect() << endl;
+                return true;
+            } else {
+                response->saveEffect("Quitting");
+                cout << response->getEffect() << endl;
+                return false;
+            }
+        }
+
+        cout << response->getEffect() << endl;
+    }    
 }
 
 /**
@@ -948,11 +1022,18 @@ void GameEngine::startNewGame()
 {
     displayWelcomeMessage();
 
-    startupPhase();
+    bool playingDaGame = true;
+    while (playingDaGame) {
+        startupPhase();
 
-    isTournament ? 
-        tournamentGameLoop() :
-        mainGameLoop();
+        isTournament ? 
+            tournamentGameLoop() :
+            mainGameLoop();
+
+        playingDaGame = endingSegment();
+    }
+    
+    displayFarewellMessage();
 }
 
 // Return game state
