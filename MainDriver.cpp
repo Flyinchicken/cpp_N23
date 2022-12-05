@@ -11,6 +11,7 @@
 #include "CommandProcessingDriver.h"
 #include "LoggingObserverDriver.h"
 #include "PlayerStrategiesDriver.h"
+#include "PlayerStrategies.h"
 
 using namespace std;
 
@@ -22,6 +23,18 @@ bool realGame;
 
 int main(int argc, char** argv)
 {
+
+    // Player* test = new Player();
+    // PlayerStrategy* temp = new NeutralPlayerStrategy(test);
+    // test->setPlayerStrategy(temp);
+    // string name = test->getPlayerStrategy()->getStrategyAsString();
+
+    // if(name.find("Neutral") != std::string::npos){
+    //     test->setPlayerStrategy(new AggressivePlayerStrategy(test));
+    //   }
+
+    //   cout << test->getPlayerStrategy()->getStrategyAsString() << endl ;
+
     x = new Deck();
     // This is a test since a test is being run
     realGame = false;
