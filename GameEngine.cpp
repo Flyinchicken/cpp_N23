@@ -750,8 +750,7 @@ void GameEngine::issueOrdersPhase()
     }
 
     cout << "Issue Order Phase for turn " << turnNumber << endl
-         << "There are currently " << playerList.size() << " players in the game" << endl
-         << "Type anything to continue:";
+         << "There are currently " << playerList.size() << " players in the game" << endl;
     
     if (!isTournament) {
         cout << "Type anything to continue:";
