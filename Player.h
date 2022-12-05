@@ -47,7 +47,6 @@ public:
 	int numAttacks = 0;
 	int numDefense = 0;
 
-	// TODO: How init Strategy?
 	Player();
 	~Player();
 	//copy constructor
