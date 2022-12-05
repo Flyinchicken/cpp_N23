@@ -663,6 +663,12 @@ void AggressivePlayerStrategy::issueOrder() {
 	vector<Territory*> d_territories = this->toDefend();
 	vector<Territory*> potentialAttacks = this->toAttack();
 
+	// If a cheater took everything
+	if (d_territories.size() == 0 && potentialAttacks.size() == 0) {
+		player->setTurnCompleted(true);
+		return;
+	}
+
 	bool completed = false;
 	if (player->getReinforcementPool() > 0) {
 		//deploy to strongest country
@@ -765,6 +771,11 @@ BenevolentPlayerStrategy& BenevolentPlayerStrategy::operator = (const Benevolent
 
 void BenevolentPlayerStrategy::issueOrder() {
 	vector<Territory*> d_territories = this->toDefend();
+
+	if (d_territories.size() == 0) {
+		player->setTurnCompleted(true);
+		return;
+	}
 
 	bool completed = false;
 	if (player->getReinforcementPool() > 0) {
