@@ -941,7 +941,7 @@ void GameEngine::outputTournamentResults() {
     for (int i = 0; i < tournamentParams->maps.size(); i++) {
         outfile << tournamentParams->maps.at(i) << "\t";
         for (int j = 0; j < tournamentParams->numGames; j++) {
-            outfile << "Game " << j << ": "  << tournamentWinners.at(i).at(j) << "; \t";
+            outfile << "Game " << j+1 << ": "  << tournamentWinners.at(i).at(j) << "; \t";
         }
         outfile << endl;
     }

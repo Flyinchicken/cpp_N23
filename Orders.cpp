@@ -665,13 +665,13 @@ void Blockade::execute()
     targetTerritory->setArmyNumber((targetTerritory->getArmyNumber()) * 2);
     targetTerritory->setOwner(new Player("Neutral player"));
     cout << "Current number of armies of " << *(targetTerritory->getTerritoryName()) << " : " << targetTerritory->getArmyNumber() << endl;
-    cout << "Current owner of " << *(targetTerritory->getTerritoryName()) << " : " << *(targetTerritory->getOwner()) << endl;
+    cout << "Current owner of " << *(targetTerritory->getTerritoryName()) << " : " << targetTerritory->getOwner()->getName() << endl;
 
     ostringstream oss;
     oss << "Blockade order execute:  " << endl
         << "Previous number of armies of " << *targetTerritory->getTerritoryName() << " : " << targetTerritory->getArmyNumber() << endl
         << "Current number of armies of " << *targetTerritory->getTerritoryName() << " : " << targetTerritory->getArmyNumber() << endl
-        << "Current owner of " << *targetTerritory->getTerritoryName() << " : " << *(targetTerritory->getOwner()) << endl;
+        << "Current owner of " << *targetTerritory->getTerritoryName() << " : " << targetTerritory->getOwner()->getName() << endl;
     string effect = oss.str();
     setOrderEffect(this->getType() + " is valid. " + effect);
   }
