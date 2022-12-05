@@ -19,6 +19,7 @@ using std::ofstream;
 
 int finishedPlayers;
 int turnNumber = 0;
+int numberOfTurns = 10;
 
 /**
  * Default constructor sets current game state to Start
@@ -775,18 +776,11 @@ void GameEngine::issueOrdersPhase()
             cout << "Order for player " << temp->getName() << endl;
 
             int numOrders = temp->getOrdersList()->order_list.size();
-
-            if (numOrders > 4)
-            {
-                if (!temp->getHand()->getHand().empty())
-                {
-                    vector<Card *> cards = temp->getHand()->getHand();
-                    // This is no bueno, will need to come up with something better in the future
-                    CardParameters params;
-                    cards[0]->play(temp->getHand(), params);
-                }
+            
+            if (numOrders > 8) {
                 temp->setTurnCompleted(true);
                 finishedPlayers++;
+                donePlayers.push_back(temp->getName());
                 cout << "Player " << temp->getName() << " has ended their turn" << endl;
             }
             else

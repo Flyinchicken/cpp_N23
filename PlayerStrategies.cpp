@@ -683,9 +683,12 @@ void AggressivePlayerStrategy::issueOrder() {
 		}
 		if (!completed) {
 			playCard(player, d_territories, potentialAttacks);
+			player->setTurnCompleted(true);
+			finishedPlayers++;
+			cout << "Player " << player->getName() << " has ended their turn" << endl;
 		}
 	}
-	player->setTurnCompleted(true);
+	
 }
 
 vector<Territory*> AggressivePlayerStrategy::toAttack() {
@@ -776,9 +779,11 @@ void BenevolentPlayerStrategy::issueOrder() {
 		completed = advanceDefend(player, d_territories);
 		if (!completed) {
 			playCard(player, d_territories, {});
+			player->setTurnCompleted(true);
+			finishedPlayers++;
+			cout << "Player " << player->getName() << " has ended their turn" << endl;
 		}
 	}
-	player->setTurnCompleted(true);
 }
 
 
@@ -861,6 +866,8 @@ NeutralPlayerStrategy& NeutralPlayerStrategy::operator = (const NeutralPlayerStr
 void NeutralPlayerStrategy::issueOrder() {
 	// I'll have an uh...uhhhhhhhhhhhhhhhh...
 	player->setTurnCompleted(true);
+	finishedPlayers++;
+	cout << "Player " << player->getName() << " has ended their turn" << endl;
 }
 
 /**
@@ -930,8 +937,10 @@ void CheaterPlayerStrategy::issueOrder() {
 	for (Territory* t : territoriesToConquer) {
 		t->setOwner(player);
 	}
-
+	
 	player->setTurnCompleted(true);
+	finishedPlayers++;
+	cout << "Player " << player->getName() << " has ended their turn" << endl;
 }
 
 /**

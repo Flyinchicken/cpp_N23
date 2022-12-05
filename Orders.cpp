@@ -1,6 +1,7 @@
 
 #include "Orders.h"
 #include "GameEngine.h"
+#include "PlayerStrategies.h"
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -466,6 +467,14 @@ void Advance::execute()
         {
           defnd_alive--;
         }
+      }
+
+      Player* temp = sourceTerritory->getOwner();
+      PlayerStrategy* temp1 = temp->getPlayerStrategy();
+      string name = temp1->getStrategyAsString();
+
+      if(name.find("Neutral") != std::string::npos){
+        temp->setPlayerStrategy(new AggressivePlayerStrategy(temp));
       }
 
       // attack successful

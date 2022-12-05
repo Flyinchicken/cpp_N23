@@ -8,6 +8,8 @@ using std::vector;
 using std::ostream;
 using std::string;
 
+extern int finishedPlayers;
+
 class Territory;
 class Player;
 class CommandProcessor;
