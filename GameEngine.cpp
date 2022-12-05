@@ -987,6 +987,11 @@ void GameEngine::tournamentGameLoop() {
     outputTournamentResults();
 }
 
+/**
+ * Asks user if they want to replay or quit
+ * 
+ * @returns If they want to replay
+*/
 bool GameEngine::endingSegment() {
     cout << endl << "Would you like to play again or quit?" << endl;
     
