@@ -625,8 +625,14 @@ void playCard(Player* player, vector<Territory*> d_territories, vector<Territory
 	if (!player->getHand()->getHand().empty())
 	{
 		vector<Card*> cards = player->getHand()->getHand();
-		CardParameters params(nullptr, nullptr, 0);
-		cards[0]->play(player->getHand(), params);
+		if (potentialAttacks.size() == 0) {
+			CardParameters params(d_territories.front(), d_territories.back(), 0);
+			cards[0]->play(player->getHand(), params);
+		} else {
+			CardParameters params(d_territories.front(), potentialAttacks.front(), 0);
+			cards[0]->play(player->getHand(), params);
+		}		
+		
 	}
 }
 /// 

@@ -236,7 +236,7 @@ void Player::cardOrder(int orderNumber, CardParameters params)
     {
     case 1:
     {
-        newOrder = new Deploy(this, 10, outposts.at(rand() % outposts.size()));
+        newOrder = new Deploy(this, 10, params.targetTerritory);
         break;
     }
     case 2:
@@ -250,12 +250,12 @@ void Player::cardOrder(int orderNumber, CardParameters params)
             cout << "A benevolent player wouldn't bomb another player" << endl;
             break;
         }
-        newOrder = new Bomb(this, enemies.at(rand() % enemies.size()));
+        newOrder = new Bomb(this, params.targetTerritory);
         break;
     }
     case 4:
     {
-        newOrder = new Blockade(this, outposts.at(rand() % outposts.size()));
+        newOrder = new Blockade(this, params.targetTerritory);
         break;
     }
     case 5:
@@ -269,14 +269,7 @@ void Player::cardOrder(int orderNumber, CardParameters params)
             break;
         }
 
-        Territory* source = outposts.at(rand() % outposts.size());
-        Territory* target = outposts.at(rand() % outposts.size());
-
-        while(source == target){
-            Territory* target = outposts.at(rand() % outposts.size());
-        }
-
-        newOrder = new Airlift(this, source, target, source->getArmyNumber() / 2);
+        newOrder = new Airlift(this, params.sourceTerritory, params.targetTerritory, params.sourceTerritory->getArmyNumber() / 2);
         break;
     }
     case 6:
@@ -292,11 +285,6 @@ void Player::cardOrder(int orderNumber, CardParameters params)
         }
 
         Player* other = ge->getPlayerList().at(rand() % ge->getPlayerList().size());
-
-        while (this->getName() == other->getName())
-        {
-            other = ge->getPlayerList().at(rand() % ge->getPlayerList().size());
-        }
         
         newOrder = new Negotiate(this, other);
         break;
