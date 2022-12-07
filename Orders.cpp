@@ -469,13 +469,15 @@ void Advance::execute()
         }
       }
 
-      Player* temp = sourceTerritory->getOwner();
+      Player* temp = targetTerritory->getOwner();
       PlayerStrategy* temp1 = temp->getPlayerStrategy();
-      string name = temp1->getStrategyAsString();
+      if (temp1 != nullptr) {
+        string name = temp->getName();
 
-      if(name.find("Neutral") != std::string::npos){
-        temp->setPlayerStrategy(new AggressivePlayerStrategy(temp));
-      }
+        if(name.find("Neutral") != std::string::npos){
+          temp->setPlayerStrategy(new AggressivePlayerStrategy(temp));
+        }
+      }      
 
       // attack successful
       if (defnd_alive == 0 && attck_alive > 0)
