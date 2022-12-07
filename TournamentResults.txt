@@ -1,0 +1,325 @@
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Neutral Neutral 
+G: 3
+D: 10
+
+Results: 
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Neutral Neutral Cheater 
+G: 3
+D: 10
+
+Results: 
+./MapFiles/3D.map	Game 0: NeutralPlayer_2; 	Game 1: NeutralPlayer_2; 	Game 2: NeutralPlayer_2; 	
+./MapFiles/3D.map	Game 0: NeutralPlayer_2; 	Game 1: NeutralPlayer_2; 	Game 2: NeutralPlayer_2; 	
+./MapFiles/3D.map	Game 0: NeutralPlayer_2; 	Game 1: NeutralPlayer_2; 	Game 2: NeutralPlayer_2; 	
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Neutral Neutral Cheater 
+G: 3
+D: 10
+
+Results: 
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Neutral Neutral Cheater 
+G: 3
+D: 10
+
+Results: 
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Neutral Neutral Cheater 
+G: 3
+D: 10
+Results: 
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Neutral Neutral Cheater 
+G: 3
+D: 10
+Results: 
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Neutral Neutral Cheater 
+G: 3
+D: 10
+Results: 
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Neutral Neutral Cheater 
+G: 3
+D: 10
+Results: 
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Neutral Neutral Cheater Cheater 
+G: 3
+D: 10
+Results: 
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: DRAW; 	
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: DRAW; 	Game 2: DRAW; 	
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Neutral Neutral Cheater Cheater 
+G: 3
+D: 10
+Results: 
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: DRAW; 	
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: CheaterPlayer1; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Cheater Cheater Cheater 
+G: 4
+D: 30
+Results: 
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Neutral Neutral 
+G: 4
+D: 30
+Results: 
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Benevolent Benevolent 
+G: 4
+D: 30
+Results: 
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Benevolent Benevolent Aggressive Neutral 
+G: 4
+D: 30
+Results: 
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Aggressive Neutral 
+G: 4
+D: 30
+Results: 
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Aggressive Neutral 
+G: 5
+D: 50
+Results: 
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	Game 4: DRAW; 	
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	Game 4: DRAW; 	
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	Game 4: DRAW; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map 
+P: Neutral Neutral Cheater Neutral 
+G: 3
+D: 10
+Results: 
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map 
+P: Neutral Neutral Cheater Neutral 
+G: 3
+D: 10
+Results: 
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map 
+P: Neutral Neutral Cheater Neutral 
+G: 3
+D: 10
+Results: 
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map 
+P: Neutral Neutral Cheater Neutral 
+G: 3
+D: 10
+Results: 
+./MapFiles/3D.map	Game 0: CheaterPlayer1; 	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map 
+P: Neutral Aggressive Cheater Neutral 
+G: 3
+D: 10
+Results: 
+./MapFiles/3D.map	Game 0: DRAW; 	Game 1: DRAW; 	Game 2: CheaterPlayer1; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map 
+P: Neutral Aggressive Cheater Neutral 
+G: 3
+D: 10
+Results: 
+./MapFiles/3D.map	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: CheaterPlayer1; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map 
+P: Neutral Neutral Cheater Neutral 
+G: 3
+D: 10
+Results: 
+./MapFiles/3D.map	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	Game 3: CheaterPlayer1; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map 
+P: Benevolent Aggressive 
+G: 3
+D: 10
+Results: 
+./MapFiles/3D.map	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map 
+P: Benevolent Aggressive Neutral Cheater 
+G: 3
+D: 10
+Results: 
+./MapFiles/3D.map	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	Game 3: CheaterPlayer1; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Benevolent Aggressive Neutral Cheater 
+G: 4
+D: 30
+Results: 
+./MapFiles/3D.map	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	Game 3: CheaterPlayer1; 	Game 4: CheaterPlayer1; 	
+./MapFiles/3D.map	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	Game 3: CheaterPlayer1; 	Game 4: CheaterPlayer1; 	
+./MapFiles/3D.map	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	Game 3: CheaterPlayer1; 	Game 4: CheaterPlayer1; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Aggressive Neutral 
+G: 4
+D: 30
+Results: 
+./MapFiles/3D.map	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	Game 4: DRAW; 	
+./MapFiles/3D.map	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	Game 4: DRAW; 	
+./MapFiles/3D.map	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	Game 4: DRAW; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Cheater Neutral 
+G: 3
+D: 25
+Results: 
+./MapFiles/3D.map	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	Game 3: CheaterPlayer1; 	
+./MapFiles/3D.map	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	Game 3: CheaterPlayer1; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Aggressive Neutral 
+G: 3
+D: 25
+Results: 
+./MapFiles/3D.map	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+./MapFiles/3D.map	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Cheater Aggressive Benevolent 
+G: 3
+D: 25
+Results: 
+./MapFiles/3D.map	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	Game 3: CheaterPlayer1; 	
+./MapFiles/3D.map	Game 1: DRAW; 	Game 2: CheaterPlayer1; 	Game 3: DRAW; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Aggressive Benevolent Aggressive Benevolent 
+G: 3
+D: 25
+Results: 
+./MapFiles/3D.map	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+./MapFiles/3D.map	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Aggressive Benevolent Aggressive Benevolent 
+G: 3
+D: 25
+Results: 
+./MapFiles/3D.map	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+./MapFiles/3D.map	Game 1: DRAW; 	Game 2: DRAW; 	Game 3: DRAW; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Cheater Aggressive Benevolent 
+G: 3
+D: 25
+Results: 
+./MapFiles/3D.map	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	Game 3: CheaterPlayer1; 	
+./MapFiles/3D.map	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	Game 3: CheaterPlayer1; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Cheater Neutral Aggressive Benevolent 
+G: 4
+D: 30
+Results: 
+./MapFiles/3D.map	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	Game 3: CheaterPlayer1; 	Game 4: CheaterPlayer1; 	
+./MapFiles/3D.map	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	Game 3: CheaterPlayer1; 	Game 4: CheaterPlayer1; 	
+./MapFiles/3D.map	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	Game 3: CheaterPlayer1; 	Game 4: DRAW; 	
+
+Tournament mode: 
+M: ./MapFiles/3D.map ./MapFiles/3D.map 
+P: Cheater Aggressive Benevolent 
+G: 3
+D: 25
+Results: 
+./MapFiles/3D.map	Game 1: CheaterPlayer1; 	Game 2: CheaterPlayer1; 	Game 3: CheaterPlayer1; 	
+./MapFiles/3D.map	Game 1: DRAW; 	Game 2: CheaterPlayer1; 	Game 3: DRAW; 	
+

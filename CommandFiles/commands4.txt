@@ -1,0 +1,2 @@
+tournament -M ./MapFiles/3D.map ./MapFiles/3D.map -P Cheater Aggressive Benevolent -G 3 -D 25
+quit

@@ -59,24 +59,15 @@ bool processCommandArguments(int argc, char** argv) {
 
 int main(int argc, char** argv)
 {
+    // issueorder deploy 50 1t
+    // issueorder advance 1t 1c 50
     if (processCommandArguments(argc, argv)) {
         x = new Deck();
         ge = new GameEngine();
         // This is a test since a test is being run
         realGame = false;
-        //testPlayerStrategies();
+        testPlayerStrategies();
         testTournament();
     }
-    // Player* test = new Player();
-    // PlayerStrategy* temp = new NeutralPlayerStrategy(test);
-    // test->setPlayerStrategy(temp);
-    // string name = test->getPlayerStrategy()->getStrategyAsString();
-
-    // if(name.find("Neutral") != std::string::npos){
-    //     test->setPlayerStrategy(new AggressivePlayerStrategy(test));
-    //   }
-
-    //   cout << test->getPlayerStrategy()->getStrategyAsString() << endl ;
-
     
 }
