@@ -123,7 +123,7 @@ void testPlayerStrategies() {
     strategyEngine->addPlayer(new Command("addplayer NeutralPlayer2"));
     strategyEngine->addPlayer(new Command("addplayer NeutralPlayer3"));
     strategyEngine->gameStart(new Command("gamestart"));
-    
+
     cout << "Today's participants: " << endl;
     playerList = strategyEngine->getPlayerList();
     for (Player* p : playerList) {
@@ -147,7 +147,7 @@ void testPlayerStrategies() {
         cout << p->getName() << "'s order list: " << endl;
         if (p->getOrdersList()->order_list.size() == 0) {
             cout << p->getName() << " has issued no orders" << endl;
-        } 
+        }
         else {        // Else exists in case something breaks 
             cout << "Error!" << p->getName() << " shouldn't have any orders!" << endl;
         }
@@ -155,6 +155,91 @@ void testPlayerStrategies() {
 
     cout << endl << "Conclusion: Neutral players issue no orders" << endl;
     cout << "-------END NEUTRAL PLAYER DEMO-----------" << endl;
+
+    // Aggressive player demo that demonstrates their natural affinity for warfare
+    cout << "-------AGGRESSIVE PLAYER DEMO-----------" << endl;
+    delete strategyEngine;
+
+    strategyEngine = new GameEngine();
+    strategyEngine->loadMap(new Command("loadmap ./MapFiles/3D.map"));  // Known valid map so won't validate
+    strategyEngine->addPlayer(new Command("addplayer AggressivePlayer1"));
+    strategyEngine->addPlayer(new Command("addplayer AggressivePlayer2"));
+    strategyEngine->addPlayer(new Command("addplayer AggressivePlayer3"));
+
+    cout << "Today's participants: " << endl;
+    playerList = strategyEngine->getPlayerList();
+    for (Player* p : playerList) {
+        p->setPlayerStrategy(new AggressivePlayerStrategy(p));
+        cout << p->getName() << " (" << *(p->getPlayerStrategy()) << ")" << endl;
+    }
+
+    cout << endl << "Mock issue order phase (each player issues two orders)" << endl;
+    turnCount = 0;
+    while (turnCount < 2) {
+        for (Player* p : playerList) {
+            p->issueOrder();
+            cout << p->getName() << " has issued " << turnCount + 1 << " orders" << endl;
+        }
+
+        ++turnCount;
+    }
+
+    cout << endl << "Mock execute order phase (iterates over each player's order list)" << endl;
+    for (Player* p : playerList) {
+        cout << p->getName() << "'s order list: " << endl;
+        if (p->getOrdersList()->order_list.size() == 0) {
+            cout << p->getName() << " has issued no orders" << endl;
+        }
+        else {        // Else exists in case something breaks
+            cout << "Error!" << p->getName() << " shouldn't have any orders!" << endl;
+        }
+    }
+
+    cout << endl << "Conclusion: Aggressive players issue no orders" << endl;
+    cout << "-------END AGGRESSIVE PLAYER DEMO-----------" << endl;
+
+    // Benevolent player demo that demonstrates their natural affinity for warfare
+    cout << "-------BENEVOLENT PLAYER DEMO-----------" << endl;
+    delete strategyEngine;
+
+    strategyEngine = new GameEngine();
+    strategyEngine->loadMap(new Command("loadmap ./MapFiles/3D.map"));  // Known valid map so won't validate
+    strategyEngine->addPlayer(new Command("addplayer BenevolentPlayer1"));
+    strategyEngine->addPlayer(new Command("addplayer BenevolentPlayer2"));
+    strategyEngine->addPlayer(new Command("addplayer BenevolentPlayer3"));
+
+    cout << "Today's participants: " << endl;
+    playerList = strategyEngine->getPlayerList();
+    for (Player* p : playerList) {
+        p->setPlayerStrategy(new BenevolentPlayerStrategy(p));
+        cout << p->getName() << " (" << *(p->getPlayerStrategy()) << ")" << endl;
+    }
+
+    cout << endl << "Mock issue order phase (each player issues two orders)" << endl;
+    turnCount = 0;
+    while (turnCount < 2) {
+        for (Player* p : playerList) {
+            p->issueOrder();
+            cout << p->getName() << " has issued " << turnCount + 1 << " orders" << endl;
+        }
+
+        ++turnCount;
+    }
+
+    cout << endl << "Mock execute order phase (iterates over each player's order list)" << endl;
+    for (Player* p : playerList) {
+        cout << p->getName() << "'s order list: " << endl;
+        if (p->getOrdersList()->order_list.size() == 0) {
+            cout << p->getName() << " has issued no orders" << endl;
+        }
+        else {        // Else exists in case something breaks
+            cout << "Error!" << p->getName() << " shouldn't have any orders!" << endl;
+        }
+    }
+
+    cout << endl << "Conclusion: Benevolent players issue no orders" << endl;
+    cout << "-------END BENEVOLENT PLAYER DEMO-----------" << endl;
+
 
 
     // Cheater player demo
