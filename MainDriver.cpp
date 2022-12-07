@@ -21,9 +21,52 @@ Map* worldMap;
 Deck* x;
 bool realGame;
 
+bool processCommandArguments(int argc, char** argv) {
+    if (argc < 2)
+    {
+        cout << "To execute this program you must enter additional arguments in the form -console or -file <filename>" << endl;
+        return false;
+    }
+    string processorType = argv[1];
+
+    if (processorType == "-console") {
+        return true;
+    }
+    else if (processorType == "-file") {
+        if (argc < 3)
+        {
+            cout << "To execute this program you must enter additional arguments in the form -console or -file <filename>" << endl;
+            return false;
+        }
+        else
+        {
+            filePath = argv[2];
+
+            if (ifstream(filePath).fail()) {
+                cout << "File " << filePath << " does not exist!" << endl;
+                return false;
+            }
+
+            cout << "filepath is: " << filePath << endl;
+        }
+        return true;
+    }
+    else  {
+        cout << "To execute this program you must enter additional arguments in the form -console or -file <filename>" << endl;
+        return false;
+    }
+}
+
 int main(int argc, char** argv)
 {
-
+    if (processCommandArguments(argc, argv)) {
+        x = new Deck();
+        ge = new GameEngine();
+        // This is a test since a test is being run
+        realGame = false;
+        //testPlayerStrategies();
+        testTournament();
+    }
     // Player* test = new Player();
     // PlayerStrategy* temp = new NeutralPlayerStrategy(test);
     // test->setPlayerStrategy(temp);
@@ -35,10 +78,5 @@ int main(int argc, char** argv)
 
     //   cout << test->getPlayerStrategy()->getStrategyAsString() << endl ;
 
-    x = new Deck();
-    ge = new GameEngine();
-    // This is a test since a test is being run
-    realGame = false;
-    //testPlayerStrategies();
-    testTournament();
+    
 }
